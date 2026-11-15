@@ -132,37 +132,40 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
+      gap: 8px;
       height: 60px;
     }
 
     .brand-group {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
+      flex-shrink: 0;
     }
     .brand-icon {
-      font-size: 24px;
+      font-size: 22px;
       line-height: 1;
     }
     .brand-title {
-      font-size: 16px;
+      font-size: 15px;
       font-weight: 800;
       letter-spacing: -0.02em;
       background: linear-gradient(135deg, var(--accent), #ec4899);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      white-space: nowrap;
     }
 
     .header-nav {
       display: flex;
       align-items: center;
       gap: 6px;
+      flex-wrap: nowrap;
     }
 
     .nav-btn {
-      min-height: var(--btn-min-height);
-      padding: 0 12px;
+      min-height: 38px;
+      padding: 0 10px;
       border-radius: var(--radius-md);
       border: 1px solid var(--border-color);
       background: var(--bg-surface-elevated);
@@ -175,6 +178,7 @@
       justify-content: center;
       gap: 6px;
       transition: all 0.2s ease;
+      white-space: nowrap;
     }
     .nav-btn:hover {
       border-color: var(--accent);
@@ -184,6 +188,51 @@
       background: var(--accent);
       color: #ffffff;
       border-color: var(--accent);
+    }
+
+    /* Sub-nav switcher for Play Tools */
+    .tool-switcher-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 6px;
+      backdrop-filter: blur(12px);
+      margin-bottom: 6px;
+    }
+    .tab-pills {
+      display: flex;
+      gap: 4px;
+      flex: 1;
+    }
+    .tab-pill {
+      flex: 1;
+      min-height: 38px;
+      border: 1px solid transparent;
+      border-radius: var(--radius-sm);
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+    .tab-pill:hover {
+      color: var(--text-main);
+      background: var(--bg-surface-elevated);
+    }
+    .tab-pill.active {
+      background: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+      box-shadow: 0 2px 6px -1px rgba(124, 58, 237, 0.4);
     }
 
     /* Connection Status Indicator */
@@ -244,29 +293,51 @@
       margin: 0 auto;
     }
 
-    /* Portrait: stacked rows */
+    /* Workspace panel display modes */
     .panel-workspace {
-      display: grid;
-      grid-template-columns: 1fr;
+      display: flex;
+      flex-direction: column;
       gap: 16px;
       width: 100%;
       flex: 1;
     }
 
-    /* Landscape or wide screens: flexible multi-columns */
-    @media (min-width: 960px) {
-      .panel-workspace.mode-cols-2 {
+    /* Split mode:
+       - Вертикальний екран (Portrait): 2 інструменти горизонтальними смугами (1 колонка / рядками)
+       - Горизонтальний екран (Landscape): 2 інструменти вертикальними колонками (2 колонки поруч)
+    */
+    .panel-workspace.layout-split {
+      display: grid;
+      gap: 16px;
+      width: 100%;
+      grid-template-columns: 1fr;
+    }
+    @media (orientation: landscape) {
+      .panel-workspace.layout-split {
         grid-template-columns: repeat(2, minmax(320px, 1fr));
       }
-      .panel-workspace.mode-cols-3 {
-        grid-template-columns: repeat(3, minmax(320px, 1fr));
+    }
+    @media (min-width: 960px) {
+      .panel-workspace.layout-split {
+        grid-template-columns: repeat(2, minmax(320px, 1fr));
       }
     }
 
-    @media (orientation: landscape) and (min-width: 768px) and (max-width: 959px) {
-      .panel-workspace {
-        grid-template-columns: repeat(2, minmax(320px, 1fr));
-      }
+    /* Single tool mode: full width focus */
+    .panel-workspace.layout-dice #panelScorebook {
+      display: none !important;
+    }
+    .panel-workspace.layout-dice #panelDice {
+      display: flex !important;
+      width: 100%;
+    }
+
+    .panel-workspace.layout-scorebook #panelDice {
+      display: none !important;
+    }
+    .panel-workspace.layout-scorebook #panelScorebook {
+      display: flex !important;
+      width: 100%;
     }
 
     /* Card Panels */
@@ -378,9 +449,15 @@
     /* Dice Component */
     .dice-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-      gap: 10px;
-      padding: 4px 0;
+      grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+      gap: 12px;
+      padding: 6px 0;
+    }
+    @media (max-width: 480px) {
+      .dice-grid {
+        grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
+        gap: 8px;
+      }
     }
 
     .die-card {
@@ -392,7 +469,7 @@
       flex-direction: column;
       align-items: center;
       justify-content: space-between;
-      padding: 6px;
+      padding: 8px 6px;
       cursor: pointer;
       user-select: none;
       transition: all 0.2s ease;
@@ -414,28 +491,42 @@
 
     /* Dot patterns */
     .dot-matrix {
-      width: 44px;
-      height: 44px;
+      width: 50px;
+      height: 50px;
       background: rgba(0, 0, 0, 0.05);
-      border-radius: 8px;
+      border-radius: 10px;
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       grid-template-rows: repeat(3, 1fr);
       gap: 3px;
-      padding: 4px;
+      padding: 5px;
       align-items: center;
       justify-items: center;
     }
+    @media (max-width: 480px) {
+      .dot-matrix {
+        width: 42px;
+        height: 42px;
+        padding: 4px;
+        gap: 2px;
+      }
+    }
     @media (prefers-color-scheme: dark) {
       .dot-matrix {
-        background: rgba(0, 0, 0, 0.3);
+        background: rgba(0, 0, 0, 0.35);
       }
     }
     .matrix-dot {
-      width: 7px;
-      height: 7px;
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
       background: transparent;
+    }
+    @media (max-width: 480px) {
+      .matrix-dot {
+        width: 7px;
+        height: 7px;
+      }
     }
     .matrix-dot.active {
       background: var(--accent);
@@ -443,8 +534,8 @@
     }
 
     .die-num-face {
-      font-size: 22px;
-      font-weight: 800;
+      font-size: 26px;
+      font-weight: 900;
       color: var(--accent);
       font-family: monospace;
       margin: auto 0;
@@ -731,9 +822,6 @@
       <button class="nav-btn" id="viewBtnStore" onclick="App.setView('store')">
         <span>🛒</span> <span data-i18n="navStore">Магазин</span>
       </button>
-      <button class="nav-btn" id="viewBtnPanels" onclick="PanelManager.toggleLayout()" title="Перемкнути вигляд панелей">
-        <span>🔲</span> <span id="layoutLabel">Auto</span>
-      </button>
     </div>
 
     <!-- Status & Language Selector -->
@@ -765,14 +853,28 @@
   <!-- Main Viewport -->
   <main class="main-viewport">
 
-    <!-- PLAY VIEW: MULTI-PANEL WORKSPACE (DICE + SCOREBOOK) -->
-    <section id="viewPlay" class="panel-workspace mode-cols-2">
+    <!-- PLAY VIEW: WORKSPACE WITH TOOL SWITCHER -->
+    <div id="playToolSwitcher" class="tool-switcher-bar">
+      <div class="tab-pills">
+        <button class="tab-pill active" id="tabBtnDice" onclick="PanelManager.setToolMode('dice')">
+          <span>🎲</span> <span data-i18n="tabDice">Кубики</span>
+        </button>
+        <button class="tab-pill" id="tabBtnScorebook" onclick="PanelManager.setToolMode('scorebook')">
+          <span>📊</span> <span data-i18n="tabScore">Очки & Таймер</span>
+        </button>
+        <button class="tab-pill" id="tabBtnSplit" onclick="PanelManager.setToolMode('split')">
+          <span>🔲</span> <span data-i18n="tabBoth">Обидва</span>
+        </button>
+      </div>
+    </div>
+
+    <section id="viewPlay" class="panel-workspace layout-dice">
       
       <!-- PANEL 1: DICE ROLLER -->
       <div class="card-panel" id="panelDice">
         <div class="panel-header">
           <div class="panel-title">
-            <span>🎲</span> <span data-i18n="diceTitle">Dice Roller</span>
+            <span>🎲</span> <span data-i18n="diceTitle">Кубики</span>
           </div>
           <div class="row">
             <button class="btn btn-secondary" style="min-height:34px; padding:0 8px;" onclick="DiceRoller.toggleDisplayMode()" id="diceModeToggleBtn">
@@ -860,7 +962,7 @@
       <div class="card-panel" id="panelScorebook">
         <div class="panel-header">
           <div class="panel-title">
-            <span>📊</span> <span data-i18n="scorebookTitle">Scorebook & Timer</span>
+            <span>📊</span> <span data-i18n="scorebookTitle">Очки & Таймер</span>
           </div>
           <div class="row">
             <span class="text-sm font-mono" style="font-weight:700; color:var(--accent);" id="roundBadge">Раунд 1</span>
@@ -1266,14 +1368,45 @@
     </div>
   </div>
 
-  <!-- 9. DevInfo / Connection Modal -->
+  <!-- 9. DevInfo / Connection & Supabase Config Modal -->
   <div class="modal-overlay" id="devInfoModal">
     <div class="modal-content">
       <div class="modal-header">
-        <h3 class="modal-title">⚙️ Стан системи та синхронізації</h3>
+        <h3 class="modal-title">⚙️ Налаштування бази даних & Стан</h3>
         <button class="btn btn-secondary btn-icon" onclick="App.closeDevInfo()">✕</button>
       </div>
-      <div class="col" style="gap:8px; font-size:13px;">
+      <div class="col" style="gap:10px; font-size:13px;">
+        <div style="background:var(--accent-light); padding:10px; border-radius:var(--radius-md); font-size:12px; line-height:1.4;">
+          <b>💡 Як підключити Supabase:</b>
+          <ol style="margin-left:18px; margin-top:4px;">
+            <li>Зареєструйтесь на <a href="https://supabase.com" target="_blank" style="color:var(--accent); font-weight:700;">supabase.com</a> та створіть проєкт.</li>
+            <li>Відкрийте <b>Project Settings → API</b>.</li>
+            <li>Скопіюйте <b>Project URL</b> (формату <code>https://xxx.supabase.co</code>) та <b>Project API Key (anon/public)</b>.</li>
+            <li>Вставте їх у поля нижче або у файл <code>index.html</code> (константи <code>SUPABASE_URL</code> та <code>SUPABASE_ANON_KEY</code>).</li>
+          </ol>
+        </div>
+
+        <div class="col" style="gap:4px;">
+          <label class="text-sm font-bold">Supabase Project URL:</label>
+          <input type="text" id="supabaseUrlInput" placeholder="https://xxxxxxxxxxxx.supabase.co" class="font-mono" style="font-size:12px;">
+        </div>
+
+        <div class="col" style="gap:4px;">
+          <label class="text-sm font-bold">Supabase Anon Key (public):</label>
+          <input type="text" id="supabaseKeyInput" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6..." class="font-mono" style="font-size:12px;">
+        </div>
+
+        <div class="row">
+          <button class="btn btn-primary flex-1" onclick="App.saveSupabaseConfig()">
+            💾 Зберегти та підключити
+          </button>
+          <button class="btn btn-secondary" onclick="App.clearSupabaseConfig()" title="Очистити і перейти в офлайн">
+            ✕ Очистити
+          </button>
+        </div>
+
+        <hr style="border:none; border-top:1px solid var(--border-color); margin:4px 0;">
+
         <div class="row" style="justify-content:space-between; border-bottom:1px solid var(--border-color); padding-bottom:6px;">
           <span>Мережа браузера:</span>
           <b id="devOnlineState">Online</b>
@@ -1286,9 +1419,9 @@
           <span>Лічильник RPM (запитів / хв):</span>
           <b id="devRpmCounter">0 RPM</b>
         </div>
-        <div class="row" style="justify-content:space-between; border-bottom:1px solid var(--border-color); padding-bottom:6px;">
-          <span>Supabase URL:</span>
-          <span class="font-mono" id="devSupabaseUrl" style="font-size:11px;">(порожньо — Local mode)</span>
+        <div class="row" style="justify-content:space-between;">
+          <span>Активний статус Supabase:</span>
+          <span class="font-mono" id="devSupabaseUrl" style="font-size:11px;">(Local mode)</span>
         </div>
       </div>
     </div>
@@ -1413,11 +1546,16 @@
 
       function initSupabase() {
         try {
-          if (SUPABASE_URL && SUPABASE_ANON_KEY && window.supabase) {
-            supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+          const activeUrl = localStorage.getItem('bgame_supabase_url') || SUPABASE_URL;
+          const activeKey = localStorage.getItem('bgame_supabase_key') || SUPABASE_ANON_KEY;
+          if (activeUrl && activeKey && window.supabase) {
+            supabaseClient = window.supabase.createClient(activeUrl, activeKey);
+          } else {
+            supabaseClient = null;
           }
         } catch (err) {
           console.warn('[DB] Supabase init failed:', err);
+          supabaseClient = null;
         }
       }
 
@@ -1882,7 +2020,8 @@
       const dict = {
         uk: {
           navPlay: "Гра", navStore: "Магазин", navMulti: "Кімнати",
-          diceTitle: "Кубики (Dice Roller)", scorebookTitle: "Очки та Таймер",
+          tabDice: "Кубики", tabScore: "Очки & Таймер", tabBoth: "Обидва",
+          diceTitle: "Кубики", scorebookTitle: "Очки & Таймер",
           rollAll: "Кинути всі", passTurn: "Хід", rerollSelected: "Перекинути",
           colorNone: "Без кольору", colorRed: "Червоний", colorOrange: "Помаранчевий",
           colorGreen: "Зелений", colorBlue: "Синій", colorPurple: "Фіолетовий",
@@ -1901,6 +2040,7 @@
         },
         en: {
           navPlay: "Play", navStore: "Store", navMulti: "Rooms",
+          tabDice: "Dice", tabScore: "Scores & Timer", tabBoth: "Both",
           diceTitle: "Dice Roller", scorebookTitle: "Scorebook & Timer",
           rollAll: "Roll All", passTurn: "Turn", rerollSelected: "Re-roll",
           colorNone: "No color", colorRed: "Red", colorOrange: "Orange",
@@ -3179,14 +3319,57 @@
 
       function init() {
         loadLocalCatalog();
+        syncFromSupabase();
       }
 
       async function loadLocalCatalog() {
         const local = await DB.getLocal('games_catalog');
         if (local && Array.isArray(local)) {
-          catalog.push(...local);
+          // Merge unique by id
+          local.forEach(item => {
+            if (!catalog.some(c => c.id === item.id)) {
+              catalog.push(item);
+            }
+          });
         }
         render();
+      }
+
+      async function syncFromSupabase() {
+        const supabase = DB.getSupabase();
+        if (!supabase) return;
+        try {
+          const { data, error } = await supabase
+            .from('games')
+            .select('*')
+            .eq('is_public', true)
+            .order('created_at', { ascending: false });
+
+          if (!error && data && data.length > 0) {
+            data.forEach(item => {
+              const cfg = item.config || {};
+              const gameObj = {
+                id: item.id || cfg.id,
+                author: item.author_id || cfg.author || 'Автор',
+                title: item.title || cfg.title || 'Гра',
+                description: item.description || cfg.description || '',
+                lang: item.lang || cfg.lang || 'uk',
+                players: cfg.players || { min: 2, max: 6 },
+                tools: cfg.tools || {}
+              };
+              const existingIdx = catalog.findIndex(c => c.id === gameObj.id);
+              if (existingIdx >= 0) {
+                catalog[existingIdx] = gameObj;
+              } else {
+                catalog.unshift(gameObj);
+              }
+            });
+            DB.saveLocal('games_catalog', catalog);
+            render();
+          }
+        } catch (e) {
+          console.warn('[Store] Remote fetch warning:', e);
+        }
       }
 
       function saveLocally(gameConfig) {
@@ -3201,7 +3384,7 @@
         const supabase = DB.getSupabase();
         if (supabase) {
           try {
-            await supabase.from('games').insert([{
+            const { error } = await supabase.from('games').upsert([{
               id: gameConfig.id,
               author_id: gameConfig.author,
               title: gameConfig.title,
@@ -3210,6 +3393,12 @@
               is_public: true,
               lang: gameConfig.lang
             }]);
+            if (error) {
+              console.warn('[Store] Supabase insert error:', error);
+              alert('Збережено локально. Помилка Supabase: ' + (error.message || 'Перевірте RLS або таблицю games'));
+            } else {
+              alert('Гру успішно опубліковано в онлайн базу даних Supabase!');
+            }
           } catch (e) {
             console.warn('[Store] Remote publish fallback to queue:', e);
           }
@@ -3313,44 +3502,40 @@
 
 
     /* ==========================================================================
-       MODULE 12. PanelManager — Multi-Panel Modes (Portrait / Landscape / Columns)
+       MODULE 12. PanelManager — Multi-Panel Modes (Single Dice / Single Scorebook / Split)
        ========================================================================== */
     const PanelManager = (() => {
-      let layoutMode = 'auto'; // 'auto' | 'cols-2' | 'cols-3'
+      let currentMode = localStorage.getItem('bgame_panel_mode') || 'dice'; // 'dice' | 'scorebook' | 'split'
 
-      function toggleLayout() {
-        const workspace = document.getElementById('viewPlay');
-        if (layoutMode === 'auto') {
-          layoutMode = 'cols-2';
-        } else if (layoutMode === 'cols-2') {
-          layoutMode = 'cols-3';
-        } else {
-          layoutMode = 'auto';
-        }
+      function setToolMode(mode) {
+        currentMode = mode;
+        localStorage.setItem('bgame_panel_mode', mode);
         applyLayout();
       }
 
       function applyLayout() {
         const workspace = document.getElementById('viewPlay');
-        const label = document.getElementById('layoutLabel');
         if (!workspace) return;
 
-        workspace.className = 'panel-workspace';
-        if (layoutMode === 'cols-2') {
-          workspace.classList.add('mode-cols-2');
-          if (label) label.innerText = '2 Колонки';
-        } else if (layoutMode === 'cols-3') {
-          workspace.classList.add('mode-cols-3');
-          if (label) label.innerText = '3 Колонки';
-        } else {
-          workspace.classList.add('mode-cols-2');
-          if (label) label.innerText = 'Auto';
-        }
+        workspace.className = 'panel-workspace layout-' + currentMode;
+
+        const tabDice = document.getElementById('tabBtnDice');
+        const tabScore = document.getElementById('tabBtnScorebook');
+        const tabSplit = document.getElementById('tabBtnSplit');
+
+        if (tabDice) tabDice.classList.toggle('active', currentMode === 'dice');
+        if (tabScore) tabScore.classList.toggle('active', currentMode === 'scorebook');
+        if (tabSplit) tabSplit.classList.toggle('active', currentMode === 'split');
+
+        // Trigger resize renders
+        DiceRoller.render();
+        Scorebook.render();
       }
 
       return {
-        toggleLayout,
-        applyLayout
+        setToolMode,
+        applyLayout,
+        getMode: () => currentMode
       };
     })();
 
@@ -3383,19 +3568,32 @@
 
       function setView(view) {
         currentView = view;
-        document.getElementById('viewPlay').style.display = view === 'play' ? 'grid' : 'none';
+        const playSwitcher = document.getElementById('playToolSwitcher');
+        if (playSwitcher) playSwitcher.style.display = view === 'play' ? 'flex' : 'none';
+
+        document.getElementById('viewPlay').style.display = view === 'play' ? (PanelManager.getMode() === 'split' ? 'grid' : 'flex') : 'none';
         document.getElementById('viewStore').style.display = view === 'store' ? 'flex' : 'none';
-        document.getElementById('viewMultiplayer').style.display = view === 'multiplayer' ? 'flex' : 'none';
+        const multiView = document.getElementById('viewMultiplayer');
+        if (multiView) multiView.style.display = view === 'multiplayer' ? 'flex' : 'none';
 
         document.getElementById('viewBtnPlay').classList.toggle('active', view === 'play');
         document.getElementById('viewBtnStore').classList.toggle('active', view === 'store');
-        document.getElementById('viewBtnMulti').classList.toggle('active', view === 'multiplayer');
+
+        if (view === 'play') {
+          PanelManager.applyLayout();
+        }
       }
 
       function showDevInfo() {
         document.getElementById('devOnlineState').innerText = navigator.onLine ? 'Online' : 'Offline';
         document.getElementById('devRpmCounter').innerText = `${SyncEngine.getRpm()} RPM`;
-        document.getElementById('devSupabaseUrl').innerText = SUPABASE_URL ? SUPABASE_URL : '(порожньо — Local mode)';
+        
+        const activeUrl = localStorage.getItem('bgame_supabase_url') || SUPABASE_URL;
+        const activeKey = localStorage.getItem('bgame_supabase_key') || SUPABASE_ANON_KEY;
+        document.getElementById('supabaseUrlInput').value = activeUrl || '';
+        document.getElementById('supabaseKeyInput').value = activeKey || '';
+
+        document.getElementById('devSupabaseUrl').innerText = activeUrl ? activeUrl : '(Local mode)';
         DB.getQueue().then(q => {
           document.getElementById('devSyncQueueCount').innerText = `${q.length} подій`;
         });
@@ -3406,11 +3604,37 @@
         document.getElementById('devInfoModal').classList.remove('open');
       }
 
+      function saveSupabaseConfig() {
+        const url = document.getElementById('supabaseUrlInput').value.trim();
+        const key = document.getElementById('supabaseKeyInput').value.trim();
+        if (url) {
+          localStorage.setItem('bgame_supabase_url', url);
+        } else {
+          localStorage.removeItem('bgame_supabase_url');
+        }
+        if (key) {
+          localStorage.setItem('bgame_supabase_key', key);
+        } else {
+          localStorage.removeItem('bgame_supabase_key');
+        }
+        alert('Ключі збережено! Сторінка зараз перезавантажиться для підключення.');
+        window.location.reload();
+      }
+
+      function clearSupabaseConfig() {
+        localStorage.removeItem('bgame_supabase_url');
+        localStorage.removeItem('bgame_supabase_key');
+        alert('Ключі очищено! Повернення до 100% локального режиму.');
+        window.location.reload();
+      }
+
       return {
         init,
         setView,
         showDevInfo,
-        closeDevInfo
+        closeDevInfo,
+        saveSupabaseConfig,
+        clearSupabaseConfig
       };
     })();
 
