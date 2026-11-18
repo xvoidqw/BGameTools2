@@ -1,9 +1,9 @@
-const CACHE_NAME = 'bgame-tools-v1';
+const CACHE_NAME = 'bgame-tools-v2';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
   './manifest.json',
-  'https://cdnjs.cloudflare.com/ajax/libs/supabase-js/2.39.8/supabase.min.js'
+  'https://cdnjs.cloudflare.com/ajax/libs/supabase-js/2.39.3/umd/supabase.min.js'
 ];
 
 self.addEventListener('install', (event) => {
@@ -31,9 +31,7 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  // We handle cache-first strategy for local assets & CDN scripts
   if (event.request.method !== 'GET') return;
-
   const url = new URL(event.request.url);
 
   // If supabase API request, pass through network
@@ -44,7 +42,6 @@ self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) {
-        // Fetch in background to update cache (stale-while-revalidate or cache-first)
         fetch(event.request).then((networkResponse) => {
           if (networkResponse && networkResponse.status === 200) {
             caches.open(CACHE_NAME).then((cache) => {
