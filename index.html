@@ -48,6 +48,11 @@
       }
     }
 
+    /* Support CJK fonts for JA, ZH, KO without external downloads */
+    :lang(ja), :lang(zh), :lang(ko) {
+      font-family: 'Noto Sans CJK', 'Noto Sans', system-ui, -apple-system, sans-serif;
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
@@ -148,97 +153,147 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      flex-wrap: nowrap;
     }
 
-    .nav-btn {
-      min-height: 44px;
-      padding: 0 12px;
+    .tool-switcher-group {
+      display: flex;
+      align-items: center;
+      background: var(--bg-main);
+      padding: 3px;
       border-radius: var(--radius-sm);
       border: 1px solid var(--border);
-      background: var(--bg-surface);
-      color: var(--text-main);
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      transition: all 0.2s ease;
-      white-space: nowrap;
-    }
-    .nav-btn:hover {
-      border-color: var(--accent);
-      color: var(--accent);
-    }
-    .nav-btn.active {
-      background: var(--accent);
-      color: #ffffff;
-      border-color: var(--accent);
     }
 
-    /* Tool switch bar */
-    .tool-switcher-bar {
+    .tool-tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 6px 10px;
+      border-radius: 7px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+    }
+    .tool-tab-btn:hover {
+      color: var(--text-main);
+    }
+    .tool-tab-btn.active {
+      background: var(--bg-surface);
+      color: var(--accent);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    }
+
+    .lang-selector {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      color: var(--text-main);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 6px;
+      border-radius: var(--radius-sm);
+      outline: none;
+      cursor: pointer;
+    }
+
+    /* Main Workspace Layout */
+    main.main-content {
+      flex: 1;
+      padding: 12px;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .panel-workspace {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      width: 100%;
+    }
+
+    .panel-workspace.layout-dice #panelDice {
+      display: flex !important;
+      flex: 1;
+    }
+    .panel-workspace.layout-dice #panelScorebook {
+      display: none !important;
+    }
+
+    .panel-workspace.layout-scorebook #panelDice {
+      display: none !important;
+    }
+    .panel-workspace.layout-scorebook #panelScorebook {
+      display: flex !important;
+      flex: 1;
+    }
+
+    .panel-workspace.layout-split {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    .panel-workspace.layout-split #panelDice,
+    .panel-workspace.layout-split #panelScorebook {
+      display: flex !important;
+    }
+
+    /* Landscape or wide screens >= 768px in split mode: 2 columns */
+    @media (orientation: landscape), (min-width: 768px) {
+      .panel-workspace.layout-split {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    /* Card Panels */
+    .card-panel {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: var(--shadow);
+    }
+
+    .card-panel-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 8px;
-      background: var(--bg-surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 6px;
-      margin-bottom: 8px;
-    }
-    .tab-pills {
-      display: flex;
-      gap: 6px;
-      flex: 1;
-    }
-    .tab-pill {
-      flex: 1;
-      min-height: 44px;
-      border: 1px solid transparent;
-      border-radius: var(--radius-sm);
-      background: transparent;
-      color: var(--text-muted);
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      transition: all 0.2s ease;
-    }
-    .tab-pill:hover {
-      color: var(--text-main);
-      background: var(--bg-main);
-    }
-    .tab-pill.active {
-      background: var(--accent);
-      color: #ffffff;
-      border-color: var(--accent);
+      flex-wrap: wrap;
     }
 
-    /* Common Buttons & Inputs */
+    .panel-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Buttons */
     .btn {
-      min-height: 44px;
-      padding: 8px 16px;
-      border-radius: var(--radius-sm);
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
       border: 1px solid transparent;
-      transition: all 0.2s ease;
+      transition: all 0.15s ease;
+      white-space: nowrap;
       user-select: none;
-    }
-    .btn:hover {
-      opacity: 0.92;
+      min-height: 38px;
     }
     .btn:active {
       transform: scale(0.97);
@@ -247,136 +302,59 @@
       background: var(--accent);
       color: #ffffff;
     }
+    .btn-primary:hover {
+      background: var(--accent-hover);
+    }
     .btn-secondary {
-      background: var(--bg-surface);
+      background: var(--bg-main);
       color: var(--text-main);
-      border: 1px solid var(--border);
+      border-color: var(--border);
     }
     .btn-secondary:hover {
+      background: var(--border);
+    }
+    .btn-secondary.active {
+      background: var(--accent-light);
       border-color: var(--accent);
+      color: var(--accent);
     }
     .btn-danger {
       background: var(--danger-light);
       color: var(--danger);
-      border: 1px solid var(--danger);
+      border-color: transparent;
     }
     .btn-danger:hover {
       background: var(--danger);
       color: #ffffff;
     }
     .btn-icon {
-      width: 44px;
-      min-width: 44px;
       padding: 0;
-    }
-
-    input, select, textarea {
-      font-family: inherit;
-      background: var(--bg-surface);
-      border: 1px solid var(--border);
-      color: var(--text-main);
+      width: 38px;
+      height: 38px;
       border-radius: var(--radius-sm);
-      padding: 8px 12px;
-      font-size: 13px;
-      outline: none;
-      transition: border-color 0.2s ease;
-      min-height: 44px;
-    }
-    input:focus, select:focus, textarea:focus {
-      border-color: var(--accent);
     }
 
-    /* Main Container & Multi-panel Layout */
-    main.main-viewport {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      padding: 12px;
-      gap: 12px;
-      max-width: 1400px;
-      width: 100%;
-      margin: 0 auto;
-    }
+    /* Common Flex Helpers */
+    .row { display: flex; align-items: center; gap: 8px; }
+    .col { display: flex; flex-direction: column; gap: 8px; }
+    .flex-1 { flex: 1; }
+    .font-mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+    .text-sm { font-size: 12px; }
+    .text-muted { color: var(--text-muted); }
+    .font-bold { font-weight: 700; }
 
-    .panel-workspace {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-      width: 100%;
-      flex: 1;
-    }
-
-    /* Multi-panel split mode:
-       Portrait: rows (stacked)
-       Landscape or >= 768px: columns */
-    .panel-workspace.layout-split {
-      display: grid;
-      gap: 16px;
-      width: 100%;
-      grid-template-columns: 1fr;
-    }
-    @media (orientation: landscape), (min-width: 768px) {
-      .panel-workspace.layout-split {
-        grid-template-columns: repeat(2, minmax(320px, 1fr));
-      }
-    }
-
-    .panel-workspace.layout-dice #panelScorebook { display: none !important; }
-    .panel-workspace.layout-dice #panelDice { display: flex !important; width: 100%; }
-
-    .panel-workspace.layout-scorebook #panelDice { display: none !important; }
-    .panel-workspace.layout-scorebook #panelScorebook { display: flex !important; width: 100%; }
-
-    /* Card Panels */
-    .card-panel {
-      background: var(--bg-surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      box-shadow: var(--shadow);
-      min-width: 320px;
-      position: relative;
-    }
-
-    .panel-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 8px;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 10px;
-    }
-    .panel-title {
-      font-size: 14px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--accent);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    /* Dice grid & Cards */
+    /* Dice Grid & Dice Components */
     .dice-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-      gap: 12px;
-      padding: 4px 0;
-    }
-    @media (max-width: 480px) {
-      .dice-grid {
-        grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
-        gap: 8px;
-      }
+      grid-template-columns: repeat(auto-fill, minmax(78px, 1fr));
+      gap: 10px;
+      width: 100%;
+      min-height: 100px;
     }
 
     .die-card {
       aspect-ratio: 1;
-      background: var(--bg-surface);
+      background: var(--bg-main);
       border: 2px solid var(--border);
       border-radius: var(--radius);
       display: flex;
@@ -385,169 +363,170 @@
       justify-content: space-between;
       padding: 6px;
       cursor: pointer;
-      user-select: none;
-      transition: all 0.2s ease;
       position: relative;
+      transition: all 0.15s ease;
+      user-select: none;
     }
     .die-card:hover {
       border-color: var(--accent);
-      transform: translateY(-2px);
     }
     .die-card.selected {
       border-color: var(--accent);
       background: var(--accent-light);
-      box-shadow: 0 0 10px rgba(124, 58, 237, 0.4);
+      box-shadow: 0 0 0 2px var(--accent);
     }
     .die-card.recently-rolled {
-      border-color: var(--accent);
-      box-shadow: 0 0 14px 2px rgba(124, 58, 237, 0.5);
+      animation: pulseGlow 0.4s ease-out;
     }
 
+    /* Dice Colors */
+    .die-card.die-red { border-color: #ef4444; }
+    .die-card.die-orange { border-color: #f97316; }
+    .die-card.die-green { border-color: #10b981; }
+    .die-card.die-blue { border-color: #0ea5e9; }
+    .die-card.die-purple { border-color: #a855f7; }
+
+    /* Dot Matrix for 3x3 D6/D9 */
     .dot-matrix {
-      width: 48px;
-      height: 48px;
-      background: rgba(0, 0, 0, 0.04);
-      border-radius: var(--radius-sm);
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       grid-template-rows: repeat(3, 1fr);
-      gap: 3px;
-      padding: 4px;
-      align-items: center;
-      justify-items: center;
-    }
-    @media (prefers-color-scheme: dark) {
-      .dot-matrix {
-        background: rgba(0, 0, 0, 0.3);
-      }
+      gap: 4px;
+      width: 44px;
+      height: 44px;
+      margin: auto;
+      pointer-events: none;
     }
     .matrix-dot {
-      width: 8px;
-      height: 8px;
+      width: 9px;
+      height: 9px;
       border-radius: 50%;
       background: transparent;
+      margin: auto;
+      transition: background 0.1s ease;
     }
     .matrix-dot.active {
+      background: var(--text-main);
+    }
+    .die-card.selected .matrix-dot.active {
       background: var(--accent);
-      box-shadow: 0 0 4px var(--accent);
     }
 
     .die-num-face {
       font-size: 26px;
-      font-weight: 800;
-      color: var(--accent);
-      font-family: monospace;
-      margin: auto 0;
+      font-weight: 900;
+      font-family: var(--font-family);
+      line-height: 1;
     }
 
-    /* Die Colors */
-    .die-red { border-color: #ef4444 !important; }
-    .die-red .matrix-dot.active { background: #ef4444 !important; }
-    .die-orange { border-color: #f97316 !important; }
-    .die-orange .matrix-dot.active { background: #f97316 !important; }
-    .die-green { border-color: #10b981 !important; }
-    .die-green .matrix-dot.active { background: #10b981 !important; }
-    .die-blue { border-color: #0ea5e9 !important; }
-    .die-blue .matrix-dot.active { background: #0ea5e9 !important; }
-    .die-purple { border-color: #a855f7 !important; }
-    .die-purple .matrix-dot.active { background: #a855f7 !important; }
+    /* Popover for group colors */
+    .color-popover {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      z-index: 40;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 6px;
+      display: flex;
+      gap: 6px;
+      box-shadow: var(--shadow);
+      margin-top: 4px;
+    }
+    .color-dot-btn {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      cursor: pointer;
+    }
 
-    /* Scorebook & Players Grid */
+    /* Scorebook Timer Display */
+    .timer-hero-container {
+      background: var(--bg-main);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      position: relative;
+      overflow: hidden;
+    }
+    .timer-progress-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 4px;
+      background: var(--accent);
+      transition: width 0.2s linear;
+    }
+    .timer-clock {
+      font-size: 52px;
+      font-weight: 900;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      color: var(--text-main);
+    }
+    .timer-player-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    /* Players Grid & Cards */
     .players-grid-container {
       display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      max-height: 520px;
-      overflow-y: auto;
-      padding-right: 4px;
-    }
-    @media (min-width: 768px) {
-      .players-grid-container {
-        grid-template-columns: repeat(4, 1fr);
-      }
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 12px;
     }
 
     .player-card {
       background: var(--bg-surface);
       border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 10px;
+      border-radius: var(--radius);
+      padding: 12px;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      gap: 8px;
-      transition: all 0.2s ease;
+      gap: 10px;
+      position: relative;
+      transition: all 0.15s ease;
+      box-shadow: var(--shadow);
     }
     .player-card.active-turn {
       border-color: var(--accent);
-      box-shadow: 0 0 0 2px var(--accent-light);
+      box-shadow: 0 0 0 2px var(--accent);
     }
     .player-card-header {
       display: flex;
-      flex-direction: column;
-      gap: 4px;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 6px;
+      align-items: center;
+      justify-content: space-between;
     }
     .player-card-name {
-      font-size: 13px;
-      font-weight: 700;
+      font-size: 15px;
+      font-weight: 800;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
     .player-card-score {
-      font-size: 20px;
+      font-size: 26px;
       font-weight: 900;
-      font-family: monospace;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
       color: var(--accent);
-      text-align: right;
-    }
-    .player-card-actions {
-      display: flex;
-      gap: 6px;
-      align-items: center;
-    }
-
-    /* Timer Widget */
-    .timer-widget {
-      background: var(--bg-surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      padding: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      align-items: center;
-    }
-    .timer-digits {
-      font-family: monospace;
-      font-size: 32px;
-      font-weight: 900;
-      color: var(--text-main);
-      letter-spacing: -0.02em;
-    }
-    .timer-bar-wrap {
-      width: 100%;
-      height: 6px;
-      background: var(--border);
-      border-radius: 9999px;
-      overflow: hidden;
-    }
-    .timer-bar-fill {
-      height: 100%;
-      width: 100%;
-      background: var(--accent);
-      transition: width 1s linear;
+      line-height: 1;
     }
 
     /* Modals */
     .modal-overlay {
       position: fixed;
       inset: 0;
+      z-index: 100;
       background: rgba(0, 0, 0, 0.6);
       backdrop-filter: blur(4px);
-      z-index: 100;
       display: none;
       align-items: center;
       justify-content: center;
@@ -560,241 +539,264 @@
       background: var(--bg-surface);
       border: 1px solid var(--border);
       border-radius: var(--radius);
-      max-width: 520px;
       width: 100%;
-      max-height: 90vh;
-      overflow-y: auto;
-      padding: 20px;
+      max-width: 480px;
+      padding: 18px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
-      box-shadow: var(--shadow);
+      gap: 14px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+      animation: pulseGlow 0.25s ease-out;
     }
     .modal-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid var(--border);
-      padding-bottom: 10px;
+      gap: 8px;
     }
     .modal-title {
       font-size: 16px;
       font-weight: 800;
-      color: var(--text-main);
     }
 
-    /* Helpers */
-    .row { display: flex; align-items: center; gap: 8px; }
-    .col { display: flex; flex-direction: column; gap: 8px; }
-    .flex-1 { flex: 1; }
-    .text-sm { font-size: 12px; }
-    .text-muted { color: var(--text-muted); }
-    .font-mono { font-family: monospace; }
+    input[type="text"], input[type="number"], select, textarea {
+      background: var(--bg-surface);
+      color: var(--text-main);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 8px 10px;
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--accent);
+    }
   </style>
 </head>
 <body>
 
-  <!-- Header Navigation -->
+  <!-- App Header -->
   <header class="app-header">
     <div class="brand-group" onclick="App.setView('play')">
       <span class="brand-icon">🎲</span>
       <span class="brand-title">Board Game Tools</span>
     </div>
 
-    <!-- Active Panels / View Mode -->
-    <div class="header-nav">
-      <button class="nav-btn active" id="viewBtnPlay" onclick="App.setView('play')">
-        <span>🎮</span> <span data-i18n="navPlay">Гра</span>
+    <!-- Play Sub-tool Switcher -->
+    <div id="playToolSwitcher" class="tool-switcher-group">
+      <button onclick="PanelManager.setToolMode('dice')" id="tabBtnDice" class="tool-tab-btn active">
+        <span>🎲</span> <span data-i18n="tabDice">Кубики</span>
       </button>
-      <button class="nav-btn" id="viewBtnStore" onclick="App.setView('store')">
-        <span>🛒</span> <span data-i18n="navStore">Магазин</span>
+      <button onclick="PanelManager.setToolMode('scorebook')" id="tabBtnScorebook" class="tool-tab-btn">
+        <span>📊</span> <span data-i18n="tabScore">Очки & Таймер</span>
+      </button>
+      <button onclick="PanelManager.setToolMode('split')" id="tabBtnSplit" class="tool-tab-btn">
+        <span>🔲</span> <span data-i18n="tabBoth">Обидва</span>
       </button>
     </div>
 
-    <!-- Controls -->
+    <!-- Right Controls: View Switcher & Language -->
     <div class="header-nav">
-      <select id="langSelect" onchange="i18n.setLanguage(this.value)" style="min-height:44px; padding:4px 8px; font-weight:700;">
-        <option value="uk">UK 🇺🇦</option>
-        <option value="en">EN 🇬🇧</option>
+      <button onclick="App.setView('play')" id="viewBtnPlay" class="btn btn-secondary active text-sm" style="min-height:32px; padding:0 10px;" data-i18n="navPlay">
+        Гра
+      </button>
+      <button onclick="App.setView('store')" id="viewBtnStore" class="btn btn-secondary text-sm" style="min-height:32px; padding:0 10px;" data-i18n="navStore">
+        Магазин
+      </button>
+      <select id="langSelect" class="lang-selector" onchange="i18n.setLanguage(this.value)">
+        <option value="uk">🇺🇦 UK</option>
+        <option value="en">🇬🇧 EN</option>
+        <option value="es">🇪🇸 ES</option>
+        <option value="de">🇩🇪 DE</option>
+        <option value="fr">🇫🇷 FR</option>
+        <option value="it">🇮🇹 IT</option>
+        <option value="pl">🇵🇱 PL</option>
+        <option value="pt">🇧🇷 PT</option>
+        <option value="tr">🇹🇷 TR</option>
+        <option value="ja">🇯🇵 JA</option>
+        <option value="zh">🇨🇳 ZH</option>
+        <option value="ko">🇰🇷 KO</option>
       </select>
     </div>
   </header>
 
-  <!-- Main Viewport -->
-  <main class="main-viewport">
+  <!-- Main View Area -->
+  <main class="main-content">
 
     <!-- PLAY VIEW -->
-    <div id="playToolSwitcher" class="tool-switcher-bar">
-      <div class="tab-pills">
-        <button class="tab-pill active" id="tabBtnDice" onclick="PanelManager.setToolMode('dice')">
-          <span>🎲</span> <span data-i18n="tabDice">Кубики</span>
-        </button>
-        <button class="tab-pill" id="tabBtnScorebook" onclick="PanelManager.setToolMode('scorebook')">
-          <span>📊</span> <span data-i18n="tabScore">Очки & Таймер</span>
-        </button>
-        <button class="tab-pill" id="tabBtnSplit" onclick="PanelManager.setToolMode('split')">
-          <span>🔲</span> <span data-i18n="tabBoth">Обидва</span>
-        </button>
-      </div>
-    </div>
-
     <section id="viewPlay" class="panel-workspace layout-dice">
-      
-      <!-- PANEL 1: DICE ROLLER -->
-      <div class="card-panel" id="panelDice">
-        <div class="panel-header">
+
+      <!-- ====================================================================
+           PANEL 1: DICE ROLLER
+           ==================================================================== -->
+      <div id="panelDice" class="card-panel">
+        <div class="card-panel-header">
           <div class="panel-title">
-            <span>🎲</span> <span data-i18n="diceTitle">Кубики</span>
+            <span id="diceModeIcon">🎲</span>
+            <span data-i18n="diceTitle">Кубики</span>
           </div>
-          <div class="row">
-            <button class="btn btn-secondary" style="min-height:36px; padding:0 10px;" onclick="DiceRoller.toggleVisualMode()" id="diceModeToggleBtn">
-              <span id="diceModeIcon">🎲</span> <span id="diceModeLabel">Крапки</span>
-            </button>
-            <button class="btn btn-secondary btn-icon" style="min-height:36px; width:36px;" onclick="DiceRoller.toggleFormulaModal()" title="Формули">
-              📐
-            </button>
-            <button class="btn btn-secondary btn-icon" style="min-height:36px; width:36px;" onclick="DiceRoller.toggleHistoryModal()" title="Історія дій">
-              📜
-            </button>
-            <button class="btn btn-secondary btn-icon" style="min-height:36px; width:36px;" onclick="DiceRoller.toggleSettingsModal()" title="Налаштування кубика">
-              ⚙️
-            </button>
-          </div>
-        </div>
 
-        <!-- Top Control Bar (Select all & Group actions) -->
-        <div class="row" style="justify-content: space-between; flex-wrap: wrap;">
+          <!-- Controls: Mode toggle, Count selector, Reset -->
           <div class="row">
-            <button class="btn btn-secondary btn-icon" onclick="DiceRoller.toggleSelectAll()" id="selectAllBtn" title="Виділити все">
-              ☑️
+            <button onclick="DiceRoller.toggleVisualMode()" class="btn btn-secondary text-sm" style="min-height:34px; padding:0 10px;" title="Змінити відображення (крапки/цифри)">
+              <span id="diceModeLabel" data-i18n="dots">Крапки</span>
             </button>
-            <div id="selectedActionContainer" style="display:none;" class="row">
-              <button class="btn btn-secondary" onclick="DiceRoller.toggleGroupColorPicker()" id="groupColorBtn">
-                🎨 <span data-i18n="color">Колір</span>
-              </button>
-              <button class="btn btn-primary" onclick="DiceRoller.rollSelectedDice()" id="rollSelectedBtn">
-                <span id="selectedCountBadge" style="background:rgba(255,255,255,0.25); padding:2px 6px; border-radius:6px; font-size:11px;">0</span>
-                <span data-i18n="rerollSelected">Перекинути</span>
-              </button>
+
+            <!-- Dice Count Stepper with input (1-20) -->
+            <div class="row" style="gap:2px; background:var(--bg-main); padding:2px; border-radius:var(--radius-sm); border:1px solid var(--border);">
+              <button onclick="DiceRoller.adjustDiceCount(-1)" class="btn btn-secondary" style="min-height:30px; width:30px; padding:0; font-weight:800;">−</button>
+              <input type="number" id="diceCountInput" min="1" max="20" value="1" style="width:48px; text-align:center; font-weight:800; font-size:15px; font-family:monospace; border:none; background:transparent; padding:0;" onchange="DiceRoller.setDiceCount(parseInt(this.value))">
+              <button onclick="DiceRoller.adjustDiceCount(1)" class="btn btn-secondary" style="min-height:30px; width:30px; padding:0; font-weight:800;">+</button>
             </div>
+
+            <!-- Reset Dice Button -->
+            <button onclick="DiceRoller.resetDice()" class="btn btn-secondary btn-icon" style="height:34px; width:34px;" title="Скинути всі кубики">
+              🗑️
+            </button>
           </div>
+        </div>
 
-          <div class="row">
-            <span class="text-sm text-muted">Формула:</span>
-            <span id="formulaResultValue" class="font-mono" style="font-weight:800; color:var(--accent); font-size:15px;">0</span>
+        <!-- Player Turn Banner (if active) -->
+        <div id="playerTurnBanner" style="display:none; background:var(--accent-light); padding:8px 12px; border-radius:var(--radius-sm); border-left:4px solid var(--accent);">
+          <div class="row" style="justify-content:space-between;">
+            <div class="row">
+              <span style="font-size:14px;">👤</span>
+              <span class="text-sm font-bold" data-i18n="currentTurn">Хід гравця</span>:
+              <b id="activePlayerNameDisplay" style="color:var(--accent);">Гравець 1</b>
+            </div>
+            <button onclick="DiceRoller.passTurn()" id="passTurnBtn" class="btn btn-secondary text-sm" style="min-height:28px; padding:0 8px;" data-i18n="passTurn">
+              Хід ➡️
+            </button>
           </div>
         </div>
 
-        <!-- Group Color Popover -->
-        <div id="groupColorPopover" style="display:none; gap:6px; background:var(--bg-surface); border:1px solid var(--border); padding:8px; border-radius:var(--radius-sm);" class="row">
-          <button onclick="DiceRoller.setGroupColor(null)" class="btn btn-secondary btn-icon" style="height:32px; width:32px;">✕</button>
-          <button onclick="DiceRoller.setGroupColor('red')" style="background:#ef4444; width:32px; height:32px; border-radius:8px; border:none; cursor:pointer;"></button>
-          <button onclick="DiceRoller.setGroupColor('orange')" style="background:#f97316; width:32px; height:32px; border-radius:8px; border:none; cursor:pointer;"></button>
-          <button onclick="DiceRoller.setGroupColor('green')" style="background:#10b981; width:32px; height:32px; border-radius:8px; border:none; cursor:pointer;"></button>
-          <button onclick="DiceRoller.setGroupColor('blue')" style="background:#0ea5e9; width:32px; height:32px; border-radius:8px; border:none; cursor:pointer;"></button>
-          <button onclick="DiceRoller.setGroupColor('purple')" style="background:#a855f7; width:32px; height:32px; border-radius:8px; border:none; cursor:pointer;"></button>
-        </div>
-
-        <!-- Active Player Turn Banner -->
-        <div id="playerTurnBanner" style="display:none; text-align:center; padding:4px; font-size:12px; font-weight:700;">
-          <span data-i18n="currentTurn">Хід гравця</span>: <b id="activePlayerNameDisplay" style="color:var(--accent);">-</b>
-        </div>
-
-        <!-- Dice Grid -->
+        <!-- Dice Grid Container -->
         <div class="dice-grid" id="diceGrid">
           <!-- Populated by DiceRoller.renderAll() -->
         </div>
 
-        <!-- Bottom Navigation Controls -->
-        <div class="row" style="margin-top:auto; gap:8px; justify-content:space-between; flex-wrap:wrap;">
-          <!-- Stepper with Number Input (Min 1, Max 20) -->
-          <div class="row" style="background:var(--bg-main); border:1px solid var(--border); border-radius:var(--radius-sm); padding:2px;">
-            <button class="btn btn-secondary btn-icon" style="min-height:38px; width:38px;" onclick="DiceRoller.adjustDiceCount(-1)">−</button>
-            <input type="number" id="diceCountInput" min="1" max="20" value="1"
-              style="width:48px; text-align:center; font-weight:800; font-size:15px; font-family:monospace; border:none; background:transparent; min-height:38px;"
-              onchange="DiceRoller.setDiceCount(parseInt(this.value))"
-              oninput="DiceRoller.setDiceCount(parseInt(this.value))">
-            <button class="btn btn-secondary btn-icon" style="min-height:38px; width:38px;" onclick="DiceRoller.adjustDiceCount(1)">+</button>
+        <!-- Floating Multi-Select Toolbar -->
+        <div id="selectedActionContainer" style="display:none; align-items:center; justify-content:space-between; background:var(--bg-main); border:1px solid var(--border); padding:8px 12px; border-radius:var(--radius-sm); margin-top:4px;">
+          <div class="row">
+            <span class="text-sm font-bold">Вибрано:</span>
+            <span id="selectedCountBadge" style="background:var(--accent); color:#fff; border-radius:9999px; padding:2px 8px; font-size:11px; font-weight:800;">0</span>
           </div>
+          <div class="row" style="position:relative;">
+            <button onclick="DiceRoller.rollSelectedDice()" class="btn btn-primary text-sm" style="min-height:32px; padding:0 10px;" data-i18n="rerollSelected">
+              Перекинути
+            </button>
+            <button onclick="DiceRoller.toggleGroupColorPicker()" class="btn btn-secondary text-sm" style="min-height:32px; padding:0 10px;" data-i18n="color">
+              🎨 Колір
+            </button>
+            <!-- Color Palette Dropdown -->
+            <div id="groupColorPopover" class="color-popover" style="display:none;">
+              <button onclick="DiceRoller.setGroupColor(null)" class="color-dot-btn" style="background:var(--bg-surface); line-height:20px; font-size:10px;">✕</button>
+              <button onclick="DiceRoller.setGroupColor('red')" class="color-dot-btn" style="background:#ef4444;"></button>
+              <button onclick="DiceRoller.setGroupColor('orange')" class="color-dot-btn" style="background:#f97316;"></button>
+              <button onclick="DiceRoller.setGroupColor('green')" class="color-dot-btn" style="background:#10b981;"></button>
+              <button onclick="DiceRoller.setGroupColor('blue')" class="color-dot-btn" style="background:#0ea5e9;"></button>
+              <button onclick="DiceRoller.setGroupColor('purple')" class="color-dot-btn" style="background:#a855f7;"></button>
+            </div>
+          </div>
+        </div>
 
-          <button class="btn btn-primary flex-1" id="rollBtn" onclick="DiceRoller.rollAllDice()" style="font-size:15px;">
-            <span>🎲</span> <span data-i18n="roll1">Кинути</span> <span data-i18n="roll2">Всі</span>
+        <!-- Dice Bottom Controls: Roll Button + Extra Actions -->
+        <div class="row" style="gap:8px; margin-top:4px;">
+          <button id="rollBtn" onclick="DiceRoller.rollAllDice()" class="btn btn-primary flex-1" style="min-height:48px; font-size:16px; font-weight:900; letter-spacing:0.02em;">
+            <span data-i18n="roll1">Кинути</span> (<span data-i18n="roll2">Всі</span>) 🎲
           </button>
+          <button onclick="DiceRoller.toggleSelectAll()" id="selectAllBtn" class="btn btn-secondary btn-icon" style="height:48px; width:48px;" title="Виділити все">
+            ☑️
+          </button>
+          <button onclick="DiceRoller.toggleFormulaModal()" class="btn btn-secondary btn-icon" style="height:48px; width:48px;" title="Математична формула">
+            fx
+          </button>
+          <button onclick="DiceRoller.toggleHistoryModal()" class="btn btn-secondary btn-icon" style="height:48px; width:48px;" title="Історія дій">
+            📜
+          </button>
+          <button onclick="DiceRoller.toggleSettingsModal()" class="btn btn-secondary btn-icon" style="height:48px; width:48px;" title="Налаштування кубика">
+            ⚙️
+          </button>
+        </div>
 
-          <button class="btn btn-secondary" id="passTurnBtn" style="display:none;" onclick="DiceRoller.passTurn()" title="Передати хід">
-            🔄 <span data-i18n="passTurn">Хід</span>
-          </button>
-
-          <button class="btn btn-secondary btn-icon" onclick="DiceRoller.resetDice()" title="Скинути кубики" style="color:var(--danger);">
-            🗑️
-          </button>
+        <!-- Formula Result Footer Bar (if expression present) -->
+        <div id="formulaResultBar" class="row" style="justify-content:space-between; background:var(--bg-main); padding:8px 12px; border-radius:var(--radius-sm); border:1px solid var(--border);">
+          <span class="text-sm font-bold" data-i18n="calcResult">Результат:</span>
+          <span id="formulaResultValue" class="font-mono" style="font-weight:900; color:var(--accent); font-size:16px;">0</span>
         </div>
       </div>
 
-      <!-- PANEL 2: SCOREBOOK & TIMER -->
-      <div class="card-panel" id="panelScorebook">
-        <div class="panel-header">
+      <!-- ====================================================================
+           PANEL 2: SCOREBOOK & TIMER
+           ==================================================================== -->
+      <div id="panelScorebook" class="card-panel">
+        <div class="card-panel-header">
           <div class="panel-title">
-            <span>📊</span> <span data-i18n="scorebookTitle">Очки & Таймер</span>
+            <span>📊</span>
+            <span data-i18n="scorebookTitle">Очки & Таймер</span>
           </div>
+
           <div class="row">
-            <span class="text-sm font-mono" style="font-weight:700; color:var(--accent);" id="currentRoundDisplay">Раунд 1</span>
-            <button class="btn btn-secondary btn-icon" style="min-height:36px; width:36px;" onclick="Scorebook.toggleRoundHistoryModal()" title="Історія раундів">
-              🏆
+            <span id="currentRoundDisplay" class="font-bold text-sm" style="background:var(--accent-light); color:var(--accent); padding:4px 8px; border-radius:var(--radius-sm);">
+              Раунд 1
+            </span>
+            <button onclick="Scorebook.finishRound()" class="btn btn-secondary text-sm" style="min-height:32px; padding:0 8px;" data-i18n="finishRound">
+              Завершити
             </button>
-            <button class="btn btn-secondary btn-icon" style="min-height:36px; width:36px;" onclick="Scorebook.toggleGlobalHistoryModal()" title="Глобальна історія">
-              📜
+            <button onclick="Scorebook.toggleRoundHistoryModal()" class="btn btn-secondary text-sm" style="min-height:32px; padding:0 8px;" data-i18n="roundsBtn">
+              Раунди
             </button>
-            <button class="btn btn-secondary btn-icon" style="min-height:36px; width:36px;" onclick="Scorebook.openCalculatorModal()" title="Калькулятор">
+          </div>
+        </div>
+
+        <!-- Timer Hero Display -->
+        <div class="timer-hero-container">
+          <div class="timer-player-name" id="activePlayerHeading">
+            Гравець 1
+          </div>
+          <div class="timer-clock" id="countdownDisplay">
+            00:30
+          </div>
+          <div class="timer-progress-bar" id="timerProgressBar" style="width: 100%;"></div>
+        </div>
+
+        <!-- Timer Controls Row -->
+        <div class="row" style="justify-content:space-between; flex-wrap:wrap; gap:6px;">
+          <div class="row" style="gap:4px;">
+            <button onclick="Scorebook.toggleTimerRunning()" id="timerToggleBtn" class="btn btn-secondary text-sm" style="min-height:34px; padding:0 10px;">
+              <span id="timerToggleIcon">⏸️</span> <span id="timerToggleText" data-i18n="pause">Пауза</span>
+            </button>
+            <button onclick="Scorebook.adjustTime(-10)" class="btn btn-secondary" style="min-height:34px; padding:0 8px; font-size:11px;">-10s</button>
+            <button onclick="Scorebook.adjustTime(10)" class="btn btn-secondary" style="min-height:34px; padding:0 8px; font-size:11px;">+10s</button>
+            <button onclick="Scorebook.resetCurrentTimer()" class="btn btn-secondary" style="min-height:34px; padding:0 8px; font-size:11px;" title="Скинути час">🔄</button>
+          </div>
+
+          <div class="row" style="gap:4px;">
+            <button onclick="Scorebook.passTurn()" class="btn btn-primary text-sm" style="min-height:34px; padding:0 12px;" data-i18n="nextTurn">
+              Хід ➡️
+            </button>
+          </div>
+        </div>
+
+        <!-- Action Header: Add Player, Reset All, Calc, Settings -->
+        <div class="row" style="justify-content:space-between; border-top:1px solid var(--border); padding-top:10px;">
+          <button onclick="Scorebook.openAddPlayerModal()" class="btn btn-primary text-sm" style="min-height:34px;">
+            <span>+</span> <span data-i18n="addPlayer">Додати гравця</span>
+          </button>
+
+          <div class="row">
+            <button onclick="Scorebook.resetAllScores()" class="btn btn-danger text-sm" style="min-height:34px; padding:0 8px;" data-i18n="resetScores">
+              Скинути
+            </button>
+            <button onclick="Scorebook.openCalculatorModal()" class="btn btn-secondary btn-icon" style="height:34px; width:34px;" title="Калькулятор">
               🧮
             </button>
-            <button class="btn btn-secondary btn-icon" style="min-height:36px; width:36px;" onclick="Scorebook.toggleSettingsModal()" title="Налаштування гравців та таймера">
+            <button onclick="Scorebook.toggleGlobalHistoryModal()" class="btn btn-secondary btn-icon" style="height:34px; width:34px;" title="Історія дій">
+              📜
+            </button>
+            <button onclick="Scorebook.toggleSettingsModal()" class="btn btn-secondary btn-icon" style="height:34px; width:34px;" title="Налаштування">
               ⚙️
-            </button>
-          </div>
-        </div>
-
-        <!-- Integrated Turn Timer -->
-        <div class="timer-widget" id="timerCard">
-          <div class="row" style="width:100%; justify-content:space-between;">
-            <span class="text-sm text-muted">
-              <span data-i18n="turnOf">Хід:</span> <b id="activePlayerHeading" style="color:var(--text-main);">-</b>
-            </span>
-            <span id="penaltyAlertBadge" style="display:none; color:var(--danger); font-weight:700; font-size:12px;">
-              ⚠️ <span data-i18n="penaltyAlert">Штраф!</span>
-            </span>
-          </div>
-
-          <div class="row" style="gap:12px;">
-            <button class="btn btn-secondary" style="min-height:36px; padding:0 10px;" onclick="Scorebook.adjustTime(-5)">-5с</button>
-            <div class="timer-digits" id="countdownDisplay">00:30</div>
-            <button class="btn btn-secondary" style="min-height:36px; padding:0 10px;" onclick="Scorebook.adjustTime(5)">+5с</button>
-            <button class="btn btn-secondary" style="min-height:36px; padding:0 12px;" onclick="Scorebook.toggleTimerRunning()" id="timerToggleBtn">
-              <span id="timerToggleIcon">⏸️</span>
-              <span id="timerToggleText" data-i18n="pause">Пауза</span>
-            </button>
-            <button class="btn btn-secondary btn-icon" style="min-height:36px; width:36px;" onclick="Scorebook.resetCurrentTimer()" title="Скинути таймер">
-              🔄
-            </button>
-          </div>
-
-          <div class="timer-bar-wrap">
-            <div class="timer-bar-fill" id="timerProgressBar"></div>
-          </div>
-        </div>
-
-        <!-- Players List Header with Add/Finish/Reset -->
-        <div class="row" style="justify-content:space-between; margin-top:4px;">
-          <span class="text-sm font-bold" data-i18n="playersList">Гравці</span>
-          <div class="row">
-            <button class="btn btn-secondary" style="min-height:36px; padding:0 10px; font-size:12px;" onclick="Scorebook.openAddPlayerModal()">
-              ➕ <span data-i18n="addPlayer">Додати гравця</span>
-            </button>
-            <button class="btn btn-secondary" style="min-height:36px; padding:0 10px; font-size:12px;" onclick="Scorebook.finishRound()">
-              🏁 <span data-i18n="finishRound">Завершити</span>
-            </button>
-            <button class="btn btn-secondary btn-icon" style="min-height:36px; width:36px;" onclick="Scorebook.resetAllScores()" title="Скинути бали">
-              🔄
             </button>
           </div>
         </div>
@@ -810,15 +812,20 @@
     <!-- STORE VIEW -->
     <section id="viewStore" class="col" style="display:none;">
       <div class="card-panel">
-        <div class="row" style="justify-content:space-between; flex-wrap:wrap;">
-          <input type="text" id="storeSearchInput" placeholder="Пошук гри..." class="flex-1" oninput="GameStore.onSearch(this.value)">
-          <div class="row">
-            <button class="btn btn-primary" onclick="GameStore.createGamePrompt()">
-              ✨ Створити гру
-            </button>
-          </div>
+        <div class="row" style="justify-content:space-between; flex-wrap:wrap; gap:8px;">
+          <input type="text" id="storeSearchInput" placeholder="Пошук гри..." class="flex-1" oninput="GameStore.onSearch(this.value)" style="min-height:40px;">
+          <button class="btn btn-primary" onclick="GameStore.openWizard()">
+            ✨ Створити гру
+          </button>
+        </div>
+
+        <!-- Offline Code Import Row -->
+        <div class="row" style="margin-top:8px; gap:8px;">
+          <input type="text" id="offlineCodeInput" placeholder="Введіть код гри (XXXXXXXX-XXXXXXXX-...)" style="flex:1; min-height:40px; font-family:monospace; font-size:12px;">
+          <button class="btn btn-secondary" onclick="GameStore.importFromCode()">📥 Імпортувати</button>
         </div>
       </div>
+
       <div class="card-panel" id="storeGrid">
         <!-- Rendered by GameStore.render() -->
       </div>
@@ -867,10 +874,6 @@
             <span class="text-sm text-muted" data-i18n="playerTurnsDesc">Чергування ходів між гравцями</span>
           </div>
           <input type="checkbox" id="playerModeToggle" onchange="DiceRoller.togglePlayerModeSetting(this.checked)" style="width:20px; height:20px;">
-        </div>
-        <div id="playerConfigContainer" style="display:none;" class="col">
-          <span class="text-sm font-bold" data-i18n="playersList">Імена гравців (через кому, до 8)</span>
-          <input type="text" id="playerNamesInput" oninput="DiceRoller.onPlayerNamesCommaChange(this.value)" placeholder="Гравець 1, Гравець 2">
         </div>
       </div>
 
@@ -963,8 +966,31 @@
           <button type="button" onclick="Scorebook.setOpMode('div')" id="modeBtn_div" class="btn btn-secondary flex-1">÷</button>
           <button type="button" onclick="Scorebook.setOpMode('set')" id="modeBtn_set" class="btn btn-secondary flex-1">=</button>
         </div>
-        <input type="number" id="opValueInput" value="1" style="text-align:center; font-size:18px; font-weight:800; font-family:monospace;">
+        <div class="row" style="justify-content:space-between; align-items:center; margin-top:4px;">
+          <span class="text-sm">Лічильник:</span>
+          <select id="opsCounterSelect" style="padding:4px 8px; font-weight:700;">
+            <option value="A">Лічильник A</option>
+            <option value="B">Лічильник B</option>
+            <option value="C">Лічильник C</option>
+          </select>
+        </div>
+        <input type="number" id="opValueInput" value="1" style="text-align:center; font-size:18px; font-weight:800; font-family:monospace; margin-top:4px;">
         <button onclick="Scorebook.applyAdvancedOperation()" class="btn btn-primary" data-i18n="apply">Застосувати</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rename Counter Modal -->
+  <div id="renameCounterModal" class="modal-overlay">
+    <div class="modal-content" style="max-width:320px;">
+      <div class="modal-header">
+        <h3 class="modal-title" data-i18n="renameCounterTitle">Змінити назву лічильника</h3>
+        <button class="btn btn-secondary btn-icon" onclick="Scorebook.closeRenameCounterModal()">✕</button>
+      </div>
+      <div class="col" style="gap:8px;">
+        <label class="text-sm font-bold" data-i18n="renameCounterLabel">Назва лічильника:</label>
+        <input type="text" id="renameCounterInput" maxlength="10" placeholder="A">
+        <button onclick="Scorebook.confirmRenameCounter()" class="btn btn-primary" data-i18n="save">Зберегти</button>
       </div>
     </div>
   </div>
@@ -1095,6 +1121,170 @@
     </div>
   </div>
 
+  <!-- Game Store Wizard Modal (3 Steps) -->
+  <div id="gameWizardModal" class="modal-overlay">
+    <div class="modal-content" style="max-width:460px; max-height:90vh; overflow-y:auto;">
+      <div class="modal-header">
+        <h3 id="wizardStepHeaderTitle" class="modal-title">✨ Створення гри</h3>
+        <button class="btn btn-secondary btn-icon" onclick="GameStore.closeWizard()">✕</button>
+      </div>
+
+      <!-- STEP 1: Basic Info -->
+      <div id="wizardStep1" class="col" style="gap:10px;">
+        <b class="text-sm font-bold" data-i18n="step1Title">Крок 1: Основна інформація</b>
+        <div class="col" style="gap:4px;">
+          <label class="text-sm font-bold">Назва гри *</label>
+          <input type="text" id="wzGameTitle" placeholder="Наприклад: Каркасон, Монополія...">
+        </div>
+        <div class="col" style="gap:4px;">
+          <label class="text-sm">Опис гри (до 500 символів)</label>
+          <textarea id="wzGameDesc" maxlength="500" rows="3" placeholder="Короткі правила або опис гри..." style="width:100%; padding:8px; border-radius:var(--radius-sm); border:1px solid var(--border); background:var(--bg-surface); color:var(--text-main); font-family:inherit;"></textarea>
+        </div>
+        <div class="row" style="gap:10px;">
+          <div class="col flex-1" style="gap:4px;">
+            <label class="text-sm">Мін гравців</label>
+            <input type="number" id="wzMinPlayers" min="1" max="20" value="1" style="text-align:center;">
+          </div>
+          <div class="col flex-1" style="gap:4px;">
+            <label class="text-sm">Макс гравців</label>
+            <input type="number" id="wzMaxPlayers" min="1" max="20" value="6" style="text-align:center;">
+          </div>
+        </div>
+        <div class="row" style="justify-content:flex-end; margin-top:8px;">
+          <button class="btn btn-primary" onclick="GameStore.wizardNext()" data-i18n="nextStep">Далі →</button>
+        </div>
+      </div>
+
+      <!-- STEP 2: Tool Questions -->
+      <div id="wizardStep2" class="col" style="gap:12px; display:none;">
+        <b class="text-sm font-bold" data-i18n="step2Title">Крок 2: Питання про інструменти</b>
+
+        <!-- Dice Question -->
+        <div class="col" style="background:var(--bg-main); padding:10px; border-radius:var(--radius-sm); gap:8px;">
+          <div class="row" style="justify-content:space-between;">
+            <span class="text-sm font-bold">🎲 Чи використовуються кубики?</span>
+            <div class="row" style="gap:8px;">
+              <label class="text-sm"><input type="radio" name="wzDiceUsed" value="yes" checked onchange="GameStore.toggleWizardToolVisibility()"> Так</label>
+              <label class="text-sm"><input type="radio" name="wzDiceUsed" value="no" onchange="GameStore.toggleWizardToolVisibility()"> Ні</label>
+            </div>
+          </div>
+          <div id="wzDiceSubOptions" class="col" style="gap:6px; border-top:1px solid var(--border); padding-top:6px;">
+            <span class="text-sm text-muted">Типи кубиків:</span>
+            <div class="row" style="flex-wrap:wrap; gap:6px;">
+              <label class="text-sm"><input type="checkbox" id="wzDie_d4"> D4</label>
+              <label class="text-sm"><input type="checkbox" id="wzDie_d6" checked> D6</label>
+              <label class="text-sm"><input type="checkbox" id="wzDie_d8"> D8</label>
+              <label class="text-sm"><input type="checkbox" id="wzDie_d10"> D10</label>
+              <label class="text-sm"><input type="checkbox" id="wzDie_d12"> D12</label>
+              <label class="text-sm"><input type="checkbox" id="wzDie_d20"> D20</label>
+              <label class="text-sm"><input type="checkbox" id="wzDie_custom"> Власний</label>
+            </div>
+            <div class="row" style="justify-content:space-between; align-items:center;">
+              <span class="text-sm">Скільки кубиків за раз (1-10)?</span>
+              <input type="number" id="wzDiceCount" min="1" max="10" value="2" style="width:60px; text-align:center;">
+            </div>
+            <div class="row" style="justify-content:space-between; align-items:center;">
+              <span class="text-sm">Режим відображення:</span>
+              <div class="row" style="gap:8px;">
+                <label class="text-sm"><input type="radio" name="wzDiceMode" value="dots" checked> Крапки</label>
+                <label class="text-sm"><input type="radio" name="wzDiceMode" value="nums"> Цифри</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Score Question -->
+        <div class="col" style="background:var(--bg-main); padding:10px; border-radius:var(--radius-sm); gap:8px;">
+          <div class="row" style="justify-content:space-between;">
+            <span class="text-sm font-bold">📊 Рахувати очки?</span>
+            <div class="row" style="gap:8px;">
+              <label class="text-sm"><input type="radio" name="wzScoreUsed" value="yes" checked onchange="GameStore.toggleWizardToolVisibility()"> Так</label>
+              <label class="text-sm"><input type="radio" name="wzScoreUsed" value="no" onchange="GameStore.toggleWizardToolVisibility()"> Ні</label>
+            </div>
+          </div>
+          <div id="wzScoreSubOptions" class="col" style="gap:6px; border-top:1px solid var(--border); padding-top:6px;">
+            <div class="row" style="justify-content:space-between; align-items:center;">
+              <span class="text-sm">Лічильників на гравця:</span>
+              <div class="row" style="gap:8px;">
+                <label class="text-sm"><input type="radio" name="wzCountersNum" value="1" onchange="GameStore.updateWizardCounterInputs()"> 1</label>
+                <label class="text-sm"><input type="radio" name="wzCountersNum" value="2" onchange="GameStore.updateWizardCounterInputs()"> 2</label>
+                <label class="text-sm"><input type="radio" name="wzCountersNum" value="3" checked onchange="GameStore.updateWizardCounterInputs()"> 3</label>
+              </div>
+            </div>
+            <div class="col" style="gap:4px;" id="wzCounterLabelsList">
+              <span class="text-sm text-muted">Назви лічильників:</span>
+              <input type="text" id="wzCounter1" value="A" placeholder="Лічильник 1">
+              <input type="text" id="wzCounter2" value="B" placeholder="Лічильник 2">
+              <input type="text" id="wzCounter3" value="C" placeholder="Лічильник 3">
+            </div>
+            <div class="row" style="justify-content:space-between; align-items:center;">
+              <span class="text-sm">Дозволені від'ємні очки?</span>
+              <div class="row" style="gap:8px;">
+                <label class="text-sm"><input type="radio" name="wzAllowNeg" value="yes" checked> Так</label>
+                <label class="text-sm"><input type="radio" name="wzAllowNeg" value="no"> Ні</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Time Limit Question -->
+        <div class="col" style="background:var(--bg-main); padding:10px; border-radius:var(--radius-sm); gap:8px;">
+          <div class="row" style="justify-content:space-between;">
+            <span class="text-sm font-bold">⏱️ Є ліміт часу на хід?</span>
+            <div class="row" style="gap:8px;">
+              <label class="text-sm"><input type="radio" name="wzTimerUsed" value="yes" checked onchange="GameStore.toggleWizardToolVisibility()"> Так</label>
+              <label class="text-sm"><input type="radio" name="wzTimerUsed" value="no" onchange="GameStore.toggleWizardToolVisibility()"> Ні</label>
+            </div>
+          </div>
+          <div id="wzTimerSubOptions" class="col" style="gap:6px; border-top:1px solid var(--border); padding-top:6px;">
+            <div class="row" style="justify-content:space-between; align-items:center;">
+              <span class="text-sm">Скільки секунд?</span>
+              <input type="number" id="wzTimerSeconds" min="5" max="3600" value="30" style="width:70px; text-align:center;">
+            </div>
+            <div class="row" style="justify-content:space-between; align-items:center;">
+              <span class="text-sm">Штраф за перевищення?</span>
+              <input type="number" id="wzTimerPenalty" min="0" max="99" value="1" style="width:70px; text-align:center;">
+            </div>
+          </div>
+        </div>
+
+        <!-- Rounds Question -->
+        <div class="col" style="background:var(--bg-main); padding:10px; border-radius:var(--radius-sm); gap:8px;">
+          <div class="row" style="justify-content:space-between;">
+            <span class="text-sm font-bold">🔄 Є раунди у грі?</span>
+            <div class="row" style="gap:8px;">
+              <label class="text-sm"><input type="radio" name="wzRoundsUsed" value="yes" checked onchange="GameStore.toggleWizardToolVisibility()"> Так</label>
+              <label class="text-sm"><input type="radio" name="wzRoundsUsed" value="no" onchange="GameStore.toggleWizardToolVisibility()"> Ні</label>
+            </div>
+          </div>
+          <div id="wzRoundsSubOptions" class="row" style="justify-content:space-between; align-items:center; border-top:1px solid var(--border); padding-top:6px;">
+            <span class="text-sm">Максимум раундів (0 = без обмежень):</span>
+            <input type="number" id="wzMaxRounds" min="0" max="100" value="0" style="width:70px; text-align:center;">
+          </div>
+        </div>
+
+        <div class="row" style="justify-content:space-between; margin-top:8px;">
+          <button class="btn btn-secondary" onclick="GameStore.wizardPrev()" data-i18n="prevStep">← Назад</button>
+          <button class="btn btn-primary" onclick="GameStore.wizardNext()" data-i18n="nextStep">Далі →</button>
+        </div>
+      </div>
+
+      <!-- STEP 3: Review & Save -->
+      <div id="wizardStep3" class="col" style="gap:10px; display:none;">
+        <b class="text-sm font-bold" data-i18n="step3Title">Крок 3: Перегляд і збереження</b>
+        <div id="wzSummaryCard" class="col" style="background:var(--bg-main); padding:12px; border-radius:var(--radius-sm); border:1px solid var(--border); font-size:12px; gap:8px;">
+          <!-- Populated by GameStore.renderWizardSummary() -->
+        </div>
+        <div class="col" style="gap:8px; margin-top:6px;">
+          <button class="btn btn-primary" onclick="GameStore.wizardSaveLocal()" data-i18n="saveLocal">💾 Зберегти локально</button>
+          <button class="btn btn-secondary" onclick="GameStore.wizardCopyCode()" data-i18n="copyOfflineCode">📤 Скопіювати офлайн-код</button>
+          <button class="btn btn-secondary" onclick="GameStore.wizardPrev()" data-i18n="prevStep">← Назад</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
   <!-- Message Modal (replacing window.alert) -->
   <div id="messageModal" class="modal-overlay">
     <div class="modal-content" style="max-width:320px; text-align:center;">
@@ -1103,6 +1293,17 @@
     </div>
   </div>
 
+  <!-- Confirm Modal (replacing window.confirm) -->
+  <div id="confirmModal" class="modal-overlay">
+    <div class="modal-content" style="max-width:320px; text-align:center;">
+      <h3 id="confirmModalTitle" class="modal-title" style="margin-bottom:4px;" data-i18n="confirmTitle">Підтвердження</h3>
+      <p id="confirmModalText" class="text-sm text-muted" style="margin-bottom:12px;" data-i18n="confirmReset">Ви впевнені?</p>
+      <div class="row" style="gap:8px; justify-content:center;">
+        <button onclick="App.closeConfirmModal()" class="btn btn-secondary flex-1" data-i18n="close">Скасувати</button>
+        <button id="confirmModalActionBtn" class="btn btn-danger flex-1" data-i18n="apply">Підтвердити</button>
+      </div>
+    </div>
+  </div>
 
   <!-- ========================================================================
        JAVASCRIPT ARCHITECTURE
@@ -1121,15 +1322,11 @@
     const SUPABASE_ANON_KEY = ''; // ← 'eyJhbGci...'
 
     /* ==========================================================================
-       MODULE 2. AppState — спільний стан і шина подій
+       MODULE 1. AppState — спільний стан і шина подій (ПОРОЖНІЙ ПРИ СТАРТІ)
        ========================================================================== */
     const AppState = (() => {
       const listeners = {};
-
-      const players = [
-        { id: 1, name: 'Гравець 1', score: 0, color: 'purple', history: [] },
-        { id: 2, name: 'Гравець 2', score: 0, color: 'blue', history: [] }
-      ];
+      const players = []; // ← ПОРОЖНІЙ МАСИВ. Гравці додаються ТІЛЬКИ через "Додати гравця"
 
       function on(event, callback) {
         if (!listeners[event]) listeners[event] = [];
@@ -1150,7 +1347,7 @@
     })();
 
     /* ==========================================================================
-       MODULE 3. DB — IndexedDB обгортка + Supabase ініціалізація
+       MODULE 2. DB — IndexedDB обгортка + Supabase ініціалізація
        ========================================================================== */
     const DB = (() => {
       let supabaseClient = null;
@@ -1174,159 +1371,420 @@
     })();
 
     /* ==========================================================================
-       MODULE 4. i18n — переклади і функція t('key')
+       MODULE 3. GameCodec — кодування/декодування ігор (Base64 + XOR)
+       ========================================================================== */
+    const GameCodec = (() => {
+      function lzCompress(str) {
+        return btoa(unescape(encodeURIComponent(str)));
+      }
+      function lzDecompress(str) {
+        return decodeURIComponent(escape(atob(str)));
+      }
+
+      const KEY = 'BGT2024';
+      function xorEncrypt(str) {
+        return str.split('').map((c, i) =>
+          String.fromCharCode(c.charCodeAt(0) ^ KEY.charCodeAt(i % KEY.length))
+        ).join('');
+      }
+
+      function encode(gameConfig) {
+        try {
+          const json = JSON.stringify(gameConfig);
+          const compressed = lzCompress(json);
+          const encrypted = xorEncrypt(compressed);
+          const b64 = btoa(encrypted);
+          const chunks = b64.match(/.{1,8}/g);
+          return chunks ? chunks.join('-') : b64;
+        } catch (e) {
+          console.error('[GameCodec] Encode error:', e);
+          return '';
+        }
+      }
+
+      function decode(code) {
+        try {
+          if (!code || typeof code !== 'string') return null;
+          const b64 = code.replace(/-/g, '').trim();
+          const encrypted = atob(b64);
+          const compressed = xorEncrypt(encrypted);
+          const json = lzDecompress(compressed);
+          return JSON.parse(json);
+        } catch (e) {
+          console.warn('[GameCodec] Decode error:', e);
+          return null;
+        }
+      }
+
+      return { encode, decode };
+    })();
+
+    /* ==========================================================================
+       MODULE 4. i18n — переклади для 12 мов (UK, EN, ES, DE, FR, IT, PL, PT, TR, JA, ZH, KO)
        ========================================================================== */
     const i18n = (() => {
       let currentLang = 'uk';
 
       const translations = {
         uk: {
-          navPlay: "Гра",
-          navStore: "Магазин",
-          tabDice: "Кубики",
-          tabScore: "Очки & Таймер",
-          tabBoth: "Обидва",
-          diceTitle: "Кубики",
-          scorebookTitle: "Очки & Таймер",
-          dots: "Крапки",
-          nums: "Цифри",
-          roll1: "Кинути",
-          roll2: "Всі",
-          selectAll: "Виділити все",
-          deselectAll: "Зняти виділення",
-          settingsTitle: "Розширені налаштування",
-          facesLabel: "Тип кубика (Грані)",
-          customFaces: "Власні грані (до 64):",
-          allowZeroTitle: "Допустимий нуль (0)",
-          allowZeroDesc: "Якщо випадає нуль — буде порожній фон",
-          saveClose: "Зберегти та закрити",
-          rerollSelected: "Перекинути",
-          rerollSingle: "Перекинути",
-          colorTag: "Мітка кольором",
-          color: "Колір",
-          playerTurnsTitle: "Режим ходів гравців",
-          playerTurnsDesc: "Чергування ходів між гравцями",
-          playersList: "Список активних гравців",
-          passTurn: "Хід",
-          currentTurn: "Хід гравця",
-          historyBtn: "Історія",
-          historyTitle: "Історія дій",
-          clearHistory: "Очистити",
-          noHistory: "Історія дій порожня.",
-          formulaTitle: "Калькулятор математичної формули",
-          enterFormula: "Введіть вираз (напр., sum() + A - M або A + B * 2)",
-          clear: "Очистити",
-          calcResult: "Результат обчислення:",
-          funcsRef: "Вбудовані функції та змінні:",
-          varsDesc: "sum(), avg(), min(), max(), count() | A–L: кубики 1-12 | M: к-ть кубиків",
-          dieSettings: "Налаштування кубика",
-          actRollAll: "Кидок усіх кубиків",
-          actRollSelected: "Кидок вибраних кубиків",
-          actRollSingle: "Кидок кубика",
-          actPassTurn: "Передача ходу",
-          actColor: "Зміна кольору",
-          actAddDice: "Додано кубик",
-          actRemoveDice: "Видалено кубик",
-          roundsBtn: "Раунди",
-          roundLabel: "Раунд",
-          finishRound: "Завершити",
-          resetScores: "Скинути",
-          addPlayer: "Додати гравця",
-          addPlayerTitle: "Додати нового гравця",
-          save: "Зберегти",
-          close: "Закрити",
-          roundsModalTitle: "Історія раундів",
-          calcHistoryTitle: "Історія обчислень",
-          turnDuration: "Час ходу (с):",
-          penaltyPointsLabel: "Штрафні бали за тайм-аут:",
-          timerSettings: "Налаштування таймера",
-          turnOf: "Хід:",
-          nextTurn: "Хід",
-          pause: "Пауза",
-          resume: "Далі",
-          penaltyAlert: "Штраф!",
-          playerHistoryTitle: "Історія гравця",
-          playerOpsTitle: "Операції гравця",
-          customOpLabel: "Виберіть дію та введіть значення:",
-          apply: "Застосувати",
-          actionScoreBtn: "Дія / Бали",
-          noPlayers: "Гравців ще не додано. Натисніть «Додати гравця»!",
-          noRounds: "Ще не завершено жодного раунду.",
-          maxPlayersError: "Максимальна кількість гравців — 8!"
+          navPlay: "Гра", navStore: "Магазин", tabDice: "Кубики", tabScore: "Очки & Таймер", tabBoth: "Обидва",
+          diceTitle: "Кубики", scorebookTitle: "Очки & Таймер", dots: "Крапки", nums: "Цифри", roll1: "Кинути", roll2: "Всі",
+          selectAll: "Виділити все", deselectAll: "Зняти виділення", settingsTitle: "Розширені налаштування",
+          facesLabel: "Тип кубика (Грані)", customFaces: "Власні грані (до 64):", allowZeroTitle: "Допустимий нуль (0)",
+          allowZeroDesc: "Якщо випадає нуль — буде порожній фон", saveClose: "Зберегти та закрити", rerollSelected: "Перекинути",
+          rerollSingle: "Перекинути", colorTag: "Мітка кольором", color: "Колір", playerTurnsTitle: "Режим ходів гравців",
+          playerTurnsDesc: "Чергування ходів між гравцями", playersList: "Список активних гравців", passTurn: "Хід",
+          currentTurn: "Хід гравця", historyBtn: "Історія", historyTitle: "Історія дій", clearHistory: "Очистити",
+          noHistory: "Історія дій порожня.", formulaTitle: "Калькулятор математичної формули",
+          enterFormula: "Введіть вираз (напр., sum() + A - M або A + B * 2)", clear: "Очистити", calcResult: "Результат обчислення:",
+          funcsRef: "Вбудовані функції та змінні:", varsDesc: "sum(), avg(), min(), max(), count() | A–L: кубики 1-12 | M: к-ть кубиків",
+          dieSettings: "Налаштування кубика", actRollAll: "Кидок усіх кубиків", actRollSelected: "Кидок вибраних кубиків",
+          actRollSingle: "Кидок кубика", actPassTurn: "Передача ходу", actColor: "Зміна кольору", actAddDice: "Додано кубик",
+          actRemoveDice: "Видалено кубик", roundsBtn: "Раунди", roundLabel: "Раунд", finishRound: "Завершити", resetScores: "Скинути",
+          addPlayer: "Додати гравця", addPlayerTitle: "Додати нового гравця", save: "Зберегти", close: "Закрити",
+          roundsModalTitle: "Історія раундів", calcHistoryTitle: "Історія обчислень", turnDuration: "Час ходу (с):",
+          penaltyPointsLabel: "Штрафні бали за тайм-аут:", timerSettings: "Налаштування таймера", turnOf: "Хід:", nextTurn: "Хід",
+          pause: "Пауза", resume: "Далі", penaltyAlert: "Штраф!", playerHistoryTitle: "Історія гравця",
+          playerOpsTitle: "Операції гравця", customOpLabel: "Виберіть дію та введіть значення:", apply: "Застосувати",
+          actionScoreBtn: "Дія / Бали", noPlayers: "Гравців ще не додано. Натисніть «Додати гравця»!",
+          noRounds: "Ще не завершено жодного раунду.", maxPlayersError: "Максимальна кількість гравців — 8!",
+          storeTitle: "Магазин ігор", createGame: "✨ Створити гру", searchGame: "Пошук гри...", importCode: "Введіть код гри...",
+          importBtn: "📥 Імпортувати", emptyStoreTitle: "Ігор ще немає", emptyStoreDesc: "Створіть першу гру або введіть офлайн-код",
+          step1Title: "Крок 1: Основна інформація", step2Title: "Крок 2: Інструменти гри", step3Title: "Крок 3: Огляд і збереження",
+          nextStep: "Далі →", prevStep: "← Назад", saveLocal: "💾 Зберегти локально", copyOfflineCode: "📤 Скопіювати офлайн-код",
+          codeCopied: "Офлайн-код скопійовано!", gameSaved: "Гру успішно додано!", invalidCode: "Невірний офлайн-код гри!",
+          renameCounterTitle: "Змінити назву лічильника", renameCounterLabel: "Назва лічильника:", totalScore: "Загальний рахунок",
+          confirmTitle: "Підтвердження", confirmReset: "Ви впевнені, що хочете скинути?"
         },
         en: {
-          navPlay: "Play",
-          navStore: "Store",
-          tabDice: "Dice",
-          tabScore: "Scores & Timer",
-          tabBoth: "Both",
-          diceTitle: "Dice Roller",
-          scorebookTitle: "Scorebook & Timer",
-          dots: "Dots",
-          nums: "Numbers",
-          roll1: "Roll",
-          roll2: "All",
-          selectAll: "Select All",
-          deselectAll: "Deselect All",
-          settingsTitle: "Advanced Settings",
-          facesLabel: "Die Type (Faces)",
-          customFaces: "Custom faces (up to 64):",
-          allowZeroTitle: "Allow Zero (0)",
-          allowZeroDesc: "If zero rolls — empty background",
-          saveClose: "Save & Close",
-          rerollSelected: "Re-roll",
-          rerollSingle: "Re-roll",
-          colorTag: "Color Tag",
-          color: "Color",
-          playerTurnsTitle: "Player Turns Mode",
-          playerTurnsDesc: "Track turns across multiple players",
-          playersList: "Active Players List",
-          passTurn: "Turn",
-          currentTurn: "Current Turn",
-          historyBtn: "History",
-          historyTitle: "Action History",
-          clearHistory: "Clear",
-          noHistory: "No actions recorded yet.",
-          formulaTitle: "Math Formula Calculator",
-          enterFormula: "Enter expression (e.g., sum() + A - M or A + B * 2)",
-          clear: "Clear",
-          calcResult: "Calculation Result:",
-          funcsRef: "Built-in Functions & Variables:",
-          varsDesc: "sum(), avg(), min(), max(), count() | A–L: dice 1-12 | M: total dice",
-          dieSettings: "Die Settings",
-          actRollAll: "Rolled all dice",
-          actRollSelected: "Rolled selected dice",
-          actRollSingle: "Rolled single die",
-          actPassTurn: "Passed turn",
-          actColor: "Updated color tag",
-          actAddDice: "Added die",
-          actRemoveDice: "Removed die",
-          roundsBtn: "Rounds",
-          roundLabel: "Round",
-          finishRound: "Finish",
-          resetScores: "Reset",
-          addPlayer: "Add Player",
-          addPlayerTitle: "Add New Player",
-          save: "Save",
-          close: "Close",
-          roundsModalTitle: "Rounds History",
-          calcHistoryTitle: "Calculation History",
-          turnDuration: "Turn Time (s):",
-          penaltyPointsLabel: "Penalty Points:",
-          timerSettings: "Timer Settings",
-          turnOf: "Turn:",
-          nextTurn: "Turn",
-          pause: "Pause",
-          resume: "Resume",
-          penaltyAlert: "Penalty!",
-          playerHistoryTitle: "Player History",
-          playerOpsTitle: "Player Operations",
-          customOpLabel: "Select operation & enter value:",
-          apply: "Apply",
-          actionScoreBtn: "Op / Score",
-          noPlayers: "No players added yet. Click 'Add Player'!",
-          noRounds: "No rounds finished yet.",
-          maxPlayersError: "Maximum number of players is 8!"
+          navPlay: "Play", navStore: "Store", tabDice: "Dice", tabScore: "Scores & Timer", tabBoth: "Both",
+          diceTitle: "Dice Roller", scorebookTitle: "Scorebook & Timer", dots: "Dots", nums: "Numbers", roll1: "Roll", roll2: "All",
+          selectAll: "Select All", deselectAll: "Deselect All", settingsTitle: "Advanced Settings",
+          facesLabel: "Die Type (Faces)", customFaces: "Custom faces (up to 64):", allowZeroTitle: "Allow Zero (0)",
+          allowZeroDesc: "If zero rolls — empty background", saveClose: "Save & Close", rerollSelected: "Re-roll",
+          rerollSingle: "Re-roll", colorTag: "Color Tag", color: "Color", playerTurnsTitle: "Player Turns Mode",
+          playerTurnsDesc: "Track turns across multiple players", playersList: "Active Players List", passTurn: "Turn",
+          currentTurn: "Current Turn", historyBtn: "History", historyTitle: "Action History", clearHistory: "Clear",
+          noHistory: "No actions recorded yet.", formulaTitle: "Math Formula Calculator",
+          enterFormula: "Enter expression (e.g., sum() + A - M or A + B * 2)", clear: "Clear", calcResult: "Calculation Result:",
+          funcsRef: "Built-in Functions & Variables:", varsDesc: "sum(), avg(), min(), max(), count() | A–L: dice 1-12 | M: total dice",
+          dieSettings: "Die Settings", actRollAll: "Rolled all dice", actRollSelected: "Rolled selected dice",
+          actRollSingle: "Rolled single die", actPassTurn: "Passed turn", actColor: "Updated color tag", actAddDice: "Added die",
+          actRemoveDice: "Removed die", roundsBtn: "Rounds", roundLabel: "Round", finishRound: "Finish", resetScores: "Reset",
+          addPlayer: "Add Player", addPlayerTitle: "Add New Player", save: "Save", close: "Close",
+          roundsModalTitle: "Rounds History", calcHistoryTitle: "Calculation History", turnDuration: "Turn Time (s):",
+          penaltyPointsLabel: "Penalty Points:", timerSettings: "Timer Settings", turnOf: "Turn:", nextTurn: "Turn",
+          pause: "Pause", resume: "Resume", penaltyAlert: "Penalty!", playerHistoryTitle: "Player History",
+          playerOpsTitle: "Player Operations", customOpLabel: "Select operation & enter value:", apply: "Apply",
+          actionScoreBtn: "Op / Score", noPlayers: "No players added yet. Click 'Add Player'!",
+          noRounds: "No rounds finished yet.", maxPlayersError: "Maximum number of players is 8!",
+          storeTitle: "Game Store", createGame: "✨ Create Game", searchGame: "Search games...", importCode: "Enter game code...",
+          importBtn: "📥 Import", emptyStoreTitle: "No games yet", emptyStoreDesc: "Create your first game or enter an offline code",
+          step1Title: "Step 1: Basic Info", step2Title: "Step 2: Game Tools", step3Title: "Step 3: Review & Save",
+          nextStep: "Next →", prevStep: "← Back", saveLocal: "💾 Save Locally", copyOfflineCode: "📤 Copy Offline Code",
+          codeCopied: "Offline code copied!", gameSaved: "Game successfully added!", invalidCode: "Invalid offline game code!",
+          renameCounterTitle: "Rename Counter", renameCounterLabel: "Counter name:", totalScore: "Total Score",
+          confirmTitle: "Confirmation", confirmReset: "Are you sure you want to reset?"
+        },
+        es: {
+          navPlay: "Jugar", navStore: "Tienda", tabDice: "Dados", tabScore: "Puntos y Tiempo", tabBoth: "Ambos",
+          diceTitle: "Dados", scorebookTitle: "Puntos y Cronómetro", dots: "Puntos", nums: "Números", roll1: "Lanzar", roll2: "Todos",
+          selectAll: "Seleccionar todo", deselectAll: "Deseleccionar todo", settingsTitle: "Configuración avanzada",
+          facesLabel: "Caras del dado", customFaces: "Caras personalizadas (hasta 64):", allowZeroTitle: "Permitir cero (0)",
+          allowZeroDesc: "Fondo vacío si sale cero", saveClose: "Guardar y cerrar", rerollSelected: "Relanzar",
+          rerollSingle: "Relanzar", colorTag: "Color", color: "Color", playerTurnsTitle: "Modo turnos",
+          playerTurnsDesc: "Alternar turnos entre jugadores", playersList: "Lista de jugadores activos", passTurn: "Turno",
+          currentTurn: "Turno actual", historyBtn: "Historial", historyTitle: "Historial de acciones", clearHistory: "Borrar",
+          noHistory: "Sin acciones registradas.", formulaTitle: "Calculadora de fórmulas",
+          enterFormula: "Escribe una fórmula (ej. sum() + A - M)", clear: "Borrar", calcResult: "Resultado:",
+          funcsRef: "Funciones y variables:", varsDesc: "sum(), avg(), min(), max(), count() | A–L: dados | M: total",
+          dieSettings: "Ajustes del dado", actRollAll: "Lanzamiento de todos", actRollSelected: "Lanzamiento de seleccionados",
+          actRollSingle: "Lanzamiento individual", actPassTurn: "Pase de turno", actColor: "Cambio de color", actAddDice: "Dado añadido",
+          actRemoveDice: "Dado eliminado", roundsBtn: "Rondas", roundLabel: "Ronda", finishRound: "Terminar", resetScores: "Reiniciar",
+          addPlayer: "Añadir jugador", addPlayerTitle: "Nuevo jugador", save: "Guardar", close: "Cerrar",
+          roundsModalTitle: "Historial de rondas", calcHistoryTitle: "Historial de cálculo", turnDuration: "Tiempo de turno (s):",
+          penaltyPointsLabel: "Puntos de penalización:", timerSettings: "Ajustes de tiempo", turnOf: "Turno de:", nextTurn: "Turno",
+          pause: "Pausa", resume: "Reanudar", penaltyAlert: "¡Penalización!", playerHistoryTitle: "Historial de jugador",
+          playerOpsTitle: "Operaciones de jugador", customOpLabel: "Selecciona acción y valor:", apply: "Aplicar",
+          actionScoreBtn: "Op / Puntos", noPlayers: "No hay jugadores. ¡Añade uno!",
+          noRounds: "No hay rondas finalizadas.", maxPlayersError: "¡Máximo 8 jugadores!",
+          storeTitle: "Tienda de juegos", createGame: "✨ Crear juego", searchGame: "Buscar juego...", importCode: "Introduce código...",
+          importBtn: "📥 Importar", emptyStoreTitle: "No hay juegos", emptyStoreDesc: "Crea tu primer juego o introduce un código",
+          step1Title: "Paso 1: Información básica", step2Title: "Paso 2: Herramientas", step3Title: "Paso 3: Revisión y guardado",
+          nextStep: "Siguiente →", prevStep: "← Atrás", saveLocal: "💾 Guardar localmente", copyOfflineCode: "📤 Copiar código",
+          codeCopied: "¡Código copiado al portapapeles!", gameSaved: "¡Juego añadido con éxito!", invalidCode: "¡Código de juego inválido!",
+          renameCounterTitle: "Renombrar contador", renameCounterLabel: "Nombre del contador:", totalScore: "Total",
+          confirmTitle: "Confirmación", confirmReset: "¿Estás seguro de restablecer?"
+        },
+        de: {
+          navPlay: "Spielen", navStore: "Store", tabDice: "Würfel", tabScore: "Punkte & Zeit", tabBoth: "Beide",
+          diceTitle: "Würfel", scorebookTitle: "Punkte & Timer", dots: "Punkte", nums: "Zahlen", roll1: "Würfeln", roll2: "Alle",
+          selectAll: "Alle wählen", deselectAll: "Auswahl aufheben", settingsTitle: "Erweiterte Einstellungen",
+          facesLabel: "Würfeltyp (Seiten)", customFaces: "Eigene Seiten (bis 64):", allowZeroTitle: "Null (0) erlauben",
+          allowZeroDesc: "Bei 0 leerer Hintergrund", saveClose: "Speichern & Schließen", rerollSelected: "Ausgewählte neu würfeln",
+          rerollSingle: "Neu würfeln", colorTag: "Farbmarkierung", color: "Farbe", playerTurnsTitle: "Spielerzüge-Modus",
+          playerTurnsDesc: "Züge zwischen Spielern wechseln", playersList: "Aktive Spielerliste", passTurn: "Zug weiter",
+          currentTurn: "Aktueller Zug", historyBtn: "Verlauf", historyTitle: "Aktionsverlauf", clearHistory: "Löschen",
+          noHistory: "Noch keine Aktionen aufgezeichnet.", formulaTitle: "Mathematischer Formelrechner",
+          enterFormula: "Formel eingeben (z.B. sum() + A - M)", clear: "Leeren", calcResult: "Berechnungsergebnis:",
+          funcsRef: "Integrierte Funktionen & Variablen:", varsDesc: "sum(), avg(), min(), max(), count() | A–L: Würfel | M: Gesamt",
+          dieSettings: "Würfeleinstellungen", actRollAll: "Alle gewürfelt", actRollSelected: "Ausgewählte gewürfelt",
+          actRollSingle: "Einzelwürfel geworfen", actPassTurn: "Zug weitergegeben", actColor: "Farbe geändert", actAddDice: "Würfel hinzugefügt",
+          actRemoveDice: "Würfel entfernt", roundsBtn: "Runden", roundLabel: "Runde", finishRound: "Beenden", resetScores: "Zurücksetzen",
+          addPlayer: "Spieler hinzufügen", addPlayerTitle: "Neuer Spieler", save: "Speichern", close: "Schließen",
+          roundsModalTitle: "Rundenverlauf", calcHistoryTitle: "Berechnungsverlauf", turnDuration: "Zugzeit (s):",
+          penaltyPointsLabel: "Strafpunkte:", timerSettings: "Timer-Einstellungen", turnOf: "Zug von:", nextTurn: "Zug",
+          pause: "Pause", resume: "Fortsetzen", penaltyAlert: "Strafe!", playerHistoryTitle: "Spielerverlauf",
+          playerOpsTitle: "Spieleroperationen", customOpLabel: "Aktion & Wert wählen:", apply: "Anwenden",
+          actionScoreBtn: "Op / Punkte", noPlayers: "Keine Spieler vorhanden. Jetzt hinzufügen!",
+          noRounds: "Noch keine Runden beendet.", maxPlayersError: "Maximal 8 Spieler erlaubt!",
+          storeTitle: "Spieleladen", createGame: "✨ Spiel erstellen", searchGame: "Spiel suchen...", importCode: "Code eingeben...",
+          importBtn: "📥 Importieren", emptyStoreTitle: "Noch keine Spiele", emptyStoreDesc: "Erstelle dein erstes Spiel oder gib einen Offline-Code ein",
+          step1Title: "Schritt 1: Grundinfo", step2Title: "Schritt 2: Werkzeuge", step3Title: "Schritt 3: Übersicht & Speichern",
+          nextStep: "Weiter →", prevStep: "← Zurück", saveLocal: "💾 Lokal speichern", copyOfflineCode: "📤 Offline-Code kopieren",
+          codeCopied: "Offline-Code kopiert!", gameSaved: "Spiel erfolgreich hinzugefügt!", invalidCode: "Ungültiger Offline-Code!",
+          renameCounterTitle: "Zähler umbenennen", renameCounterLabel: "Zählername:", totalScore: "Gesamtpunktzahl",
+          confirmTitle: "Bestätigung", confirmReset: "Möchten Sie wirklich zurücksetzen?"
+        },
+        fr: {
+          navPlay: "Jouer", navStore: "Boutique", tabDice: "Dés", tabScore: "Points & Chrono", tabBoth: "Les deux",
+          diceTitle: "Dés", scorebookTitle: "Points & Chronomètre", dots: "Points", nums: "Chiffres", roll1: "Lancer", roll2: "Tous",
+          selectAll: "Tout sélectionner", deselectAll: "Tout désélectionner", settingsTitle: "Paramètres avancés",
+          facesLabel: "Faces du dé", customFaces: "Faces personnalisées (max 64):", allowZeroTitle: "Autoriser zéro (0)",
+          allowZeroDesc: "Fond vide si zéro", saveClose: "Enregistrer & Fermer", rerollSelected: "Relancer sélectionnés",
+          rerollSingle: "Relancer", colorTag: "Couleur", color: "Couleur", playerTurnsTitle: "Mode tours de jeu",
+          playerTurnsDesc: "Alterner les tours entre joueurs", playersList: "Joueurs actifs", passTurn: "Tour",
+          currentTurn: "Tour actuel", historyBtn: "Historique", historyTitle: "Historique des actions", clearHistory: "Effacer",
+          noHistory: "Aucune action enregistrée.", formulaTitle: "Calculateur de formule",
+          enterFormula: "Entrez formule (ex: sum() + A - M)", clear: "Effacer", calcResult: "Résultat:",
+          funcsRef: "Fonctions & Variables:", varsDesc: "sum(), avg(), min(), max(), count() | A–L: dés | M: total dés",
+          dieSettings: "Paramètres du dé", actRollAll: "Tous les dés lancés", actRollSelected: "Dés sélectionnés lancés",
+          actRollSingle: "Dé lancé", actPassTurn: "Tour passé", actColor: "Couleur modifiée", actAddDice: "Dé ajouté",
+          actRemoveDice: "Dé retiré", roundsBtn: "Manches", roundLabel: "Manche", finishRound: "Terminer", resetScores: "Réinitialiser",
+          addPlayer: "Ajouter joueur", addPlayerTitle: "Nouveau joueur", save: "Enregistrer", close: "Fermer",
+          roundsModalTitle: "Historique des manches", calcHistoryTitle: "Historique des calculs", turnDuration: "Temps du tour (s):",
+          penaltyPointsLabel: "Points de pénalité:", timerSettings: "Paramètres du chronomètre", turnOf: "Tour de :", nextTurn: "Tour",
+          pause: "Pause", resume: "Reprendre", penaltyAlert: "Pénalité !", playerHistoryTitle: "Historique du joueur",
+          playerOpsTitle: "Opérations du joueur", customOpLabel: "Opération et valeur :", apply: "Appliquer",
+          actionScoreBtn: "Op / Points", noPlayers: "Aucun joueur. Ajoutez-en un !",
+          noRounds: "Aucune manche terminée.", maxPlayersError: "Maximum 8 joueurs !",
+          storeTitle: "Magasin de jeux", createGame: "✨ Créer un jeu", searchGame: "Rechercher...", importCode: "Code du jeu...",
+          importBtn: "📥 Importer", emptyStoreTitle: "Aucun jeu", emptyStoreDesc: "Créez votre premier jeu ou entrez un code hors ligne",
+          step1Title: "Étape 1: Infos de base", step2Title: "Étape 2: Outils de jeu", step3Title: "Étape 3: Vérification & Sauvegarde",
+          nextStep: "Suivant →", prevStep: "← Précédent", saveLocal: "💾 Sauvegarder localement", copyOfflineCode: "📤 Copier le code hors-ligne",
+          codeCopied: "Code copié !", gameSaved: "Jeu ajouté avec succès !", invalidCode: "Code hors ligne invalide !",
+          renameCounterTitle: "Renommer le compteur", renameCounterLabel: "Nom du compteur :", totalScore: "Score total",
+          confirmTitle: "Confirmation", confirmReset: "Êtes-vous sûr de vouloir réinitialiser ?"
+        },
+        it: {
+          navPlay: "Gioca", navStore: "Negozio", tabDice: "Dadi", tabScore: "Punti e Tempo", tabBoth: "Entrambi",
+          diceTitle: "Dadi", scorebookTitle: "Segnapunti e Timer", dots: "Punti", nums: "Numeri", roll1: "Lancia", roll2: "Tutti",
+          selectAll: "Seleziona tutti", deselectAll: "Deseleziona tutti", settingsTitle: "Impostazioni avanzate",
+          facesLabel: "Facce del dado", customFaces: "Facce personalizzate (max 64):", allowZeroTitle: "Consenti zero (0)",
+          allowZeroDesc: "Sfondo vuoto se zero", saveClose: "Salva e Chiudi", rerollSelected: "Rilancia selezionati",
+          rerollSingle: "Rilancia", colorTag: "Colore", color: "Colore", playerTurnsTitle: "Modalità turni",
+          playerTurnsDesc: "Alterna turni tra giocatori", playersList: "Giocatori attivi", passTurn: "Turno",
+          currentTurn: "Turno attuale", historyBtn: "Cronologia", historyTitle: "Cronologia azioni", clearHistory: "Cancella",
+          noHistory: "Nessuna azione registrata.", formulaTitle: "Calcolatore formule",
+          enterFormula: "Inserisci formula (es: sum() + A - M)", clear: "Cancella", calcResult: "Risultato:",
+          funcsRef: "Funzioni e variabili:", varsDesc: "sum(), avg(), min(), max(), count() | A–L: dadi | M: totale",
+          dieSettings: "Impostazioni dado", actRollAll: "Tutti i dadi lanciati", actRollSelected: "Dadi selezionati lanciati",
+          actRollSingle: "Dado lanciato", actPassTurn: "Turno passato", actColor: "Colore modificato", actAddDice: "Dado aggiunto",
+          actRemoveDice: "Dado rimosso", roundsBtn: "Round", roundLabel: "Round", finishRound: "Termina", resetScores: "Azzera",
+          addPlayer: "Aggiungi giocatore", addPlayerTitle: "Nuovo giocatore", save: "Salva", close: "Chiudi",
+          roundsModalTitle: "Cronologia round", calcHistoryTitle: "Cronologia calcoli", turnDuration: "Tempo del turno (s):",
+          penaltyPointsLabel: "Punti di penalità:", timerSettings: "Impostazioni timer", turnOf: "Turno di:", nextTurn: "Turno",
+          pause: "Pausa", resume: "Riprendi", penaltyAlert: "Penalità!", playerHistoryTitle: "Cronologia giocatore",
+          playerOpsTitle: "Operazioni giocatore", customOpLabel: "Seleziona operazione e valore:", apply: "Applica",
+          actionScoreBtn: "Op / Punti", noPlayers: "Nessun giocatore. Aggiungine uno!",
+          noRounds: "Nessun round terminato.", maxPlayersError: "Massimo 8 giocatori!",
+          storeTitle: "Negozio giochi", createGame: "✨ Crea gioco", searchGame: "Cerca gioco...", importCode: "Codice gioco...",
+          importBtn: "📥 Importa", emptyStoreTitle: "Nessun gioco", emptyStoreDesc: "Crea il tuo primo gioco o inserisci un codice offline",
+          step1Title: "Passo 1: Info base", step2Title: "Passo 2: Strumenti", step3Title: "Passo 3: Revisione e Salvataggio",
+          nextStep: "Avanti →", prevStep: "← Indietro", saveLocal: "💾 Salva in locale", copyOfflineCode: "📤 Copia codice offline",
+          codeCopied: "Codice copiato!", gameSaved: "Gioco aggiunto con successo!", invalidCode: "Codice offline non valido!",
+          renameCounterTitle: "Rinomina contatore", renameCounterLabel: "Nome contatore:", totalScore: "Punteggio totale",
+          confirmTitle: "Conferma", confirmReset: "Sei sicuro di voler resettare?"
+        },
+        pl: {
+          navPlay: "Graj", navStore: "Sklep", tabDice: "Kości", tabScore: "Punkty i Czas", tabBoth: "Oba",
+          diceTitle: "Rzut kośćmi", scorebookTitle: "Punkty i Stoper", dots: "Kropki", nums: "Liczby", roll1: "Rzuć", roll2: "Wszystkie",
+          selectAll: "Zaznacz wszystko", deselectAll: "Odznacz wszystko", settingsTitle: "Zaawansowane ustawienia",
+          facesLabel: "Typ kości (Ścianki)", customFaces: "Własne ścianki (do 64):", allowZeroTitle: "Zezwalaj na zero (0)",
+          allowZeroDesc: "Puste tło przy wyniku 0", saveClose: "Zapisz i zamknij", rerollSelected: "Przerzuć zaznaczone",
+          rerollSingle: "Przerzuć", colorTag: "Kolor", color: "Kolor", playerTurnsTitle: "Tryb tur graczy",
+          playerTurnsDesc: "Śledzenie kolejki graczy", playersList: "Lista aktywnych graczy", passTurn: "Tura",
+          currentTurn: "Aktualna tura", historyBtn: "Historia", historyTitle: "Historia akcji", clearHistory: "Wyczyść",
+          noHistory: "Brak zapisanych akcji.", formulaTitle: "Kalkulator formuły",
+          enterFormula: "Wpisz wyrażenie (np. sum() + A - M)", clear: "Wyczyść", calcResult: "Wynik obliczeń:",
+          funcsRef: "Wbudowane funkcje i zmienne:", varsDesc: "sum(), avg(), min(), max(), count() | A–L: kości | M: liczba kości",
+          dieSettings: "Ustawienia kości", actRollAll: "Rzucono wszystkimi kośćmi", actRollSelected: "Rzucono zaznaczonymi",
+          actRollSingle: "Rzucono pojedynczą kością", actPassTurn: "Oddano turę", actColor: "Zmieniono kolor", actAddDice: "Dodano kość",
+          actRemoveDice: "Usunięto kość", roundsBtn: "Rundy", roundLabel: "Runda", finishRound: "Zakończ", resetScores: "Resetuj",
+          addPlayer: "Dodaj gracza", addPlayerTitle: "Nowy gracz", save: "Zapisz", close: "Zamknij",
+          roundsModalTitle: "Historia rund", calcHistoryTitle: "Historia kalkulatora", turnDuration: "Czas tury (s):",
+          penaltyPointsLabel: "Punkty karne:", timerSettings: "Ustawienia stopera", turnOf: "Tura gracza:", nextTurn: "Tura",
+          pause: "Pauza", resume: "Wznów", penaltyAlert: "Kara!", playerHistoryTitle: "Historia gracza",
+          playerOpsTitle: "Operacje na punktach", customOpLabel: "Wybierz działanie i wartość:", apply: "Zastosuj",
+          actionScoreBtn: "Op / Punkty", noPlayers: "Brak graczy. Dodaj pierwszego gracza!",
+          noRounds: "Nie zakończono jeszcze żadnej rundy.", maxPlayersError: "Maksymalnie 8 graczy!",
+          storeTitle: "Katalog gier", createGame: "✨ Stwórz grę", searchGame: "Szukaj gry...", importCode: "Wpisz kod gry...",
+          importBtn: "📥 Importuj", emptyStoreTitle: "Brak gier", emptyStoreDesc: "Stwórz pierwszą grę lub wpisz kod offline",
+          step1Title: "Krok 1: Podstawowe informacje", step2Title: "Krok 2: Narzędzia do gry", step3Title: "Krok 3: Podsumowanie i zapis",
+          nextStep: "Dalej →", prevStep: "← Wstecz", saveLocal: "💾 Zapisz lokalnie", copyOfflineCode: "📤 Kopiuj kod offline",
+          codeCopied: "Kod offline skopiowany!", gameSaved: "Gra została pomyślnie dodana!", invalidCode: "Nieprawidłowy kod gry!",
+          renameCounterTitle: "Zmień nazwę licznika", renameCounterLabel: "Nazwa licznika:", totalScore: "Suma punktów",
+          confirmTitle: "Potwierdzenie", confirmReset: "Czy na pewno chcesz zresetować?"
+        },
+        pt: {
+          navPlay: "Jogar", navStore: "Loja", tabDice: "Dados", tabScore: "Pontos e Tempo", tabBoth: "Ambos",
+          diceTitle: "Dados", scorebookTitle: "Placar e Cronômetro", dots: "Pontos", nums: "Números", roll1: "Rolar", roll2: "Todos",
+          selectAll: "Selecionar tudo", deselectAll: "Desmarcar tudo", settingsTitle: "Configurações avançadas",
+          facesLabel: "Faces do dado", customFaces: "Faces personalizadas (até 64):", allowZeroTitle: "Permitir zero (0)",
+          allowZeroDesc: "Fundo vazio se zero", saveClose: "Salvar e Fechar", rerollSelected: "Rolar selecionados",
+          rerollSingle: "Rolar", colorTag: "Cor", color: "Cor", playerTurnsTitle: "Modo de turnos",
+          playerTurnsDesc: "Alternar turnos entre jogadores", playersList: "Jogadores ativos", passTurn: "Turno",
+          currentTurn: "Turno atual", historyBtn: "Histórico", historyTitle: "Histórico de ações", clearHistory: "Limpar",
+          noHistory: "Nenhuma ação registrada.", formulaTitle: "Calculadora de fórmulas",
+          enterFormula: "Digite a fórmula (ex: sum() + A - M)", clear: "Limpar", calcResult: "Resultado:",
+          funcsRef: "Funções e variáveis:", varsDesc: "sum(), avg(), min(), max(), count() | A–L: dados | M: total",
+          dieSettings: "Configurações do dado", actRollAll: "Todos os dados rolados", actRollSelected: "Dados selecionados rolados",
+          actRollSingle: "Dado individual rolado", actPassTurn: "Turno passado", actColor: "Cor alterada", actAddDice: "Dado adicionado",
+          actRemoveDice: "Dado removido", roundsBtn: "Rodadas", roundLabel: "Rodada", finishRound: "Terminar", resetScores: "Redefinir",
+          addPlayer: "Adicionar jogador", addPlayerTitle: "Novo jogador", save: "Salvar", close: "Fechar",
+          roundsModalTitle: "Histórico de rodadas", calcHistoryTitle: "Histórico de cálculos", turnDuration: "Tempo do turno (s):",
+          penaltyPointsLabel: "Pontos de penalidade:", timerSettings: "Configurações do cronômetro", turnOf: "Vez de:", nextTurn: "Turno",
+          pause: "Pausa", resume: "Retomar", penaltyAlert: "Penalidade!", playerHistoryTitle: "Histórico do jogador",
+          playerOpsTitle: "Operações do jogador", customOpLabel: "Selecione ação e valor:", apply: "Aplicar",
+          actionScoreBtn: "Op / Pontos", noPlayers: "Nenhum jogador ainda. Adicione um!",
+          noRounds: "Nenhuma rodada finalizada.", maxPlayersError: "Máximo de 8 jogadores!",
+          storeTitle: "Loja de jogos", createGame: "✨ Criar jogo", searchGame: "Buscar jogo...", importCode: "Código do jogo...",
+          importBtn: "📥 Importar", emptyStoreTitle: "Sem jogos", emptyStoreDesc: "Crie seu primeiro jogo ou insira um código offline",
+          step1Title: "Passo 1: Informações básicas", step2Title: "Passo 2: Ferramentas", step3Title: "Passo 3: Revisão e Salvar",
+          nextStep: "Avançar →", prevStep: "← Voltar", saveLocal: "💾 Salvar localmente", copyOfflineCode: "📤 Copiar código offline",
+          codeCopied: "Código offline copiado!", gameSaved: "Jogo adicionado com sucesso!", invalidCode: "Código offline inválido!",
+          renameCounterTitle: "Renomear contador", renameCounterLabel: "Nome do contador:", totalScore: "Pontuação total",
+          confirmTitle: "Confirmação", confirmReset: "Tem certeza de que deseja redefinir?"
+        },
+        tr: {
+          navPlay: "Oyna", navStore: "Mağaza", tabDice: "Zarlar", tabScore: "Puan & Zaman", tabBoth: "İkisi",
+          diceTitle: "Zar Atma", scorebookTitle: "Skor & Zamanlayıcı", dots: "Noktalar", nums: "Sayılar", roll1: "Zar At", roll2: "Tümü",
+          selectAll: "Tümünü seç", deselectAll: "Seçimi kaldır", settingsTitle: "Gelişmiş Ayarlar",
+          facesLabel: "Zar Yüzü (Yüz sayısı)", customFaces: "Özel yüz (64'e kadar):", allowZeroTitle: "Sıfıra (0) izin ver",
+          allowZeroDesc: "Sıfır çıkarsa boş arka plan", saveClose: "Kaydet ve Kapat", rerollSelected: "Seçilenleri at",
+          rerollSingle: "Yeniden at", colorTag: "Renk", color: "Renk", playerTurnsTitle: "Oyuncu Sırası Modu",
+          playerTurnsDesc: "Oyuncular arasında sıra takibi", playersList: "Aktif oyuncu listesi", passTurn: "Sıra",
+          currentTurn: "Mevcut sıra", historyBtn: "Geçmiş", historyTitle: "İşlem Geçmişi", clearHistory: "Temizle",
+          noHistory: "Henüz kayıtlı işlem yok.", formulaTitle: "Matematiksel Formül Hesaplayıcı",
+          enterFormula: "Formül girin (örn. sum() + A - M)", clear: "Temizle", calcResult: "Hesaplama Sonucu:",
+          funcsRef: "Yerleşik Fonksiyonlar & Değişkenler:", varsDesc: "sum(), avg(), min(), max(), count() | A–L: zarlar | M: toplam zar",
+          dieSettings: "Zar Ayarları", actRollAll: "Tüm zarlar atıldı", actRollSelected: "Seçili zarlar atıldı",
+          actRollSingle: "Tek zar atıldı", actPassTurn: "Sıra devredildi", actColor: "Renk değiştirildi", actAddDice: "Zar eklendi",
+          actRemoveDice: "Zar silindi", roundsBtn: "Turlar", roundLabel: "Tur", finishRound: "Bitir", resetScores: "Sıfırla",
+          addPlayer: "Oyuncu Ekle", addPlayerTitle: "Yeni Oyuncu", save: "Kaydet", close: "Kapat",
+          roundsModalTitle: "Tur Geçmişi", calcHistoryTitle: "Hesaplama Geçmişi", turnDuration: "Tur süresi (sn):",
+          penaltyPointsLabel: "Ceza puanı:", timerSettings: "Zamanlayıcı Ayarları", turnOf: "Sıradaki:", nextTurn: "Sıra",
+          pause: "Duraklat", resume: "Devam", penaltyAlert: "Ceza!", playerHistoryTitle: "Oyuncu Geçmişi",
+          playerOpsTitle: "Oyuncu İşlemleri", customOpLabel: "İşlem ve değer seçin:", apply: "Uygula",
+          actionScoreBtn: "İşlem / Skor", noPlayers: "Henüz oyuncu yok. Bir tane ekleyin!",
+          noRounds: "Henüz tamamlanan tur yok.", maxPlayersError: "En fazla 8 oyuncu!",
+          storeTitle: "Oyun Mağazası", createGame: "✨ Oyun Oluştur", searchGame: "Oyun ara...", importCode: "Oyun kodu girin...",
+          importBtn: "📥 İçe Aktar", emptyStoreTitle: "Henüz oyun yok", emptyStoreDesc: "İlk oyununuzu oluşturun veya çevrimdışı kod girin",
+          step1Title: "1. Adım: Temel Bilgiler", step2Title: "2. Adım: Oyun Araçları", step3Title: "3. Adım: İnceleme & Kaydet",
+          nextStep: "İleri →", prevStep: "← Geri", saveLocal: "💾 Yerel Kaydet", copyOfflineCode: "📤 Çevrimdışı Kodu Kopyala",
+          codeCopied: "Çevrimdışı kod kopyalandı!", gameSaved: "Oyun başarıyla eklendi!", invalidCode: "Geçersiz çevrimdışı kod!",
+          renameCounterTitle: "Sayacı Yeniden Adlandır", renameCounterLabel: "Sayaç adı:", totalScore: "Toplam Puan",
+          confirmTitle: "Onay", confirmReset: "Sıfırlamak istediğinizden emin misiniz?"
+        },
+        ja: {
+          navPlay: "プレイ", navStore: "ストア", tabDice: "ダイス", tabScore: "スコア＆タイマー", tabBoth: "両方",
+          diceTitle: "ダイスローラー", scorebookTitle: "スコアブック＆タイマー", dots: "ドット", nums: "数字", roll1: "振る", roll2: "すべて",
+          selectAll: "すべて選択", deselectAll: "選択解除", settingsTitle: "詳細設定",
+          facesLabel: "ダイスの面数", customFaces: "カスタム面数 (最大64):", allowZeroTitle: "ゼロ(0)を許可",
+          allowZeroDesc: "0が出た場合は背景なし", saveClose: "保存して閉じる", rerollSelected: "選択したダイスを振る",
+          rerollSingle: "振り直す", colorTag: "色タグ", color: "色", playerTurnsTitle: "プレイヤーターンモード",
+          playerTurnsDesc: "プレイヤー間のターン交代", playersList: "参加プレイヤー一覧", passTurn: "ターン交代",
+          currentTurn: "現在のターン", historyBtn: "履歴", historyTitle: "アクション履歴", clearHistory: "消去",
+          noHistory: "履歴はありません。", formulaTitle: "数式計算機",
+          enterFormula: "計算式を入力 (例: sum() + A - M)", clear: "クリア", calcResult: "計算結果:",
+          funcsRef: "組み込み関数と変数:", varsDesc: "sum(), avg(), min(), max(), count() | A–L: 各ダイス | M: ダイス総数",
+          dieSettings: "ダイス設定", actRollAll: "すべてのダイスをロール", actRollSelected: "選択したダイスをロール",
+          actRollSingle: "個別ダイスをロール", actPassTurn: "ターン交代", actColor: "色を変更", actAddDice: "ダイスを追加",
+          actRemoveDice: "ダイスを削除", roundsBtn: "ラウンド", roundLabel: "ラウンド", finishRound: "完了", resetScores: "リセット",
+          addPlayer: "プレイヤー追加", addPlayerTitle: "新規プレイヤー", save: "保存", close: "閉じる",
+          roundsModalTitle: "ラウンド履歴", calcHistoryTitle: "計算履歴", turnDuration: "ターン時間 (秒):",
+          penaltyPointsLabel: "ペナルティ点:", timerSettings: "タイマー設定", turnOf: "手番:", nextTurn: "交代",
+          pause: "一時停止", resume: "再開", penaltyAlert: "ペナルティ！", playerHistoryTitle: "プレイヤー履歴",
+          playerOpsTitle: "スコア操作", customOpLabel: "操作と数値を入力:", apply: "適用",
+          actionScoreBtn: "操作 / 得点", noPlayers: "プレイヤーがいません。「プレイヤー追加」を押してください！",
+          noRounds: "終了したラウンドはありません。", maxPlayersError: "プレイヤーは最大8人です！",
+          storeTitle: "ゲームストア", createGame: "✨ ゲーム作成", searchGame: "ゲーム検索...", importCode: "ゲームコード入力...",
+          importBtn: "📥 インポート", emptyStoreTitle: "ゲームがありません", emptyStoreDesc: "新しいゲームを作成するかオフラインコードを入力してください",
+          step1Title: "ステップ1: 基本情報", step2Title: "ステップ2: ゲームツール", step3Title: "ステップ3: 確認と保存",
+          nextStep: "次へ →", prevStep: "← 戻る", saveLocal: "💾 ローカル保存", copyOfflineCode: "📤 オフラインコードコピー",
+          codeCopied: "コードをコピーしました！", gameSaved: "ゲームを追加しました！", invalidCode: "無効なオフラインコードです！",
+          renameCounterTitle: "カウンター名変更", renameCounterLabel: "カウンター名:", totalScore: "合計スコア",
+          confirmTitle: "確認", confirmReset: "本当にリセットしますか？"
+        },
+        zh: {
+          navPlay: "开始游戏", navStore: "商店", tabDice: "骰子", tabScore: "计分与计时", tabBoth: "双模式",
+          diceTitle: "掷骰工具", scorebookTitle: "计分板与计时器", dots: "点数", nums: "数字", roll1: "掷骰", roll2: "全部",
+          selectAll: "全选", deselectAll: "取消全选", settingsTitle: "高级设置",
+          facesLabel: "骰子面数", customFaces: "自定义面数 (最高64):", allowZeroTitle: "允许出现零 (0)",
+          allowZeroDesc: "结果为0时显示空白背景", saveClose: "保存并关闭", rerollSelected: "重新掷选中的",
+          rerollSingle: "重掷", colorTag: "颜色标记", color: "颜色", playerTurnsTitle: "玩家回合模式",
+          playerTurnsDesc: "玩家之间轮流进行回合", playersList: "当前玩家列表", passTurn: "回合结束",
+          currentTurn: "当前回合", historyBtn: "历史", historyTitle: "操作历史", clearHistory: "清空",
+          noHistory: "暂无操作记录。", formulaTitle: "公式计算器",
+          enterFormula: "输入表达式 (例如 sum() + A - M)", clear: "清空", calcResult: "计算结果:",
+          funcsRef: "内置函数与变量:", varsDesc: "sum(), avg(), min(), max(), count() | A–L: 骰子 | M: 骰子总数",
+          dieSettings: "骰子设置", actRollAll: "掷出所有骰子", actRollSelected: "掷出选中的骰子",
+          actRollSingle: "掷出单颗骰子", actPassTurn: "回合交接", actColor: "更改颜色", actAddDice: "添加骰子",
+          actRemoveDice: "移除骰子", roundsBtn: "回合", roundLabel: "轮次", finishRound: "完成本轮", resetScores: "重置",
+          addPlayer: "添加玩家", addPlayerTitle: "新玩家", save: "保存", close: "关闭",
+          roundsModalTitle: "轮次历史", calcHistoryTitle: "计算历史", turnDuration: "回合时间 (秒):",
+          penaltyPointsLabel: "超时扣分:", timerSettings: "计时器设置", turnOf: "当前回合:", nextTurn: "下一位",
+          pause: "暂停", resume: "继续", penaltyAlert: "超时惩罚！", playerHistoryTitle: "玩家记录",
+          playerOpsTitle: "分数操作", customOpLabel: "选择操作与数值:", apply: "应用",
+          actionScoreBtn: "操作 / 分数", noPlayers: "暂无玩家。请点击「添加玩家」！",
+          noRounds: "尚未完成任何轮次。", maxPlayersError: "最多支持8位玩家！",
+          storeTitle: "游戏商店", createGame: "✨ 创建游戏", searchGame: "搜索游戏...", importCode: "输入游戏代码...",
+          importBtn: "📥 导入", emptyStoreTitle: "暂无游戏", emptyStoreDesc: "创建您的第一个游戏或输入离线代码",
+          step1Title: "第1步: 基本信息", step2Title: "第2步: 游戏工具", step3Title: "第3步: 预览与保存",
+          nextStep: "下一步 →", prevStep: "← 上一步", saveLocal: "💾 本地保存", copyOfflineCode: "📤 复制离线代码",
+          codeCopied: "代码已复制到剪贴板！", gameSaved: "游戏创建成功！", invalidCode: "离线游戏代码无效！",
+          renameCounterTitle: "重命名计分器", renameCounterLabel: "计分器名称:", totalScore: "总分",
+          confirmTitle: "确认", confirmReset: "您确定要重置吗？"
+        },
+        ko: {
+          navPlay: "플레이", navStore: "스토어", tabDice: "주사위", tabScore: "점수 & 타이머", tabBoth: "모두 보기",
+          diceTitle: "주사위 굴리기", scorebookTitle: "점수판 & 타이머", dots: "도트", nums: "숫자", roll1: "굴리기", roll2: "전체",
+          selectAll: "전체 선택", deselectAll: "선택 해제", settingsTitle: "고급 설정",
+          facesLabel: "주사위 면 수", customFaces: "사용자 지정 면 (최대 64):", allowZeroTitle: "0 허용",
+          allowZeroDesc: "0이 나오면 빈 배경 표시", saveClose: "저장 및 닫기", rerollSelected: "선택 주사위 다시 굴리기",
+          rerollSingle: "다시 굴리기", colorTag: "색상 태그", color: "색상", playerTurnsTitle: "플레이어 턴 모드",
+          playerTurnsDesc: "플레이어 간 순서 진행", playersList: "참여 플레이어 목록", passTurn: "턴 넘기기",
+          currentTurn: "현재 턴", historyBtn: "기록", historyTitle: "동작 기록", clearHistory: "지우기",
+          noHistory: "기록된 동작이 없습니다.", formulaTitle: "수식 계산기",
+          enterFormula: "수식 입력 (예: sum() + A - M)", clear: "지우기", calcResult: "계산 결과:",
+          funcsRef: "내장 함수 및 변수:", varsDesc: "sum(), avg(), min(), max(), count() | A–L: 주사위 | M: 주사위 총수",
+          dieSettings: "주사위 설정", actRollAll: "전체 주사위 굴림", actRollSelected: "선택 주사위 굴림",
+          actRollSingle: "단일 주사위 굴림", actPassTurn: "턴 넘김", actColor: "색상 변경", actAddDice: "주사위 추가",
+          actRemoveDice: "주사위 삭제", roundsBtn: "라운드", roundLabel: "라운드", finishRound: "종료", resetScores: "초기화",
+          addPlayer: "플레이어 추가", addPlayerTitle: "새 플레이어", save: "저장", close: "닫기",
+          roundsModalTitle: "라운드 기록", calcHistoryTitle: "계산 기록", turnDuration: "턴 시간 (초):",
+          penaltyPointsLabel: "시간 초과 감점:", timerSettings: "타이머 설정", turnOf: "차례:", nextTurn: "턴 넘김",
+          pause: "일시정지", resume: "다시 시작", penaltyAlert: "패널티!", playerHistoryTitle: "플레이어 기록",
+          playerOpsTitle: "점수 조작", customOpLabel: "동작 및 값 선택:", apply: "적용",
+          actionScoreBtn: "조작 / 점수", noPlayers: "등록된 플레이어가 없습니다. '플레이어 추가'를 누르세요!",
+          noRounds: "완료된 라운드가 없습니다.", maxPlayersError: "플레이어는 최대 8명까지 가능합니다!",
+          storeTitle: "게임 스토어", createGame: "✨ 게임 만들기", searchGame: "게임 검색...", importCode: "게임 코드 입력...",
+          importBtn: "📥 가져오기", emptyStoreTitle: "게임 없음", emptyStoreDesc: "첫 게임을 만들거나 오프라인 코드를 입력하세요",
+          step1Title: "1단계: 기본 정보", step2Title: "2단계: 게임 도구", step3Title: "3단계: 검토 및 저장",
+          nextStep: "다음 →", prevStep: "← 이전", saveLocal: "💾 로컬에 저장", copyOfflineCode: "📤 오프라인 코드 복사",
+          codeCopied: "코드가 클립보드에 복사되었습니다!", gameSaved: "게임이 추가되었습니다!", invalidCode: "유효하지 않은 오프라인 코드입니다!",
+          renameCounterTitle: "카운터 이름 변경", renameCounterLabel: "카운터 이름:", totalScore: "총 점수",
+          confirmTitle: "확인", confirmReset: "정말 초기화하시겠습니까?"
         }
       };
 
@@ -1341,6 +1799,7 @@
       }
 
       function setLanguage(lang) {
+        if (!translations[lang]) return;
         currentLang = lang;
         try { localStorage.setItem('bgame_lang', lang); } catch (e) {}
         applyDOM();
@@ -1355,6 +1814,7 @@
         });
         const sel = document.getElementById('langSelect');
         if (sel) sel.value = currentLang;
+        document.documentElement.lang = currentLang;
       }
 
       function getLang() {
@@ -1365,7 +1825,7 @@
     })();
 
     /* ==========================================================================
-       MODULE 5. DiceRoller — весь код з dice-roller.html
+       MODULE 5. DiceRoller — кубики з синхронізацією з AppState
        ========================================================================== */
     const DiceRoller = (() => {
       let visualMode = 'dots';
@@ -1382,7 +1842,7 @@
       let activeDieId = null;
 
       let playerModeEnabled = false;
-      let playerNames = ['Гравець 1', 'Гравець 2'];
+      let playerNames = [];
       let activePlayerIndex = 0;
 
       let actionHistory = [];
@@ -1401,6 +1861,25 @@
         8: [0, 1, 2, 3, 5, 6, 7, 8],
         9: [0, 1, 2, 3, 4, 5, 6, 7, 8]
       };
+
+      function syncPlayers() {
+        if (AppState.players && AppState.players.length > 0) {
+          playerNames = AppState.players.map(p => p.name);
+        } else {
+          playerNames = [];
+        }
+        if (activePlayerIndex >= playerNames.length) {
+          activePlayerIndex = 0;
+        }
+        updatePlayerBanner();
+        evaluateFormula();
+      }
+
+      function setActivePlayer(idx) {
+        if (playerNames.length === 0) return;
+        activePlayerIndex = (idx >= 0 && idx < playerNames.length) ? idx : 0;
+        updatePlayerBanner();
+      }
 
       function playRollSound() {
         try {
@@ -1621,33 +2100,14 @@
 
       function togglePlayerModeSetting(enabled) {
         playerModeEnabled = enabled;
-        const container = document.getElementById('playerConfigContainer');
-        if (container) {
-          container.style.display = enabled ? 'flex' : 'none';
-          const input = document.getElementById('playerNamesInput');
-          if (input && !input.value) input.value = playerNames.join(', ');
-        }
+        syncPlayers();
         updatePlayerBanner();
         renderAll();
       }
 
-      function onPlayerNamesCommaChange(value) {
-        const parts = value.split(',').map(s => s.trim()).filter(s => s.length > 0);
-        if (parts.length > 0) {
-          playerNames = parts.slice(0, 8);
-        } else {
-          playerNames = ['Гравець 1'];
-        }
-        if (activePlayerIndex >= playerNames.length) {
-          activePlayerIndex = 0;
-        }
-        updatePlayerBanner();
-        evaluateFormula();
-      }
-
       function passTurn() {
         if (!playerModeEnabled || playerNames.length === 0) {
-          Integration.onDiceTurnPassed();
+          AppState.emit('turn_passed', 0);
           return;
         }
         const prevPlayer = playerNames[activePlayerIndex];
@@ -1656,7 +2116,7 @@
 
         addActionLog(i18n.t('actPassTurn'), `${prevPlayer} ➡️ ${nextPlayer}`);
         updatePlayerBanner();
-        Integration.onDiceTurnPassed();
+        AppState.emit('turn_passed', activePlayerIndex);
       }
 
       function updatePlayerBanner() {
@@ -1664,7 +2124,7 @@
         const passBtn = document.getElementById('passTurnBtn');
         const nameDisplay = document.getElementById('activePlayerNameDisplay');
 
-        if (!playerModeEnabled) {
+        if (!playerModeEnabled || playerNames.length === 0) {
           if (banner) banner.style.display = 'none';
           if (passBtn) passBtn.style.display = 'none';
           return;
@@ -1720,18 +2180,19 @@
       }
 
       function resetDice() {
-        if (!confirm('Скинути всі кубики?')) return;
-        diceList = [{
-          id: 1,
-          value: 1,
-          color: null,
-          recentlyRolled: false
-        }];
-        selectedDiceIds.clear();
-        nextDieId = 2;
-        const inp = document.getElementById('diceCountInput');
-        if (inp) inp.value = 1;
-        renderAll();
+        App.openConfirm('Скинути всі кубики?', 'Видалити всі додаткові кубики та скинути до 1?', () => {
+          diceList = [{
+            id: 1,
+            value: 1,
+            color: null,
+            recentlyRolled: false
+          }];
+          selectedDiceIds.clear();
+          nextDieId = 2;
+          const inp = document.getElementById('diceCountInput');
+          if (inp) inp.value = 1;
+          renderAll();
+        });
       }
 
       function toggleSelectAll() {
@@ -1818,6 +2279,7 @@
 
           if (playerModeEnabled && playerNames.length > 0) {
             activePlayerIndex = (activePlayerIndex + 1) % playerNames.length;
+            AppState.emit('turn_passed', activePlayerIndex);
           }
 
           renderAll();
@@ -2000,11 +2462,14 @@
       function init() {
         diceList.forEach(d => d.recentlyRolled = false);
         setDieType(6);
+        syncPlayers();
         applyLanguage();
       }
 
       return {
         init,
+        syncPlayers,
+        setActivePlayer,
         setDieType,
         onCustomFacesChange,
         adjustDiceCount,
@@ -2024,7 +2489,6 @@
         clearHistory,
         toggleSettingsModal,
         togglePlayerModeSetting,
-        onPlayerNamesCommaChange,
         passTurn,
         openDieControlModal,
         closeDieControlModal,
@@ -2038,12 +2502,12 @@
     })();
 
     /* ==========================================================================
-       MODULE 6. Scorebook — весь код з scorebook.html
+       MODULE 6. Scorebook — з 3 лічильниками A/B/C та cookies
        ========================================================================== */
     const Scorebook = (() => {
       let currentRound = 1;
-      let players = AppState.players;
-      let nextPlayerId = 3;
+      let players = AppState.players; // Єдине джерело правди
+      let nextPlayerId = 1;
       let actionHistory = [];
       let roundHistory = [];
 
@@ -2057,6 +2521,9 @@
       let activeHistoryPlayerId = null;
       let activeOpsPlayerId = null;
       let selectedOpMode = 'add'; // 'add', 'mult', 'div', 'set'
+
+      let editingRenamePlayerId = null;
+      let editingRenameCounterId = null;
 
       let calcExpressionStr = '';
       let calcHistory = [];
@@ -2103,9 +2570,24 @@
 
       function loadStateFromCookies() {
         const savedRound = getCookie('bgt_round'); if (savedRound) currentRound = savedRound;
-        const savedPlayers = getCookie('bgt_players'); if (savedPlayers && Array.isArray(savedPlayers)) {
+        const savedPlayers = getCookie('bgt_players');
+        if (savedPlayers && Array.isArray(savedPlayers)) {
           players.length = 0;
-          savedPlayers.forEach(p => players.push(p));
+          savedPlayers.forEach(p => {
+            // Ensure 3 counters structure exists
+            if (!p.counters || !Array.isArray(p.counters) || p.counters.length === 0) {
+              p.counters = [
+                { id: 'A', label: 'A', value: p.score || 0 },
+                { id: 'B', label: 'B', value: 0 },
+                { id: 'C', label: 'C', value: 0 }
+              ];
+            }
+            p.score = p.counters.reduce((sum, c) => sum + (Number(c.value) || 0), 0);
+            players.push(p);
+          });
+          if (players.length > 0) {
+            nextPlayerId = Math.max(...players.map(p => p.id)) + 1;
+          }
         }
         const savedNextId = getCookie('bgt_nextId'); if (savedNextId) nextPlayerId = savedNextId;
         const savedHistory = getCookie('bgt_actionHistory'); if (savedHistory && Array.isArray(savedHistory)) actionHistory = savedHistory;
@@ -2176,7 +2658,12 @@
             if (players.length > 0) {
               const curPlayer = players[activePlayerIndex];
               if (curPlayer) {
-                curPlayer.score -= penaltyDeductionPoints;
+                if (curPlayer.counters && curPlayer.counters[0]) {
+                  curPlayer.counters[0].value -= penaltyDeductionPoints;
+                  curPlayer.score = curPlayer.counters.reduce((sum, c) => sum + (Number(c.value) || 0), 0);
+                } else {
+                  curPlayer.score -= penaltyDeductionPoints;
+                }
                 curPlayer.history.unshift({
                   time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
                   operation: `-${penaltyDeductionPoints} (Penalty)`,
@@ -2191,6 +2678,7 @@
               timeLeft = defaultTurnTime;
               if (players.length > 0) {
                 activePlayerIndex = (activePlayerIndex + 1) % players.length;
+                AppState.emit('turn_passed', activePlayerIndex);
               }
               renderAll();
             }, 400);
@@ -2246,6 +2734,15 @@
         timeLeft = defaultTurnTime;
         isTimerRunning = true;
         renderAll();
+        AppState.emit('turn_passed', activePlayerIndex);
+      }
+
+      function setActivePlayer(idx) {
+        if (players.length === 0) return;
+        activePlayerIndex = (idx >= 0 && idx < players.length) ? idx : 0;
+        timeLeft = defaultTurnTime;
+        isTimerRunning = true;
+        renderAll();
       }
 
       function onTurnDurationChange(val) {
@@ -2264,6 +2761,86 @@
           penaltyDeductionPoints = num;
           saveStateToCookies();
         }
+      }
+
+      // Counter Operations: adjust (+/-), set, rename
+      function adjustCounter(playerId, counterId, delta) {
+        const p = players.find(x => x.id === playerId);
+        if (!p) return;
+        const c = p.counters.find(x => x.id === counterId);
+        if (!c) return;
+        c.value = (Number(c.value) || 0) + delta;
+        p.score = p.counters.reduce((sum, item) => sum + (Number(item.value) || 0), 0);
+
+        p.history.unshift({
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+          operation: `${delta >= 0 ? '+' : ''}${delta}`,
+          delta: delta,
+          desc: `${p.name} [${c.label}]: ${delta >= 0 ? '+' : ''}${delta}`,
+          resultingScore: p.score
+        });
+
+        renderAll();
+        saveStateToCookies();
+      }
+
+      function setCounterValue(playerId, counterId, val) {
+        const p = players.find(x => x.id === playerId);
+        if (!p) return;
+        const c = p.counters.find(x => x.id === counterId);
+        if (!c) return;
+        const num = parseFloat(val);
+        if (isNaN(num)) return;
+        const oldVal = c.value;
+        c.value = num;
+        p.score = p.counters.reduce((sum, item) => sum + (Number(item.value) || 0), 0);
+
+        p.history.unshift({
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
+          operation: `=${num}`,
+          delta: num - oldVal,
+          desc: `${p.name} [${c.label}] = ${num}`,
+          resultingScore: p.score
+        });
+
+        renderAll();
+        saveStateToCookies();
+      }
+
+      function openRenameCounter(playerId, counterId) {
+        editingRenamePlayerId = playerId;
+        editingRenameCounterId = counterId;
+        const p = players.find(x => x.id === playerId);
+        if (!p) return;
+        const c = p.counters.find(x => x.id === counterId);
+        if (!c) return;
+
+        const input = document.getElementById('renameCounterInput');
+        if (input) input.value = c.label;
+        const modal = document.getElementById('renameCounterModal');
+        if (modal) modal.classList.add('open');
+      }
+
+      function confirmRenameCounter() {
+        if (editingRenamePlayerId === null || editingRenameCounterId === null) return;
+        const p = players.find(x => x.id === editingRenamePlayerId);
+        if (p) {
+          const c = p.counters.find(x => x.id === editingRenameCounterId);
+          const input = document.getElementById('renameCounterInput');
+          if (c && input && input.value.trim()) {
+            c.label = input.value.trim().slice(0, 10);
+          }
+        }
+        closeRenameCounterModal();
+        renderAll();
+        saveStateToCookies();
+      }
+
+      function closeRenameCounterModal() {
+        const modal = document.getElementById('renameCounterModal');
+        if (modal) modal.classList.remove('open');
+        editingRenamePlayerId = null;
+        editingRenameCounterId = null;
       }
 
       // Calculator
@@ -2316,6 +2893,12 @@
         const p = players.find(x => x.id === id);
         const nameEl = document.getElementById('opsModalPlayerName');
         if (nameEl) nameEl.innerText = p ? p.name : '';
+
+        const sel = document.getElementById('opsCounterSelect');
+        if (sel && p && p.counters) {
+          sel.innerHTML = p.counters.map(c => `<option value="${c.id}">${c.label} (${c.value})</option>`).join('');
+        }
+
         setOpMode('add');
         const inp = document.getElementById('opValueInput');
         if (inp) inp.value = '1';
@@ -2352,34 +2935,36 @@
         const val = parseFloat(document.getElementById('opValueInput').value);
         if (isNaN(val)) return;
 
-        let oldScore = p.score;
+        const sel = document.getElementById('opsCounterSelect');
+        const targetCounterId = sel ? sel.value : 'A';
+        const c = p.counters.find(x => x.id === targetCounterId) || p.counters[0];
+        if (!c) return;
+
+        let oldVal = c.value;
         let operationLabel = '';
-        let desc = '';
 
         if (selectedOpMode === 'add') {
-          p.score += val;
+          c.value += val;
           operationLabel = val >= 0 ? `+${val}` : `${val}`;
-          desc = `${p.name} (${operationLabel})`;
         } else if (selectedOpMode === 'mult') {
-          p.score = Math.round(p.score * val);
+          c.value = Math.round(c.value * val);
           operationLabel = `×${val}`;
-          desc = `${p.name} (${operationLabel})`;
         } else if (selectedOpMode === 'div') {
           if (val === 0) return;
-          p.score = Math.round(p.score / val);
+          c.value = Math.round(c.value / val);
           operationLabel = `÷${val}`;
-          desc = `${p.name} (${operationLabel})`;
         } else if (selectedOpMode === 'set') {
-          p.score = Math.round(val);
+          c.value = Math.round(val);
           operationLabel = `=${val}`;
-          desc = `${p.name} (${operationLabel})`;
         }
+
+        p.score = p.counters.reduce((sum, item) => sum + (Number(item.value) || 0), 0);
 
         p.history.unshift({
           time: new Date().toLocaleTimeString(),
           operation: operationLabel,
-          delta: p.score - oldScore,
-          desc: desc,
+          delta: c.value - oldVal,
+          desc: `${p.name} [${c.label}]: (${operationLabel})`,
           resultingScore: p.score
         });
 
@@ -2488,14 +3073,20 @@
         players.push({
           id: nextPlayerId++,
           name,
-          score: 0,
           color: colorClasses[players.length % colorClasses.length].id,
+          counters: [
+            { id: 'A', label: 'A', value: 0 },
+            { id: 'B', label: 'B', value: 0 },
+            { id: 'C', label: 'C', value: 0 }
+          ],
+          score: 0,
           history: []
         });
         closeAddPlayerModal();
         if (input) input.value = '';
         renderAll();
         saveStateToCookies();
+        AppState.emit('player_added');
       }
 
       function toggleSettingsModal() {
@@ -2519,18 +3110,27 @@
         const idx = players.findIndex(x => x.id === id);
         if (idx !== -1) {
           players.splice(idx, 1);
+          if (activePlayerIndex >= players.length) {
+            activePlayerIndex = Math.max(0, players.length - 1);
+          }
           toggleSettingsModal();
           toggleSettingsModal();
           renderAll();
           saveStateToCookies();
+          AppState.emit('player_removed');
         }
       }
 
       function resetAllScores() {
-        if (!confirm('Скинути рахунок усім гравцям?')) return;
-        players.forEach(p => { p.score = 0; p.history = []; });
-        renderAll();
-        saveStateToCookies();
+        App.openConfirm('Скинути всі очки?', 'Ви впевнені, що хочете скинути очки та лічильники всім гравцям?', () => {
+          players.forEach(p => {
+            p.score = 0;
+            p.counters.forEach(c => c.value = 0);
+            p.history = [];
+          });
+          renderAll();
+          saveStateToCookies();
+        });
       }
 
       function applyLanguage() {
@@ -2561,15 +3161,45 @@
           card.className = `player-card ${isTurn ? 'active-turn' : ''}`;
           card.style.borderLeft = `4px solid ${colorObj.border}`;
 
+          // Calculate total score from counters
+          const totalScore = player.counters ? player.counters.reduce((sum, c) => sum + (Number(c.value) || 0), 0) : player.score;
+          player.score = totalScore;
+
+          let countersHtml = '';
+          if (player.counters && Array.isArray(player.counters)) {
+            countersHtml = `
+              <div class="col" style="gap:4px; margin: 4px 0;">
+                ${player.counters.map(c => `
+                  <div class="row" style="justify-content:space-between; background:var(--bg-main); padding:3px 6px; border-radius:var(--radius-sm); border:1px solid var(--border);">
+                    <button onclick="Scorebook.openRenameCounter(${player.id}, '${c.id}')" class="btn btn-secondary" style="min-height:26px; padding:0 6px; font-size:11px; font-weight:800; border-style:dashed;" title="Змінити назву">${c.label}</button>
+                    <div class="row" style="gap:2px;">
+                      <button onclick="Scorebook.adjustCounter(${player.id}, '${c.id}', -5)" class="btn btn-secondary" style="min-height:26px; min-width:26px; padding:0; font-size:11px; font-weight:700;">-5</button>
+                      <button onclick="Scorebook.adjustCounter(${player.id}, '${c.id}', -1)" class="btn btn-secondary" style="min-height:26px; min-width:26px; padding:0; font-size:11px; font-weight:700;">-1</button>
+                      <input type="number" value="${c.value}" onchange="Scorebook.setCounterValue(${player.id}, '${c.id}', this.value)" style="width:44px; min-height:26px; text-align:center; font-family:monospace; font-weight:800; font-size:13px; padding:0 2px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--bg-surface); color:var(--text-main);">
+                      <button onclick="Scorebook.adjustCounter(${player.id}, '${c.id}', 1)" class="btn btn-secondary" style="min-height:26px; min-width:26px; padding:0; font-size:11px; font-weight:700;">+1</button>
+                      <button onclick="Scorebook.adjustCounter(${player.id}, '${c.id}', 5)" class="btn btn-secondary" style="min-height:26px; min-width:26px; padding:0; font-size:11px; font-weight:700;">+5</button>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            `;
+          }
+
           card.innerHTML = `
             <div class="player-card-header">
-              <div class="player-card-name">
+              <div class="player-card-name" style="cursor:pointer;" onclick="Scorebook.setActivePlayer(${index})" title="${i18n.t('turnOf')}">
                 ${isTurn ? '➡️ ' : ''}#${index + 1} <b>${player.name}</b>
               </div>
-              <div class="player-card-score">${player.score}</div>
+              <div class="row" style="gap:6px; align-items:baseline;">
+                <span class="text-sm text-muted font-bold" title="${i18n.t('totalScore')}">Σ</span>
+                <div class="player-card-score font-mono">${totalScore}</div>
+              </div>
             </div>
-            <div class="player-card-actions">
-              <button onclick="Scorebook.openPlayerHistory(${player.id})" class="btn btn-secondary" style="min-height:32px; padding:0 8px; font-size:11px;" title="Історія гравця">📜</button>
+
+            ${countersHtml}
+
+            <div class="row" style="gap:6px; margin-top:2px;">
+              <button onclick="Scorebook.openPlayerHistory(${player.id})" class="btn btn-secondary btn-icon" style="height:32px; width:34px;" title="${i18n.t('playerHistoryTitle')}">📜</button>
               <button onclick="Scorebook.openPlayerOpsModal(${player.id})" class="btn btn-primary flex-1" style="min-height:32px; padding:0 8px; font-size:11px;">
                 ± × ÷ <span>${i18n.t('actionScoreBtn')}</span>
               </button>
@@ -2590,6 +3220,7 @@
       return {
         init,
         passTurn,
+        setActivePlayer,
         adjustTime,
         resetCurrentTimer,
         toggleTimerRunning,
@@ -2608,6 +3239,11 @@
         closePlayerOpsModal,
         setOpMode,
         applyAdvancedOperation,
+        adjustCounter,
+        setCounterValue,
+        openRenameCounter,
+        confirmRenameCounter,
+        closeRenameCounterModal,
         toggleGlobalHistoryModal,
         finishRound,
         toggleRoundHistoryModal,
@@ -2628,19 +3264,27 @@
     })();
 
     /* ==========================================================================
-       MODULE 7. Integration — зв'язки між модулями
+       MODULE 7. Integration — зв'язки між модулями через AppState
        ========================================================================== */
     const Integration = (() => {
-      function onDiceTurnPassed() {
-        Scorebook.passTurn();
-      }
+      AppState.on('turn_passed', (nextPlayerIndex) => {
+        Scorebook.setActivePlayer(nextPlayerIndex);
+        DiceRoller.setActivePlayer(nextPlayerIndex);
+      });
+
+      AppState.on('player_added', () => {
+        DiceRoller.syncPlayers();
+      });
+
+      AppState.on('player_removed', () => {
+        DiceRoller.syncPlayers();
+      });
 
       function onScoreRoundFinished() {
         DiceRoller.clearHistory();
       }
 
       return {
-        onDiceTurnPassed,
         onScoreRoundFinished
       };
     })();
@@ -2689,24 +3333,307 @@
     })();
 
     /* ==========================================================================
-       STORE MODULE (порожній за замовчуванням, без хардкоду)
+       MODULE 9. GameStore — каталог, 3-кроковий майстер та імпорт/експорт коду
        ========================================================================== */
     const GameStore = (() => {
-      let catalog = []; // ← ЗАВЖДИ ПОРОЖНІЙ МАСИВ
+      let catalog = []; // ← ПОРОЖНІЙ МАСИВ БЕЗ ХАРДКОДНИХ ДЕМО-ІГОР
+      let currentWizardStep = 1;
+      let wizardDraft = null;
 
       function onSearch(query) {
         render(query.toLowerCase());
       }
 
-      function createGamePrompt() {
-        const title = prompt('Введіть назву гри:');
-        if (!title || !title.trim()) return;
-        catalog.push({
+      function openWizard() {
+        currentWizardStep = 1;
+        document.getElementById('wzGameTitle').value = '';
+        document.getElementById('wzGameDesc').value = '';
+        document.getElementById('wzMinPlayers').value = '1';
+        document.getElementById('wzMaxPlayers').value = '6';
+
+        // Set tool defaults
+        const diceYes = document.querySelector('input[name="wzDiceUsed"][value="yes"]');
+        if (diceYes) diceYes.checked = true;
+        document.getElementById('wzDie_d6').checked = true;
+        document.getElementById('wzDiceCount').value = '2';
+
+        const scoreYes = document.querySelector('input[name="wzScoreUsed"][value="yes"]');
+        if (scoreYes) scoreYes.checked = true;
+        const c3 = document.querySelector('input[name="wzCountersNum"][value="3"]');
+        if (c3) c3.checked = true;
+        document.getElementById('wzCounter1').value = 'A';
+        document.getElementById('wzCounter2').value = 'B';
+        document.getElementById('wzCounter3').value = 'C';
+
+        const timerYes = document.querySelector('input[name="wzTimerUsed"][value="yes"]');
+        if (timerYes) timerYes.checked = true;
+        document.getElementById('wzTimerSeconds').value = '30';
+        document.getElementById('wzTimerPenalty').value = '1';
+
+        const roundYes = document.querySelector('input[name="wzRoundsUsed"][value="yes"]');
+        if (roundYes) roundYes.checked = true;
+        document.getElementById('wzMaxRounds').value = '0';
+
+        toggleWizardToolVisibility();
+        updateWizardCounterInputs();
+        showWizardStep(1);
+
+        document.getElementById('gameWizardModal').classList.add('open');
+      }
+
+      function closeWizard() {
+        document.getElementById('gameWizardModal').classList.remove('open');
+        currentWizardStep = 1;
+      }
+
+      function showWizardStep(step) {
+        currentWizardStep = step;
+        document.getElementById('wizardStep1').style.display = step === 1 ? 'flex' : 'none';
+        document.getElementById('wizardStep2').style.display = step === 2 ? 'flex' : 'none';
+        document.getElementById('wizardStep3').style.display = step === 3 ? 'flex' : 'none';
+
+        const titleEl = document.getElementById('wizardStepHeaderTitle');
+        if (titleEl) {
+          titleEl.innerText = step === 1 ? `✨ ${i18n.t('step1Title')}` :
+                              step === 2 ? `🛠️ ${i18n.t('step2Title')}` :
+                              `📋 ${i18n.t('step3Title')}`;
+        }
+      }
+
+      function wizardNext() {
+        if (currentWizardStep === 1) {
+          const title = document.getElementById('wzGameTitle').value.trim();
+          if (!title) {
+            Scorebook.showMessage('Будь ласка, введіть назву гри!');
+            return;
+          }
+          showWizardStep(2);
+        } else if (currentWizardStep === 2) {
+          buildWizardDraft();
+          renderWizardSummary();
+          showWizardStep(3);
+        }
+      }
+
+      function wizardPrev() {
+        if (currentWizardStep > 1) {
+          showWizardStep(currentWizardStep - 1);
+        }
+      }
+
+      function toggleWizardToolVisibility() {
+        const diceUsed = document.querySelector('input[name="wzDiceUsed"]:checked')?.value === 'yes';
+        const scoreUsed = document.querySelector('input[name="wzScoreUsed"]:checked')?.value === 'yes';
+        const timerUsed = document.querySelector('input[name="wzTimerUsed"]:checked')?.value === 'yes';
+        const roundsUsed = document.querySelector('input[name="wzRoundsUsed"]:checked')?.value === 'yes';
+
+        const dBox = document.getElementById('wzDiceSubOptions');
+        if (dBox) dBox.style.display = diceUsed ? 'flex' : 'none';
+
+        const sBox = document.getElementById('wzScoreSubOptions');
+        if (sBox) sBox.style.display = scoreUsed ? 'flex' : 'none';
+
+        const tBox = document.getElementById('wzTimerSubOptions');
+        if (tBox) tBox.style.display = timerUsed ? 'flex' : 'none';
+
+        const rBox = document.getElementById('wzRoundsSubOptions');
+        if (rBox) rBox.style.display = roundsUsed ? 'flex' : 'none';
+      }
+
+      function updateWizardCounterInputs() {
+        const num = parseInt(document.querySelector('input[name="wzCountersNum"]:checked')?.value || '3');
+        const c1 = document.getElementById('wzCounter1');
+        const c2 = document.getElementById('wzCounter2');
+        const c3 = document.getElementById('wzCounter3');
+
+        if (c1) c1.style.display = num >= 1 ? 'block' : 'none';
+        if (c2) c2.style.display = num >= 2 ? 'block' : 'none';
+        if (c3) c3.style.display = num >= 3 ? 'block' : 'none';
+      }
+
+      function buildWizardDraft() {
+        const title = document.getElementById('wzGameTitle').value.trim();
+        const desc = document.getElementById('wzGameDesc').value.trim() || 'Без опису';
+        const minP = parseInt(document.getElementById('wzMinPlayers').value) || 1;
+        const maxP = parseInt(document.getElementById('wzMaxPlayers').value) || 6;
+
+        const diceUsed = document.querySelector('input[name="wzDiceUsed"]:checked')?.value === 'yes';
+        const diceTypes = [];
+        if (document.getElementById('wzDie_d4').checked) diceTypes.push('D4');
+        if (document.getElementById('wzDie_d6').checked) diceTypes.push('D6');
+        if (document.getElementById('wzDie_d8').checked) diceTypes.push('D8');
+        if (document.getElementById('wzDie_d10').checked) diceTypes.push('D10');
+        if (document.getElementById('wzDie_d12').checked) diceTypes.push('D12');
+        if (document.getElementById('wzDie_d20').checked) diceTypes.push('D20');
+        if (document.getElementById('wzDie_custom').checked) diceTypes.push('Custom');
+        if (diceTypes.length === 0) diceTypes.push('D6');
+
+        const diceCount = parseInt(document.getElementById('wzDiceCount').value) || 2;
+        const diceMode = document.querySelector('input[name="wzDiceMode"]:checked')?.value || 'dots';
+
+        const scoreUsed = document.querySelector('input[name="wzScoreUsed"]:checked')?.value === 'yes';
+        const numCounters = parseInt(document.querySelector('input[name="wzCountersNum"]:checked')?.value || '3');
+        const counterNames = [];
+        if (numCounters >= 1) counterNames.push(document.getElementById('wzCounter1').value.trim() || 'A');
+        if (numCounters >= 2) counterNames.push(document.getElementById('wzCounter2').value.trim() || 'B');
+        if (numCounters >= 3) counterNames.push(document.getElementById('wzCounter3').value.trim() || 'C');
+        const allowNeg = document.querySelector('input[name="wzAllowNeg"]:checked')?.value === 'yes';
+
+        const timerUsed = document.querySelector('input[name="wzTimerUsed"]:checked')?.value === 'yes';
+        const timerSeconds = parseInt(document.getElementById('wzTimerSeconds').value) || 30;
+        const timerPenalty = parseInt(document.getElementById('wzTimerPenalty').value) || 0;
+
+        const roundsUsed = document.querySelector('input[name="wzRoundsUsed"]:checked')?.value === 'yes';
+        const maxRounds = parseInt(document.getElementById('wzMaxRounds').value) || 0;
+
+        wizardDraft = {
           id: 'game_' + Date.now(),
-          title: title.trim(),
-          description: 'Користувацька гра'
-        });
+          title,
+          desc,
+          players: { min: minP, max: maxP },
+          dice: { used: diceUsed, types: diceTypes, count: diceCount, mode: diceMode },
+          score: { used: scoreUsed, counters: counterNames, allowNeg },
+          timer: { used: timerUsed, seconds: timerSeconds, penalty: timerPenalty },
+          rounds: { used: roundsUsed, max: maxRounds }
+        };
+      }
+
+      function renderWizardSummary() {
+        const box = document.getElementById('wzSummaryCard');
+        if (!box || !wizardDraft) return;
+
+        box.innerHTML = `
+          <div style="font-size:16px; font-weight:800; color:var(--accent);">${wizardDraft.title}</div>
+          <div style="color:var(--text-muted);">${wizardDraft.desc}</div>
+          <div class="row" style="gap:12px; flex-wrap:wrap; margin-top:4px;">
+            <span>👥 <b>${wizardDraft.players.min}-${wizardDraft.players.max}</b> гравців</span>
+            <span>🎲 Кубики: <b>${wizardDraft.dice.used ? `${wizardDraft.dice.count} шт (${wizardDraft.dice.types.join(',')})` : 'Ні'}</b></span>
+            <span>📊 Очки: <b>${wizardDraft.score.used ? wizardDraft.score.counters.join(', ') : 'Ні'}</b></span>
+            <span>⏱️ Таймер: <b>${wizardDraft.timer.used ? `${wizardDraft.timer.seconds}с (штраф: ${wizardDraft.timer.penalty})` : 'Ні'}</b></span>
+            <span>🔄 Раунди: <b>${wizardDraft.rounds.used ? (wizardDraft.rounds.max ? wizardDraft.rounds.max : '∞') : 'Ні'}</b></span>
+          </div>
+        `;
+      }
+
+      function wizardSaveLocal() {
+        if (!wizardDraft) return;
+        catalog.push(wizardDraft);
+        saveCatalogToStorage();
+        closeWizard();
         render();
+        Scorebook.showMessage(i18n.t('gameSaved'));
+      }
+
+      function wizardCopyCode() {
+        if (!wizardDraft) return;
+        const code = GameCodec.encode(wizardDraft);
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(code).then(() => {
+            Scorebook.showMessage(`${i18n.t('codeCopied')}\n\n${code}`);
+          }).catch(() => {
+            Scorebook.showMessage(code);
+          });
+        } else {
+          Scorebook.showMessage(code);
+        }
+      }
+
+      function importFromCode() {
+        const input = document.getElementById('offlineCodeInput');
+        if (!input) return;
+        const code = input.value.trim();
+        if (!code) {
+          Scorebook.showMessage('Будь ласка, введіть код гри!');
+          return;
+        }
+
+        const config = GameCodec.decode(code);
+        if (!config || !config.title) {
+          Scorebook.showMessage(i18n.t('invalidCode'));
+          return;
+        }
+
+        config.id = 'imported_' + Date.now();
+        catalog.push(config);
+        saveCatalogToStorage();
+        input.value = '';
+        render();
+        Scorebook.showMessage(i18n.t('gameSaved'));
+      }
+
+      function copyGameCode(gameId) {
+        const g = catalog.find(x => x.id === gameId);
+        if (!g) return;
+        const code = GameCodec.encode(g);
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(code).then(() => {
+            Scorebook.showMessage(`${i18n.t('codeCopied')}\n\n${code}`);
+          });
+        } else {
+          Scorebook.showMessage(code);
+        }
+      }
+
+      function applyGameToSession(gameId) {
+        const g = catalog.find(x => x.id === gameId);
+        if (!g) return;
+
+        if (g.dice && g.dice.used) {
+          DiceRoller.setDiceCount(g.dice.count || 2);
+          if (g.dice.mode) {
+            if ((g.dice.mode === 'dots' && DiceRoller.visualMode !== 'dots') ||
+                (g.dice.mode === 'nums' && DiceRoller.visualMode !== 'nums')) {
+              DiceRoller.toggleVisualMode();
+            }
+          }
+        }
+
+        if (g.timer && g.timer.used) {
+          Scorebook.onTurnDurationChange(g.timer.seconds || 30);
+          Scorebook.onPenaltyPointsChange(g.timer.penalty || 0);
+        }
+
+        if (g.score && g.score.used && g.score.counters) {
+          const players = Scorebook.getPlayers();
+          players.forEach(p => {
+            p.counters = g.score.counters.map((cName, idx) => ({
+              id: String.fromCharCode(65 + idx),
+              label: cName,
+              value: 0
+            }));
+            p.score = 0;
+          });
+          Scorebook.renderAll();
+        }
+
+        App.setView('play');
+        Scorebook.showMessage(`Гру «${g.title}» застосовано!`);
+      }
+
+      function removeGame(gameId) {
+        App.openConfirm('Видалити гру?', 'Ви впевнені, що хочете видалити цю гру з каталогу?', () => {
+          catalog = catalog.filter(x => x.id !== gameId);
+          saveCatalogToStorage();
+          render();
+        });
+      }
+
+      function saveCatalogToStorage() {
+        try {
+          localStorage.setItem('bgt_custom_catalog', JSON.stringify(catalog));
+        } catch (e) {}
+      }
+
+      function loadCatalogFromStorage() {
+        try {
+          const saved = localStorage.getItem('bgt_custom_catalog');
+          if (saved) {
+            const parsed = JSON.parse(saved);
+            if (Array.isArray(parsed)) {
+              catalog = parsed;
+            }
+          }
+        } catch (e) {}
       }
 
       function render(query = '') {
@@ -2719,8 +3646,8 @@
           const msg = catalog.length === 0
             ? `<div style="grid-column:1/-1; text-align:center; padding:40px 16px;">
                  <div style="font-size:48px; margin-bottom:12px;">🎲</div>
-                 <div style="font-weight:700; font-size:16px; margin-bottom:8px;">Ігор ще немає</div>
-                 <div style="color:var(--text-muted); font-size:13px;">Створіть першу гру або введіть офлайн-код</div>
+                 <div style="font-weight:700; font-size:16px; margin-bottom:8px;" data-i18n="emptyStoreTitle">${i18n.t('emptyStoreTitle')}</div>
+                 <div style="color:var(--text-muted); font-size:13px;" data-i18n="emptyStoreDesc">${i18n.t('emptyStoreDesc')}</div>
                </div>`
             : `<div style="grid-column:1/-1; text-align:center; padding:32px 16px;">
                  <div style="font-size:36px; margin-bottom:8px;">🔍</div>
@@ -2731,25 +3658,87 @@
         }
 
         grid.innerHTML = filtered.map(g => `
-          <div style="padding:12px; background:var(--bg-main); border:1px solid var(--border); border-radius:var(--radius-sm); margin-bottom:8px;">
-            <b>${g.title}</b>
-            <div style="font-size:12px; color:var(--text-muted); margin-top:4px;">${g.description}</div>
+          <div style="padding:14px; background:var(--bg-main); border:1px solid var(--border); border-radius:var(--radius-sm); margin-bottom:10px;" class="col">
+            <div class="row" style="justify-content:space-between;">
+              <b style="font-size:15px; color:var(--text-main);">${g.title}</b>
+              <div class="row" style="gap:4px;">
+                <button onclick="GameStore.copyGameCode('${g.id}')" class="btn btn-secondary" style="min-height:30px; padding:0 8px; font-size:11px;" title="Скопіювати код">📤 Код</button>
+                <button onclick="GameStore.removeGame('${g.id}')" class="btn btn-secondary" style="min-height:30px; padding:0 8px; font-size:11px; color:var(--danger);" title="Видалити">🗑️</button>
+              </div>
+            </div>
+            <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">${g.desc || ''}</div>
+            <div class="row" style="gap:8px; flex-wrap:wrap; font-size:11px; color:var(--text-muted); margin-top:4px;">
+              <span>👥 ${g.players ? `${g.players.min}-${g.players.max}` : '1-6'}</span>
+              ${g.dice && g.dice.used ? `<span>🎲 ${g.dice.count} кубики</span>` : ''}
+              ${g.score && g.score.used ? `<span>📊 ${g.score.counters ? g.score.counters.join(',') : 'Очки'}</span>` : ''}
+              ${g.timer && g.timer.used ? `<span>⏱️ ${g.timer.seconds}с</span>` : ''}
+            </div>
+            <button onclick="GameStore.applyGameToSession('${g.id}')" class="btn btn-primary" style="min-height:34px; margin-top:6px; font-size:12px;">
+              ▶️ Застосувати гру
+            </button>
           </div>
         `).join('');
       }
 
+      function init() {
+        loadCatalogFromStorage();
+        render();
+      }
+
       return {
+        init,
         onSearch,
-        createGamePrompt,
+        openWizard,
+        closeWizard,
+        wizardNext,
+        wizardPrev,
+        toggleWizardToolVisibility,
+        updateWizardCounterInputs,
+        wizardSaveLocal,
+        wizardCopyCode,
+        importFromCode,
+        copyGameCode,
+        applyGameToSession,
+        removeGame,
         render
       };
     })();
 
     /* ==========================================================================
-       MODULE 9. App — ініціалізація і роутинг
+       MODULE 10. App — ініціалізація, модальні підтвердження і роутинг
        ========================================================================== */
     const App = (() => {
       let currentView = 'play';
+      let confirmActionCallback = null;
+
+      function openConfirm(title, text, onConfirm) {
+        confirmActionCallback = onConfirm;
+        const tEl = document.getElementById('confirmModalTitle');
+        const dEl = document.getElementById('confirmModalText');
+        const bEl = document.getElementById('confirmModalActionBtn');
+
+        if (tEl) tEl.innerText = title || i18n.t('confirmTitle');
+        if (dEl) dEl.innerText = text || i18n.t('confirmReset');
+
+        if (bEl) {
+          bEl.onclick = () => {
+            closeConfirmModal();
+            if (confirmActionCallback) {
+              confirmActionCallback();
+              confirmActionCallback = null;
+            }
+          };
+        }
+
+        const modal = document.getElementById('confirmModal');
+        if (modal) modal.classList.add('open');
+      }
+
+      function closeConfirmModal() {
+        const modal = document.getElementById('confirmModal');
+        if (modal) modal.classList.remove('open');
+        confirmActionCallback = null;
+      }
 
       function init() {
         DB.init();
@@ -2761,7 +3750,7 @@
         DiceRoller.init();
         Scorebook.init();
         PanelManager.init();
-        GameStore.render();
+        GameStore.init();
 
         if ('serviceWorker' in navigator) {
           navigator.serviceWorker.register('./sw.js').catch(err => {
@@ -2790,7 +3779,9 @@
 
       return {
         init,
-        setView
+        setView,
+        openConfirm,
+        closeConfirmModal
       };
     })();
 
