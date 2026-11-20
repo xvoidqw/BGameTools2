@@ -84,7 +84,7 @@
       border-radius: 9999px;
     }
 
-    /* Keyframe Animations from Originals */
+    /* Keyframe Animations */
     @keyframes rollShake {
       0% { transform: translate(0, 0) rotate(0deg) scale(1); }
       20% { transform: translate(-4px, 4px) rotate(-8deg) scale(0.95); }
@@ -200,7 +200,9 @@
       cursor: pointer;
     }
 
-    /* Main Workspace Layout */
+    /* ==========================================================================
+       LAYOUT: FIXED SCROLLING IN SPLIT & OTHER MODES
+       ========================================================================== */
     main.main-content {
       flex: 1;
       padding: 12px;
@@ -214,6 +216,7 @@
       flex-direction: column;
       gap: 16px;
       width: 100%;
+      min-height: 0;
     }
 
     .panel-workspace.layout-dice #panelDice {
@@ -236,16 +239,39 @@
       display: grid;
       grid-template-columns: 1fr;
       gap: 16px;
+      align-items: start;
     }
+
     .panel-workspace.layout-split #panelDice,
     .panel-workspace.layout-split #panelScorebook {
       display: flex !important;
+      flex-direction: column;
+      min-height: 0;
+      overflow-y: auto;
+      max-height: calc(100vh - 120px);
     }
 
-    /* Landscape or wide screens >= 768px in split mode: 2 columns */
+    @media (orientation: portrait) {
+      .panel-workspace.layout-split {
+        grid-template-columns: 1fr;
+      }
+      .panel-workspace.layout-split #panelDice,
+      .panel-workspace.layout-split #panelScorebook {
+        max-height: none;
+        overflow-y: visible;
+      }
+    }
+
     @media (orientation: landscape), (min-width: 768px) {
       .panel-workspace.layout-split {
         grid-template-columns: 1fr 1fr;
+        height: calc(100vh - 120px);
+        align-items: stretch;
+      }
+      .panel-workspace.layout-split #panelDice,
+      .panel-workspace.layout-split #panelScorebook {
+        overflow-y: auto;
+        max-height: 100%;
       }
     }
 
@@ -259,6 +285,7 @@
       flex-direction: column;
       gap: 12px;
       box-shadow: var(--shadow);
+      overflow: visible;
     }
 
     .card-panel-header {
@@ -276,6 +303,21 @@
       display: flex;
       align-items: center;
       gap: 6px;
+    }
+
+    /* Game Loaded Banner */
+    .game-loaded-banner {
+      background: var(--accent);
+      color: #ffffff;
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      animation: pulseGlow 0.3s ease-out;
     }
 
     /* Buttons */
@@ -520,6 +562,19 @@
       line-height: 1;
     }
 
+    /* Store Cards */
+    .game-card-desc {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.4;
+    }
+
     /* Modals */
     .modal-overlay {
       position: fixed;
@@ -571,6 +626,10 @@
     }
     input:focus, select:focus, textarea:focus {
       border-color: var(--accent);
+    }
+    input.error-border {
+      border-color: var(--danger) !important;
+      background: var(--danger-light);
     }
   </style>
 </head>
@@ -626,6 +685,15 @@
 
     <!-- PLAY VIEW -->
     <section id="viewPlay" class="panel-workspace layout-dice">
+
+      <!-- Active Game Banner -->
+      <div id="gameLoadedBanner" class="game-loaded-banner" style="display:none;">
+        <div class="row" style="gap:6px;">
+          <span>🎮</span>
+          <span id="gameLoadedBannerText">Завантажено гру</span>
+        </div>
+        <button onclick="document.getElementById('gameLoadedBanner').style.display='none'" class="btn btn-secondary" style="min-height:24px; padding:0 6px; font-size:10px; background:rgba(255,255,255,0.25); border:none; color:#fff;">✕</button>
+      </div>
 
       <!-- ====================================================================
            PANEL 1: DICE ROLLER
@@ -819,13 +887,26 @@
           </button>
         </div>
 
-        <!-- Offline Code Import Row -->
-        <div class="row" style="margin-top:8px; gap:8px;">
-          <input type="text" id="offlineCodeInput" placeholder="Введіть код гри (XXXXXXXX-XXXXXXXX-...)" style="flex:1; min-height:40px; font-family:monospace; font-size:12px;">
-          <button class="btn btn-secondary" onclick="GameStore.importFromCode()">📥 Імпортувати</button>
+        <!-- Offline Code Import Row with Error Feedback -->
+        <div class="col" style="margin-top:8px; gap:4px;">
+          <div class="row" style="gap:8px;">
+            <input type="text" id="offlineCodeInput" placeholder="Введіть код гри (XXXXXXXX-XXXXXXXX-...)" style="flex:1; min-height:40px; font-family:monospace; font-size:12px;" oninput="GameStore.clearImportError()">
+            <button class="btn btn-secondary" onclick="GameStore.importFromCode()">📥 Імпортувати</button>
+          </div>
+          <div id="importErrorMessage" class="text-sm font-bold" style="color:var(--danger); display:none; padding:2px 4px;"></div>
         </div>
       </div>
 
+      <!-- Public Games Section (if Supabase enabled & loaded) -->
+      <div class="card-panel" id="publicStoreSection" style="display:none;">
+        <div class="row" style="justify-content:space-between; margin-bottom:4px;">
+          <b class="text-sm font-bold" style="color:var(--accent);" data-i18n="publicGames">Публічні ігри (Онлайн)</b>
+          <button onclick="GameStore.loadPublicGames()" class="btn btn-secondary" style="min-height:28px; padding:0 8px; font-size:11px;">🔄 Оновити</button>
+        </div>
+        <div id="publicGamesList" class="col"></div>
+      </div>
+
+      <!-- Local Games Section -->
       <div class="card-panel" id="storeGrid">
         <!-- Rendered by GameStore.render() -->
       </div>
@@ -836,6 +917,39 @@
   <!-- ========================================================================
        MODALS
        ======================================================================== -->
+
+  <!-- Share Modal (QR + Code + Copy) -->
+  <div id="shareModal" class="modal-overlay">
+    <div class="modal-content" style="max-width:380px; text-align:center;">
+      <div class="modal-header">
+        <h3 class="modal-title" data-i18n="shareGame">Поділитися грою</h3>
+        <button class="btn btn-secondary btn-icon" onclick="GameStore.closeShareModal()">✕</button>
+      </div>
+      <div class="col" style="gap:10px; align-items:center;">
+        <canvas id="shareQrCanvas" width="180" height="180" style="border:1px solid var(--border); border-radius:var(--radius-sm); background:#ffffff;"></canvas>
+        <textarea id="shareCodeText" readonly rows="3" style="width:100%; font-family:monospace; font-size:12px; font-weight:700; text-align:center; resize:none;" onclick="this.select()"></textarea>
+        <button onclick="GameStore.copyShareCodeFromModal()" class="btn btn-primary" style="width:100%;" data-i18n="copyCode">📋 Копіювати код</button>
+        <button onclick="GameStore.closeShareModal()" class="btn btn-secondary" style="width:100%;" data-i18n="close">Закрити</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Preview Modal (Import Confirmation) -->
+  <div id="previewModal" class="modal-overlay">
+    <div class="modal-content" style="max-width:400px;">
+      <div class="modal-header">
+        <h3 class="modal-title" data-i18n="previewTitle">Попередній перегляд гри</h3>
+        <button class="btn btn-secondary btn-icon" onclick="GameStore.closePreviewModal()">✕</button>
+      </div>
+      <div id="previewModalContent" class="col" style="gap:10px; background:var(--bg-main); padding:12px; border-radius:var(--radius-sm); border:1px solid var(--border); font-size:12px;">
+        <!-- Filled by GameStore.openPreviewModal -->
+      </div>
+      <div class="row" style="gap:8px; margin-top:6px;">
+        <button onclick="GameStore.confirmImport()" class="btn btn-primary flex-1" data-i18n="addToLibrary">✅ Додати до бібліотеки</button>
+        <button onclick="GameStore.closePreviewModal()" class="btn btn-secondary flex-1" data-i18n="cancel">Скасувати</button>
+      </div>
+    </div>
+  </div>
 
   <!-- Dice Settings Modal -->
   <div id="diceSettingsModal" class="modal-overlay">
@@ -920,9 +1034,7 @@
           <button class="btn btn-secondary btn-icon" onclick="DiceRoller.toggleHistoryModal()">✕</button>
         </div>
       </div>
-      <div id="historyListContainer" class="col" style="max-height:360px; overflow-y:auto; gap:6px;">
-        <!-- History items -->
-      </div>
+      <div id="historyListContainer" class="col" style="max-height:360px; overflow-y:auto; gap:6px;"></div>
     </div>
   </div>
 
@@ -1137,6 +1249,10 @@
           <input type="text" id="wzGameTitle" placeholder="Наприклад: Каркасон, Монополія...">
         </div>
         <div class="col" style="gap:4px;">
+          <label class="text-sm font-bold" data-i18n="authorLabel">Автор гри</label>
+          <input type="text" id="wzGameAuthor" placeholder="Ваше ім'я або нікнейм">
+        </div>
+        <div class="col" style="gap:4px;">
           <label class="text-sm">Опис гри (до 500 символів)</label>
           <textarea id="wzGameDesc" maxlength="500" rows="3" placeholder="Короткі правила або опис гри..." style="width:100%; padding:8px; border-radius:var(--radius-sm); border:1px solid var(--border); background:var(--bg-surface); color:var(--text-main); font-family:inherit;"></textarea>
         </div>
@@ -1318,8 +1434,8 @@
        4. "anon public" → скопіювати в SUPABASE_ANON_KEY
        Якщо порожньо — програма працює офлайн.
        ============================================================ */
-    const SUPABASE_URL      = 'https://jqluflotryuyekkqyvik.supabase.co'; // ← 'https://xxx.supabase.co'
-    const SUPABASE_ANON_KEY = 'sb_publishable_QuQCrWYARbv6AgbppUI48w_yls5SG6d'; // ← 'eyJhbGci...'
+    const SUPABASE_URL      = ''; // ← 'https://xxx.supabase.co'
+    const SUPABASE_ANON_KEY = ''; // ← 'eyJhbGci...'
 
     /* ==========================================================================
        MODULE 1. AppState — спільний стан і шина подій (ПОРОЖНІЙ ПРИ СТАРТІ)
@@ -1367,11 +1483,15 @@
         return supabaseClient;
       }
 
-      return { init, getSupabase };
+      function isConfigured() {
+        return !!(SUPABASE_URL && SUPABASE_ANON_KEY && supabaseClient);
+      }
+
+      return { init, getSupabase, isConfigured };
     })();
 
     /* ==========================================================================
-       MODULE 3. GameCodec — кодування/декодування ігор (Base64 + XOR)
+       MODULE 3. GameCodec — кодування/декодування ігор з валідацією помилок
        ========================================================================== */
     const GameCodec = (() => {
       function lzCompress(str) {
@@ -1403,20 +1523,77 @@
       }
 
       function decode(code) {
+        if (!code || typeof code !== 'string' || code.trim().length < 8) {
+          return { error: 'Код занадто короткий' };
+        }
         try {
-          if (!code || typeof code !== 'string') return null;
           const b64 = code.replace(/-/g, '').trim();
           const encrypted = atob(b64);
           const compressed = xorEncrypt(encrypted);
           const json = lzDecompress(compressed);
-          return JSON.parse(json);
+          const config = JSON.parse(json);
+          if (!config || !config.title) {
+            return { error: 'Невірний формат' };
+          }
+          return config;
         } catch (e) {
-          console.warn('[GameCodec] Decode error:', e);
-          return null;
+          return { error: 'Не вдалося розшифрувати код' };
         }
       }
 
-      return { encode, decode };
+      // Генерація QR-коду на Canvas без зовнішніх бібліотек
+      function drawQrCanvas(canvas, text) {
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const size = canvas.width;
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, size, size);
+
+        const modules = 25; // 25x25 матриця
+        const cellSize = size / modules;
+        ctx.fillStyle = '#000000';
+
+        function drawFinder(startX, startY) {
+          for (let r = 0; r < 7; r++) {
+            for (let c = 0; c < 7; c++) {
+              const isBorder = (r === 0 || r === 6 || c === 0 || c === 6);
+              const isCenter = (r >= 2 && r <= 4 && c >= 2 && c <= 4);
+              if (isBorder || isCenter) {
+                ctx.fillRect((startX + c) * cellSize, (startY + r) * cellSize, cellSize, cellSize);
+              }
+            }
+          }
+        }
+
+        drawFinder(1, 1);
+        drawFinder(modules - 8, 1);
+        drawFinder(1, modules - 8);
+
+        for (let i = 8; i < modules - 8; i += 2) {
+          ctx.fillRect(i * cellSize, 3 * cellSize, cellSize, cellSize);
+          ctx.fillRect(3 * cellSize, i * cellSize, cellSize, cellSize);
+        }
+
+        let hash = 0;
+        for (let i = 0; i < text.length; i++) {
+          hash = ((hash << 5) - hash + text.charCodeAt(i)) | 0;
+        }
+
+        for (let r = 1; r < modules - 1; r++) {
+          for (let c = 1; c < modules - 1; c++) {
+            if ((r <= 8 && c <= 8) || (r <= 8 && c >= modules - 9) || (r >= modules - 9 && c <= 8)) {
+              continue;
+            }
+            const charCode = text.charCodeAt((r * modules + c) % text.length) || 0;
+            const bit = ((hash ^ (r * 31 + c * 17) ^ charCode) & 1) === 1;
+            if (bit) {
+              ctx.fillRect(c * cellSize, r * cellSize, cellSize, cellSize);
+            }
+          }
+        }
+      }
+
+      return { encode, decode, drawQrCanvas };
     })();
 
     /* ==========================================================================
@@ -1454,7 +1631,12 @@
           nextStep: "Далі →", prevStep: "← Назад", saveLocal: "💾 Зберегти локально", copyOfflineCode: "📤 Скопіювати офлайн-код",
           codeCopied: "Офлайн-код скопійовано!", gameSaved: "Гру успішно додано!", invalidCode: "Невірний офлайн-код гри!",
           renameCounterTitle: "Змінити назву лічильника", renameCounterLabel: "Назва лічильника:", totalScore: "Загальний рахунок",
-          confirmTitle: "Підтвердження", confirmReset: "Ви впевнені, що хочете скинути?"
+          confirmTitle: "Підтвердження", confirmReset: "Ви впевнені, що хочете скинути?",
+          shareGame: "Поділитися грою", copyCode: "📋 Копіювати код", previewTitle: "Попередній перегляд гри",
+          addToLibrary: "✅ Додати до бібліотеки", cancel: "Скасувати", publishSupabase: "🌐 Опублікувати",
+          publicGames: "Публічні ігри (Онлайн)", myGames: "Мої локальні ігри", gameLoaded: "Завантажено гру:",
+          gamePublished: "Гру успішно опубліковано!", publishError: "Помилка публікації в Supabase", authorLabel: "Автор:",
+          playGame: "▶️ Грати"
         },
         en: {
           navPlay: "Play", navStore: "Store", tabDice: "Dice", tabScore: "Scores & Timer", tabBoth: "Both",
@@ -1484,7 +1666,12 @@
           nextStep: "Next →", prevStep: "← Back", saveLocal: "💾 Save Locally", copyOfflineCode: "📤 Copy Offline Code",
           codeCopied: "Offline code copied!", gameSaved: "Game successfully added!", invalidCode: "Invalid offline game code!",
           renameCounterTitle: "Rename Counter", renameCounterLabel: "Counter name:", totalScore: "Total Score",
-          confirmTitle: "Confirmation", confirmReset: "Are you sure you want to reset?"
+          confirmTitle: "Confirmation", confirmReset: "Are you sure you want to reset?",
+          shareGame: "Share Game", copyCode: "📋 Copy Code", previewTitle: "Game Preview",
+          addToLibrary: "✅ Add to Library", cancel: "Cancel", publishSupabase: "🌐 Publish",
+          publicGames: "Public Games (Online)", myGames: "My Local Games", gameLoaded: "Game loaded:",
+          gamePublished: "Game published successfully!", publishError: "Error publishing to Supabase", authorLabel: "Author:",
+          playGame: "▶️ Play"
         },
         es: {
           navPlay: "Jugar", navStore: "Tienda", tabDice: "Dados", tabScore: "Puntos y Tiempo", tabBoth: "Ambos",
@@ -1514,7 +1701,12 @@
           nextStep: "Siguiente →", prevStep: "← Atrás", saveLocal: "💾 Guardar localmente", copyOfflineCode: "📤 Copiar código",
           codeCopied: "¡Código copiado al portapapeles!", gameSaved: "¡Juego añadido con éxito!", invalidCode: "¡Código de juego inválido!",
           renameCounterTitle: "Renombrar contador", renameCounterLabel: "Nombre del contador:", totalScore: "Total",
-          confirmTitle: "Confirmación", confirmReset: "¿Estás seguro de restablecer?"
+          confirmTitle: "Confirmación", confirmReset: "¿Estás seguro de restablecer?",
+          shareGame: "Compartir juego", copyCode: "📋 Copiar código", previewTitle: "Vista previa del juego",
+          addToLibrary: "✅ Añadir a biblioteca", cancel: "Cancelar", publishSupabase: "🌐 Publicar",
+          publicGames: "Juegos públicos (Online)", myGames: "Mis juegos locales", gameLoaded: "Juego cargado:",
+          gamePublished: "¡Juego publicado con éxito!", publishError: "Error al publicar en Supabase", authorLabel: "Autor:",
+          playGame: "▶️ Jugar"
         },
         de: {
           navPlay: "Spielen", navStore: "Store", tabDice: "Würfel", tabScore: "Punkte & Zeit", tabBoth: "Beide",
@@ -1544,7 +1736,12 @@
           nextStep: "Weiter →", prevStep: "← Zurück", saveLocal: "💾 Lokal speichern", copyOfflineCode: "📤 Offline-Code kopieren",
           codeCopied: "Offline-Code kopiert!", gameSaved: "Spiel erfolgreich hinzugefügt!", invalidCode: "Ungültiger Offline-Code!",
           renameCounterTitle: "Zähler umbenennen", renameCounterLabel: "Zählername:", totalScore: "Gesamtpunktzahl",
-          confirmTitle: "Bestätigung", confirmReset: "Möchten Sie wirklich zurücksetzen?"
+          confirmTitle: "Bestätigung", confirmReset: "Möchten Sie wirklich zurücksetzen?",
+          shareGame: "Spiel teilen", copyCode: "📋 Code kopieren", previewTitle: "Spielvorschau",
+          addToLibrary: "✅ Zur Bibliothek hinzufügen", cancel: "Abbrechen", publishSupabase: "🌐 Veröffentlichen",
+          publicGames: "Öffentliche Spiele (Online)", myGames: "Meine lokalen Spiele", gameLoaded: "Spiel geladen:",
+          gamePublished: "Spiel erfolgreich veröffentlicht!", publishError: "Fehler beim Veröffentlichen", authorLabel: "Autor:",
+          playGame: "▶️ Spielen"
         },
         fr: {
           navPlay: "Jouer", navStore: "Boutique", tabDice: "Dés", tabScore: "Points & Chrono", tabBoth: "Les deux",
@@ -1574,7 +1771,12 @@
           nextStep: "Suivant →", prevStep: "← Précédent", saveLocal: "💾 Sauvegarder localement", copyOfflineCode: "📤 Copier le code hors-ligne",
           codeCopied: "Code copié !", gameSaved: "Jeu ajouté avec succès !", invalidCode: "Code hors ligne invalide !",
           renameCounterTitle: "Renommer le compteur", renameCounterLabel: "Nom du compteur :", totalScore: "Score total",
-          confirmTitle: "Confirmation", confirmReset: "Êtes-vous sûr de vouloir réinitialiser ?"
+          confirmTitle: "Confirmation", confirmReset: "Êtes-vous sûr de vouloir réinitialiser ?",
+          shareGame: "Partager le jeu", copyCode: "📋 Copier le code", previewTitle: "Aperçu du jeu",
+          addToLibrary: "✅ Ajouter à la bibliothèque", cancel: "Annuler", publishSupabase: "🌐 Publier",
+          publicGames: "Jeux publics (En ligne)", myGames: "Mes jeux locaux", gameLoaded: "Jeu chargé :",
+          gamePublished: "Jeu publié avec succès !", publishError: "Erreur de publication", authorLabel: "Auteur :",
+          playGame: "▶️ Jouer"
         },
         it: {
           navPlay: "Gioca", navStore: "Negozio", tabDice: "Dadi", tabScore: "Punti e Tempo", tabBoth: "Entrambi",
@@ -1604,7 +1806,12 @@
           nextStep: "Avanti →", prevStep: "← Indietro", saveLocal: "💾 Salva in locale", copyOfflineCode: "📤 Copia codice offline",
           codeCopied: "Codice copiato!", gameSaved: "Gioco aggiunto con successo!", invalidCode: "Codice offline non valido!",
           renameCounterTitle: "Rinomina contatore", renameCounterLabel: "Nome contatore:", totalScore: "Punteggio totale",
-          confirmTitle: "Conferma", confirmReset: "Sei sicuro di voler resettare?"
+          confirmTitle: "Conferma", confirmReset: "Sei sicuro di voler resettare?",
+          shareGame: "Condividi gioco", copyCode: "📋 Copia codice", previewTitle: "Anteprima gioco",
+          addToLibrary: "✅ Aggiungi alla libreria", cancel: "Annulla", publishSupabase: "🌐 Pubblica",
+          publicGames: "Giochi pubblici (Online)", myGames: "I miei giochi locali", gameLoaded: "Gioco caricato:",
+          gamePublished: "Gioco pubblicato con successo!", publishError: "Errore durante la pubblicazione", authorLabel: "Autore:",
+          playGame: "▶️ Gioca"
         },
         pl: {
           navPlay: "Graj", navStore: "Sklep", tabDice: "Kości", tabScore: "Punkty i Czas", tabBoth: "Oba",
@@ -1634,7 +1841,12 @@
           nextStep: "Dalej →", prevStep: "← Wstecz", saveLocal: "💾 Zapisz lokalnie", copyOfflineCode: "📤 Kopiuj kod offline",
           codeCopied: "Kod offline skopiowany!", gameSaved: "Gra została pomyślnie dodana!", invalidCode: "Nieprawidłowy kod gry!",
           renameCounterTitle: "Zmień nazwę licznika", renameCounterLabel: "Nazwa licznika:", totalScore: "Suma punktów",
-          confirmTitle: "Potwierdzenie", confirmReset: "Czy na pewno chcesz zresetować?"
+          confirmTitle: "Potwierdzenie", confirmReset: "Czy na pewno chcesz zresetować?",
+          shareGame: "Udostępnij grę", copyCode: "📋 Kopiuj kod", previewTitle: "Podgląd gry",
+          addToLibrary: "✅ Dodaj do biblioteki", cancel: "Anuluj", publishSupabase: "🌐 Publikuj",
+          publicGames: "Gry publiczne (Online)", myGames: "Moje gry lokalne", gameLoaded: "Załadowano grę:",
+          gamePublished: "Gra została pomyślnie opublikowana!", publishError: "Błąd publikacji w Supabase", authorLabel: "Autor:",
+          playGame: "▶️ Graj"
         },
         pt: {
           navPlay: "Jogar", navStore: "Loja", tabDice: "Dados", tabScore: "Pontos e Tempo", tabBoth: "Ambos",
@@ -1664,7 +1876,12 @@
           nextStep: "Avançar →", prevStep: "← Voltar", saveLocal: "💾 Salvar localmente", copyOfflineCode: "📤 Copiar código offline",
           codeCopied: "Código offline copiado!", gameSaved: "Jogo adicionado com sucesso!", invalidCode: "Código offline inválido!",
           renameCounterTitle: "Renomear contador", renameCounterLabel: "Nome do contador:", totalScore: "Pontuação total",
-          confirmTitle: "Confirmação", confirmReset: "Tem certeza de que deseja redefinir?"
+          confirmTitle: "Confirmação", confirmReset: "Tem certeza de que deseja redefinir?",
+          shareGame: "Compartilhar jogo", copyCode: "📋 Copiar código", previewTitle: "Pré-visualização do jogo",
+          addToLibrary: "✅ Adicionar à biblioteca", cancel: "Cancelar", publishSupabase: "🌐 Publicar",
+          publicGames: "Jogos públicos (Online)", myGames: "Meus jogos locais", gameLoaded: "Jogo carregado:",
+          gamePublished: "Jogo publicado com sucesso!", publishError: "Erro ao publicar no Supabase", authorLabel: "Autor:",
+          playGame: "▶️ Jogar"
         },
         tr: {
           navPlay: "Oyna", navStore: "Mağaza", tabDice: "Zarlar", tabScore: "Puan & Zaman", tabBoth: "İkisi",
@@ -1694,7 +1911,12 @@
           nextStep: "İleri →", prevStep: "← Geri", saveLocal: "💾 Yerel Kaydet", copyOfflineCode: "📤 Çevrimdışı Kodu Kopyala",
           codeCopied: "Çevrimdışı kod kopyalandı!", gameSaved: "Oyun başarıyla eklendi!", invalidCode: "Geçersiz çevrimdışı kod!",
           renameCounterTitle: "Sayacı Yeniden Adlandır", renameCounterLabel: "Sayaç adı:", totalScore: "Toplam Puan",
-          confirmTitle: "Onay", confirmReset: "Sıfırlamak istediğinizden emin misiniz?"
+          confirmTitle: "Onay", confirmReset: "Sıfırlamak istediğinizden emin misiniz?",
+          shareGame: "Oyunu Paylaş", copyCode: "📋 Kodu Kopyala", previewTitle: "Oyun Önizlemesi",
+          addToLibrary: "✅ Kütüphaneye Ekle", cancel: "İptal", publishSupabase: "🌐 Yayınla",
+          publicGames: "Herkese Açık Oyunlar (Çevrimiçi)", myGames: "Yerel Oyunlarım", gameLoaded: "Oyun yüklendi:",
+          gamePublished: "Oyun başarıyla yayınlandı!", publishError: "Supabase'de yayınlama hatası", authorLabel: "Yazar:",
+          playGame: "▶️ Oyna"
         },
         ja: {
           navPlay: "プレイ", navStore: "ストア", tabDice: "ダイス", tabScore: "スコア＆タイマー", tabBoth: "両方",
@@ -1724,7 +1946,12 @@
           nextStep: "次へ →", prevStep: "← 戻る", saveLocal: "💾 ローカル保存", copyOfflineCode: "📤 オフラインコードコピー",
           codeCopied: "コードをコピーしました！", gameSaved: "ゲームを追加しました！", invalidCode: "無効なオフラインコードです！",
           renameCounterTitle: "カウンター名変更", renameCounterLabel: "カウンター名:", totalScore: "合計スコア",
-          confirmTitle: "確認", confirmReset: "本当にリセットしますか？"
+          confirmTitle: "確認", confirmReset: "本当にリセットしますか？",
+          shareGame: "ゲームを共有", copyCode: "📋 コードをコピー", previewTitle: "ゲームプレビュー",
+          addToLibrary: "✅ ライブラリに追加", cancel: "キャンセル", publishSupabase: "🌐 公開する",
+          publicGames: "パブリックゲーム (オンライン)", myGames: "マイローカルゲーム", gameLoaded: "ゲームを読み込みました:",
+          gamePublished: "ゲームを公開しました！", publishError: "Supabaseへの公開エラー", authorLabel: "作者:",
+          playGame: "▶️ プレイ"
         },
         zh: {
           navPlay: "开始游戏", navStore: "商店", tabDice: "骰子", tabScore: "计分与计时", tabBoth: "双模式",
@@ -1754,7 +1981,12 @@
           nextStep: "下一步 →", prevStep: "← 上一步", saveLocal: "💾 本地保存", copyOfflineCode: "📤 复制离线代码",
           codeCopied: "代码已复制到剪贴板！", gameSaved: "游戏创建成功！", invalidCode: "离线游戏代码无效！",
           renameCounterTitle: "重命名计分器", renameCounterLabel: "计分器名称:", totalScore: "总分",
-          confirmTitle: "确认", confirmReset: "您确定要重置吗？"
+          confirmTitle: "确认", confirmReset: "您确定要重置吗？",
+          shareGame: "分享游戏", copyCode: "📋 复制代码", previewTitle: "游戏预览",
+          addToLibrary: "✅ 添加到库", cancel: "取消", publishSupabase: "🌐 发布",
+          publicGames: "公开游戏 (在线)", myGames: "我的本地游戏", gameLoaded: "已加载游戏:",
+          gamePublished: "游戏发布成功！", publishError: "发布到Supabase失败", authorLabel: "作者:",
+          playGame: "▶️ 开始游戏"
         },
         ko: {
           navPlay: "플레이", navStore: "스토어", tabDice: "주사위", tabScore: "점수 & 타이머", tabBoth: "모두 보기",
@@ -1784,7 +2016,12 @@
           nextStep: "다음 →", prevStep: "← 이전", saveLocal: "💾 로컬에 저장", copyOfflineCode: "📤 오프라인 코드 복사",
           codeCopied: "코드가 클립보드에 복사되었습니다!", gameSaved: "게임이 추가되었습니다!", invalidCode: "유효하지 않은 오프라인 코드입니다!",
           renameCounterTitle: "카운터 이름 변경", renameCounterLabel: "카운터 이름:", totalScore: "총 점수",
-          confirmTitle: "확인", confirmReset: "정말 초기화하시겠습니까?"
+          confirmTitle: "확인", confirmReset: "정말 초기화하시겠습니까?",
+          shareGame: "게임 공유", copyCode: "📋 코드 복사", previewTitle: "게임 미리보기",
+          addToLibrary: "✅ 라이브러리에 추가", cancel: "취소", publishSupabase: "🌐 게시하기",
+          publicGames: "공개 게임 (온라인)", myGames: "내 로컬 게임", gameLoaded: "게임이 로드되었습니다:",
+          gamePublished: "게임이 게시되었습니다!", publishError: "Supabase 게시 오류", authorLabel: "작성자:",
+          playGame: "▶️ 플레이"
         }
       };
 
@@ -2052,6 +2289,20 @@
           dieFaces = 9;
         }
         applyLanguage();
+      }
+
+      function setVisualMode(mode) {
+        if (mode === 'dots' || mode === 'nums') {
+          visualMode = mode;
+          if (visualMode === 'dots' && dieFaces > 9) {
+            dieFaces = 9;
+          }
+          applyLanguage();
+        }
+      }
+
+      function getVisualMode() {
+        return visualMode;
       }
 
       function applyLanguage() {
@@ -2471,11 +2722,14 @@
         syncPlayers,
         setActivePlayer,
         setDieType,
+        setDieFaces: setDieType,
         onCustomFacesChange,
         adjustDiceCount,
         setDiceCount,
         resetDice,
         toggleVisualMode,
+        setVisualMode,
+        getVisualMode,
         toggleSelectAll,
         toggleSelectDie,
         toggleGroupColorPicker,
@@ -2537,7 +2791,6 @@
         { id: 'red', border: '#ef4444' }
       ];
 
-      // Cookies storage
       function setCookie(name, value, days = 365) {
         const d = new Date();
         d.setTime(d.getTime() + (days * 24 * 60 * 60 * 1000));
@@ -2574,7 +2827,6 @@
         if (savedPlayers && Array.isArray(savedPlayers)) {
           players.length = 0;
           savedPlayers.forEach(p => {
-            // Ensure 3 counters structure exists
             if (!p.counters || !Array.isArray(p.counters) || p.counters.length === 0) {
               p.counters = [
                 { id: 'A', label: 'A', value: p.score || 0 },
@@ -2763,7 +3015,33 @@
         }
       }
 
-      // Counter Operations: adjust (+/-), set, rename
+      function setTimerDuration(seconds) {
+        onTurnDurationChange(seconds);
+      }
+
+      function setPenalty(points) {
+        onPenaltyPointsChange(points);
+      }
+
+      function setCounterLabels(newLabels) {
+        if (!newLabels || !Array.isArray(newLabels) || newLabels.length === 0) return;
+        players.forEach(p => {
+          if (!p.counters) p.counters = [];
+          newLabels.forEach((lbl, idx) => {
+            const id = String.fromCharCode(65 + idx);
+            if (p.counters[idx]) {
+              p.counters[idx].label = lbl;
+            } else {
+              p.counters.push({ id, label: lbl, value: 0 });
+            }
+          });
+          p.counters = p.counters.slice(0, Math.max(1, newLabels.length));
+          p.score = p.counters.reduce((sum, c) => sum + (Number(c.value) || 0), 0);
+        });
+        renderAll();
+        saveStateToCookies();
+      }
+
       function adjustCounter(playerId, counterId, delta) {
         const p = players.find(x => x.id === playerId);
         if (!p) return;
@@ -3161,7 +3439,6 @@
           card.className = `player-card ${isTurn ? 'active-turn' : ''}`;
           card.style.borderLeft = `4px solid ${colorObj.border}`;
 
-          // Calculate total score from counters
           const totalScore = player.counters ? player.counters.reduce((sum, c) => sum + (Number(c.value) || 0), 0) : player.score;
           player.score = totalScore;
 
@@ -3226,6 +3503,9 @@
         toggleTimerRunning,
         onTurnDurationChange,
         onPenaltyPointsChange,
+        setTimerDuration,
+        setPenalty,
+        setCounterLabels,
         openCalculatorModal,
         closeCalculatorModal,
         calcClear,
@@ -3333,25 +3613,302 @@
     })();
 
     /* ==========================================================================
-       MODULE 9. GameStore — каталог, 3-кроковий майстер та імпорт/експорт коду
+       MODULE 9. GameStore — каталог, лайки, імпорт з прев'ю, Supabase та QR share
        ========================================================================== */
     const GameStore = (() => {
-      let catalog = []; // ← ПОРОЖНІЙ МАСИВ БЕЗ ХАРДКОДНИХ ДЕМО-ІГОР
+      let catalog = []; // ← ПОРОЖНІЙ МАСИВ БЕЗ ХАРДКОДУ, завантажується з localStorage 'bgt_catalog'
+      let publicCatalog = [];
       let currentWizardStep = 1;
       let wizardDraft = null;
+      let pendingImportConfig = null;
 
       function onSearch(query) {
         render(query.toLowerCase());
       }
 
+      function clearImportError() {
+        const inp = document.getElementById('offlineCodeInput');
+        const errEl = document.getElementById('importErrorMessage');
+        if (inp) inp.classList.remove('error-border');
+        if (errEl) {
+          errEl.style.display = 'none';
+          errEl.innerText = '';
+        }
+      }
+
+      function showImportError(msg) {
+        const inp = document.getElementById('offlineCodeInput');
+        const errEl = document.getElementById('importErrorMessage');
+        if (inp) inp.classList.add('error-border');
+        if (errEl) {
+          errEl.innerText = msg;
+          errEl.style.display = 'block';
+        }
+      }
+
+      function importFromCode() {
+        clearImportError();
+        const input = document.getElementById('offlineCodeInput');
+        if (!input) return;
+        const code = input.value.trim();
+        if (!code) {
+          showImportError(i18n.t('invalidCode'));
+          return;
+        }
+
+        const result = GameCodec.decode(code);
+        if (!result || result.error) {
+          showImportError(result?.error || i18n.t('invalidCode'));
+          return;
+        }
+
+        pendingImportConfig = result;
+        openPreviewModal(result);
+      }
+
+      function openPreviewModal(config) {
+        const box = document.getElementById('previewModalContent');
+        if (!box) return;
+
+        const diceInfo = (config.tools?.dice?.enabled || config.dice?.used)
+          ? `🎲 ${config.tools?.dice?.count || config.dice?.count || 1} шт (${(config.tools?.dice?.types || config.dice?.types || ['D6']).join(', ')})`
+          : '—';
+        const scoreInfo = (config.tools?.scorebook?.enabled || config.score?.used)
+          ? `📊 ${(config.tools?.scorebook?.counters || config.score?.counters || ['A']).join(', ')}`
+          : '—';
+        const timerInfo = (config.tools?.timer?.enabled || config.timer?.used)
+          ? `⏱️ ${config.tools?.timer?.turnSeconds || config.timer?.seconds || 30}с`
+          : '—';
+        const minP = config.players?.min || 1;
+        const maxP = config.players?.max || 6;
+
+        box.innerHTML = `
+          <div>
+            <div style="font-size:16px; font-weight:800; color:var(--accent);">${config.title}</div>
+            ${config.author ? `<div class="text-sm text-muted"><b>${i18n.t('authorLabel')}</b> ${config.author}</div>` : ''}
+          </div>
+          <div style="color:var(--text-main); font-size:13px;">${config.desc || config.description || 'Без опису'}</div>
+          <div class="row" style="gap:10px; flex-wrap:wrap; font-size:12px; margin-top:4px;">
+            <span>👥 <b>${minP}–${maxP}</b> гравців</span>
+            <span>${diceInfo}</span>
+            <span>${scoreInfo}</span>
+            <span>${timerInfo}</span>
+          </div>
+        `;
+
+        document.getElementById('previewModal').classList.add('open');
+      }
+
+      function closePreviewModal() {
+        document.getElementById('previewModal').classList.remove('open');
+        pendingImportConfig = null;
+      }
+
+      function confirmImport() {
+        if (!pendingImportConfig) return;
+        const game = {
+          ...pendingImportConfig,
+          id: 'imported_' + Date.now(),
+          likes: pendingImportConfig.likes || 0
+        };
+        catalog.push(game);
+        saveCatalogToStorage();
+        closePreviewModal();
+
+        const input = document.getElementById('offlineCodeInput');
+        if (input) input.value = '';
+        clearImportError();
+        render();
+        Scorebook.showMessage(i18n.t('gameSaved'));
+      }
+
+      function openShareModal(gameId) {
+        const game = catalog.find(x => x.id === gameId) || publicCatalog.find(x => x.id === gameId);
+        if (!game) return;
+
+        const code = GameCodec.encode(game);
+        const textarea = document.getElementById('shareCodeText');
+        if (textarea) textarea.value = code;
+
+        const canvas = document.getElementById('shareQrCanvas');
+        if (canvas) GameCodec.drawQrCanvas(canvas, code);
+
+        document.getElementById('shareModal').classList.add('open');
+      }
+
+      function closeShareModal() {
+        document.getElementById('shareModal').classList.remove('open');
+      }
+
+      function copyShareCodeFromModal() {
+        const textarea = document.getElementById('shareCodeText');
+        if (!textarea) return;
+        const code = textarea.value;
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(code).then(() => {
+            Scorebook.showMessage(i18n.t('codeCopied'));
+          }).catch(() => {
+            Scorebook.showMessage(code);
+          });
+        } else {
+          Scorebook.showMessage(code);
+        }
+      }
+
+      function toggleLike(gameId) {
+        const key = 'bgt_likes_' + gameId;
+        const isLiked = localStorage.getItem(key) === 'true';
+        const newLiked = !isLiked;
+        localStorage.setItem(key, newLiked ? 'true' : 'false');
+
+        const g = catalog.find(x => x.id === gameId);
+        if (g) {
+          g.likes = Math.max(0, (g.likes || 0) + (newLiked ? 1 : -1));
+          saveCatalogToStorage();
+        }
+
+        const pubG = publicCatalog.find(x => x.id === gameId);
+        if (pubG) {
+          pubG.likes = Math.max(0, (pubG.likes || 0) + (newLiked ? 1 : -1));
+          const sb = DB.getSupabase();
+          if (sb && pubG.id) {
+            sb.from('games').update({ likes: pubG.likes }).eq('id', pubG.id).then(() => {});
+          }
+        }
+
+        render();
+      }
+
+      function isGameLiked(gameId) {
+        return localStorage.getItem('bgt_likes_' + gameId) === 'true';
+      }
+
+      function applyGameConfig(configOrId) {
+        let config = null;
+        if (typeof configOrId === 'string') {
+          config = catalog.find(x => x.id === configOrId) || publicCatalog.find(x => x.id === configOrId);
+        } else {
+          config = configOrId;
+        }
+        if (!config) return;
+
+        // Apply Dice Settings
+        const diceCfg = config.tools?.dice || config.dice;
+        if (diceCfg && (diceCfg.enabled || diceCfg.used)) {
+          let dieFace = 6;
+          if (diceCfg.types && diceCfg.types.length > 0) {
+            const parsed = parseInt(String(diceCfg.types[0]).replace(/\D/g, ''));
+            if (!isNaN(parsed) && parsed >= 2) dieFace = parsed;
+          }
+          DiceRoller.setDieType(dieFace);
+          DiceRoller.setDiceCount(diceCfg.count || 2);
+          if (diceCfg.mode) {
+            DiceRoller.setVisualMode(diceCfg.mode);
+          }
+        }
+
+        // Apply Scorebook Settings
+        const scoreCfg = config.tools?.scorebook || config.score;
+        if (scoreCfg && (scoreCfg.enabled || scoreCfg.used)) {
+          if (scoreCfg.counters && Array.isArray(scoreCfg.counters)) {
+            Scorebook.setCounterLabels(scoreCfg.counters);
+          }
+        }
+
+        // Apply Timer Settings
+        const timerCfg = config.tools?.timer || config.timer;
+        if (timerCfg && (timerCfg.enabled || timerCfg.used)) {
+          Scorebook.setTimerDuration(timerCfg.turnSeconds || timerCfg.seconds || 30);
+          Scorebook.setPenalty(timerCfg.penalty || 0);
+        }
+
+        AppState.emit('game_loaded', config);
+        App.setView('play');
+
+        const banner = document.getElementById('gameLoadedBanner');
+        const bannerTxt = document.getElementById('gameLoadedBannerText');
+        if (banner && bannerTxt) {
+          bannerTxt.innerText = `${i18n.t('gameLoaded')} ${config.title}`;
+          banner.style.display = 'flex';
+        }
+      }
+
+      async function publishToSupabase(gameId) {
+        const sb = DB.getSupabase();
+        if (!sb) {
+          Scorebook.showMessage(i18n.t('publishError') + ': Supabase не налаштовано');
+          return;
+        }
+
+        const game = catalog.find(x => x.id === gameId);
+        if (!game) return;
+
+        try {
+          const { data, error } = await sb
+            .from('games')
+            .insert([{
+              title: game.title,
+              description: game.desc || game.description || '',
+              config: game,
+              is_public: true,
+              lang: game.lang || i18n.getLang() || 'uk',
+              likes: game.likes || 0
+            }])
+            .select();
+
+          if (error) {
+            Scorebook.showMessage(i18n.t('publishError') + ': ' + error.message);
+          } else {
+            if (data && data[0]) {
+              game.supabase_id = data[0].id;
+              saveCatalogToStorage();
+              render();
+            }
+            Scorebook.showMessage(i18n.t('gamePublished'));
+            loadPublicGames();
+          }
+        } catch (err) {
+          Scorebook.showMessage(i18n.t('publishError') + ': ' + err.message);
+        }
+      }
+
+      async function loadPublicGames() {
+        const sb = DB.getSupabase();
+        if (!sb) return;
+
+        try {
+          const { data, error } = await sb
+            .from('games')
+            .select('*')
+            .eq('is_public', true)
+            .order('likes', { ascending: false })
+            .limit(20);
+
+          if (!error && data) {
+            publicCatalog = data.map(item => ({
+              ...item.config,
+              id: item.id,
+              title: item.title,
+              desc: item.description,
+              likes: item.likes || 0,
+              supabase_id: item.id,
+              isPublicItem: true
+            }));
+            render();
+          }
+        } catch (err) {
+          console.warn('[GameStore] loadPublicGames error:', err);
+        }
+      }
+
       function openWizard() {
         currentWizardStep = 1;
         document.getElementById('wzGameTitle').value = '';
+        document.getElementById('wzGameAuthor').value = '';
         document.getElementById('wzGameDesc').value = '';
         document.getElementById('wzMinPlayers').value = '1';
         document.getElementById('wzMaxPlayers').value = '6';
 
-        // Set tool defaults
         const diceYes = document.querySelector('input[name="wzDiceUsed"][value="yes"]');
         if (diceYes) diceYes.checked = true;
         document.getElementById('wzDie_d6').checked = true;
@@ -3453,6 +4010,7 @@
 
       function buildWizardDraft() {
         const title = document.getElementById('wzGameTitle').value.trim();
+        const author = document.getElementById('wzGameAuthor').value.trim();
         const desc = document.getElementById('wzGameDesc').value.trim() || 'Без опису';
         const minP = parseInt(document.getElementById('wzMinPlayers').value) || 1;
         const maxP = parseInt(document.getElementById('wzMaxPlayers').value) || 6;
@@ -3489,12 +4047,14 @@
         wizardDraft = {
           id: 'game_' + Date.now(),
           title,
+          author,
           desc,
           players: { min: minP, max: maxP },
           dice: { used: diceUsed, types: diceTypes, count: diceCount, mode: diceMode },
           score: { used: scoreUsed, counters: counterNames, allowNeg },
           timer: { used: timerUsed, seconds: timerSeconds, penalty: timerPenalty },
-          rounds: { used: roundsUsed, max: maxRounds }
+          rounds: { used: roundsUsed, max: maxRounds },
+          likes: 0
         };
       }
 
@@ -3504,6 +4064,7 @@
 
         box.innerHTML = `
           <div style="font-size:16px; font-weight:800; color:var(--accent);">${wizardDraft.title}</div>
+          ${wizardDraft.author ? `<div class="text-sm text-muted"><b>${i18n.t('authorLabel')}</b> ${wizardDraft.author}</div>` : ''}
           <div style="color:var(--text-muted);">${wizardDraft.desc}</div>
           <div class="row" style="gap:12px; flex-wrap:wrap; margin-top:4px;">
             <span>👥 <b>${wizardDraft.players.min}-${wizardDraft.players.max}</b> гравців</span>
@@ -3538,78 +4099,6 @@
         }
       }
 
-      function importFromCode() {
-        const input = document.getElementById('offlineCodeInput');
-        if (!input) return;
-        const code = input.value.trim();
-        if (!code) {
-          Scorebook.showMessage('Будь ласка, введіть код гри!');
-          return;
-        }
-
-        const config = GameCodec.decode(code);
-        if (!config || !config.title) {
-          Scorebook.showMessage(i18n.t('invalidCode'));
-          return;
-        }
-
-        config.id = 'imported_' + Date.now();
-        catalog.push(config);
-        saveCatalogToStorage();
-        input.value = '';
-        render();
-        Scorebook.showMessage(i18n.t('gameSaved'));
-      }
-
-      function copyGameCode(gameId) {
-        const g = catalog.find(x => x.id === gameId);
-        if (!g) return;
-        const code = GameCodec.encode(g);
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-          navigator.clipboard.writeText(code).then(() => {
-            Scorebook.showMessage(`${i18n.t('codeCopied')}\n\n${code}`);
-          });
-        } else {
-          Scorebook.showMessage(code);
-        }
-      }
-
-      function applyGameToSession(gameId) {
-        const g = catalog.find(x => x.id === gameId);
-        if (!g) return;
-
-        if (g.dice && g.dice.used) {
-          DiceRoller.setDiceCount(g.dice.count || 2);
-          if (g.dice.mode) {
-            if ((g.dice.mode === 'dots' && DiceRoller.visualMode !== 'dots') ||
-                (g.dice.mode === 'nums' && DiceRoller.visualMode !== 'nums')) {
-              DiceRoller.toggleVisualMode();
-            }
-          }
-        }
-
-        if (g.timer && g.timer.used) {
-          Scorebook.onTurnDurationChange(g.timer.seconds || 30);
-          Scorebook.onPenaltyPointsChange(g.timer.penalty || 0);
-        }
-
-        if (g.score && g.score.used && g.score.counters) {
-          const players = Scorebook.getPlayers();
-          players.forEach(p => {
-            p.counters = g.score.counters.map((cName, idx) => ({
-              id: String.fromCharCode(65 + idx),
-              label: cName,
-              value: 0
-            }));
-            p.score = 0;
-          });
-          Scorebook.renderAll();
-        }
-
-        App.setView('play');
-        Scorebook.showMessage(`Гру «${g.title}» застосовано!`);
-      }
-
       function removeGame(gameId) {
         App.openConfirm('Видалити гру?', 'Ви впевнені, що хочете видалити цю гру з каталогу?', () => {
           catalog = catalog.filter(x => x.id !== gameId);
@@ -3620,26 +4109,118 @@
 
       function saveCatalogToStorage() {
         try {
-          localStorage.setItem('bgt_custom_catalog', JSON.stringify(catalog));
+          localStorage.setItem('bgt_catalog', JSON.stringify(catalog));
         } catch (e) {}
       }
 
       function loadCatalogFromStorage() {
         try {
-          const saved = localStorage.getItem('bgt_custom_catalog');
+          const saved = localStorage.getItem('bgt_catalog');
           if (saved) {
             const parsed = JSON.parse(saved);
             if (Array.isArray(parsed)) {
               catalog = parsed;
             }
           }
-        } catch (e) {}
+        } catch (e) {
+          catalog = [];
+        }
+      }
+
+      function renderGameCard(g, isPublic = false) {
+        const isLiked = isGameLiked(g.id);
+        const likeCount = g.likes || 0;
+        const diceIcon = (g.tools?.dice?.enabled || g.dice?.used) ? '🎲' : '';
+        const scoreIcon = (g.tools?.scorebook?.enabled || g.score?.used) ? '📊' : '';
+        const timerIcon = (g.tools?.timer?.enabled || g.timer?.used) ? '⏱️' : '';
+        const icons = [diceIcon, scoreIcon, timerIcon].filter(Boolean).join(' ');
+
+        const minP = g.players?.min || 1;
+        const maxP = g.players?.max || 6;
+        const isSbConfigured = DB.isConfigured();
+
+        return `
+          <div style="padding:14px; background:var(--bg-main); border:1px solid var(--border); border-radius:var(--radius-sm); margin-bottom:10px;" class="col">
+            <div class="row" style="justify-content:space-between; align-items:flex-start;">
+              <div>
+                <b style="font-size:15px; color:var(--text-main);">${g.title}</b>
+                ${g.author ? `<div style="font-size:11px; color:var(--text-muted);">${i18n.t('authorLabel')} ${g.author}</div>` : ''}
+              </div>
+              <div class="row" style="gap:4px;">
+                <button onclick="GameStore.toggleLike('${g.id}')" class="btn btn-secondary ${isLiked ? 'active' : ''}" style="min-height:30px; padding:0 8px; font-size:11px;" title="Лайк">
+                  ${isLiked ? '❤️' : '🤍'} ${likeCount}
+                </button>
+                <button onclick="GameStore.openShareModal('${g.id}')" class="btn btn-secondary" style="min-height:30px; padding:0 8px; font-size:11px;" title="${i18n.t('shareGame')}">
+                  📤
+                </button>
+                ${!isPublic ? `
+                  ${isSbConfigured ? `
+                    <button onclick="GameStore.publishToSupabase('${g.id}')" class="btn btn-secondary" style="min-height:30px; padding:0 8px; font-size:11px;" title="${i18n.t('publishSupabase')}">
+                      🌐
+                    </button>
+                  ` : ''}
+                  <button onclick="GameStore.removeGame('${g.id}')" class="btn btn-secondary" style="min-height:30px; padding:0 8px; font-size:11px; color:var(--danger);" title="Видалити">
+                    🗑️
+                  </button>
+                ` : `
+                  <button onclick="GameStore.addPublicToLibrary('${g.id}')" class="btn btn-secondary" style="min-height:30px; padding:0 8px; font-size:11px;" title="Зберегти собі">
+                    💾
+                  </button>
+                `}
+              </div>
+            </div>
+
+            <div class="game-card-desc">${g.desc || g.description || 'Без опису'}</div>
+
+            <div class="row" style="gap:10px; flex-wrap:wrap; font-size:11px; color:var(--text-muted); margin-top:2px;">
+              <span>👥 ${minP}–${maxP} гравців</span>
+              ${icons ? `<span>${icons}</span>` : ''}
+            </div>
+
+            <button onclick="GameStore.applyGameConfig('${g.id}')" class="btn btn-primary" style="min-height:34px; margin-top:4px; font-size:12px;">
+              ${i18n.t('playGame')}
+            </button>
+          </div>
+        `;
+      }
+
+      function addPublicToLibrary(gameId) {
+        const pubG = publicCatalog.find(x => x.id === gameId);
+        if (!pubG) return;
+        const exists = catalog.some(x => x.title === pubG.title);
+        if (exists) {
+          Scorebook.showMessage('Гра з такою назвою вже є у вашій бібліотеці!');
+          return;
+        }
+        const newLocal = {
+          ...pubG,
+          id: 'game_' + Date.now(),
+          isPublicItem: false
+        };
+        catalog.push(newLocal);
+        saveCatalogToStorage();
+        render();
+        Scorebook.showMessage(i18n.t('gameSaved'));
       }
 
       function render(query = '') {
         const grid = document.getElementById('storeGrid');
         if (!grid) return;
 
+        // Render Public Section if available
+        const pubSec = document.getElementById('publicStoreSection');
+        const pubList = document.getElementById('publicGamesList');
+        if (pubSec && pubList) {
+          const filteredPub = publicCatalog.filter(g => !query || g.title.toLowerCase().includes(query));
+          if (filteredPub.length > 0) {
+            pubSec.style.display = 'flex';
+            pubList.innerHTML = filteredPub.map(g => renderGameCard(g, true)).join('');
+          } else {
+            pubSec.style.display = 'none';
+          }
+        }
+
+        // Render Local Catalog
         const filtered = catalog.filter(g => !query || g.title.toLowerCase().includes(query));
 
         if (filtered.length === 0) {
@@ -3657,32 +4238,18 @@
           return;
         }
 
-        grid.innerHTML = filtered.map(g => `
-          <div style="padding:14px; background:var(--bg-main); border:1px solid var(--border); border-radius:var(--radius-sm); margin-bottom:10px;" class="col">
-            <div class="row" style="justify-content:space-between;">
-              <b style="font-size:15px; color:var(--text-main);">${g.title}</b>
-              <div class="row" style="gap:4px;">
-                <button onclick="GameStore.copyGameCode('${g.id}')" class="btn btn-secondary" style="min-height:30px; padding:0 8px; font-size:11px;" title="Скопіювати код">📤 Код</button>
-                <button onclick="GameStore.removeGame('${g.id}')" class="btn btn-secondary" style="min-height:30px; padding:0 8px; font-size:11px; color:var(--danger);" title="Видалити">🗑️</button>
-              </div>
-            </div>
-            <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">${g.desc || ''}</div>
-            <div class="row" style="gap:8px; flex-wrap:wrap; font-size:11px; color:var(--text-muted); margin-top:4px;">
-              <span>👥 ${g.players ? `${g.players.min}-${g.players.max}` : '1-6'}</span>
-              ${g.dice && g.dice.used ? `<span>🎲 ${g.dice.count} кубики</span>` : ''}
-              ${g.score && g.score.used ? `<span>📊 ${g.score.counters ? g.score.counters.join(',') : 'Очки'}</span>` : ''}
-              ${g.timer && g.timer.used ? `<span>⏱️ ${g.timer.seconds}с</span>` : ''}
-            </div>
-            <button onclick="GameStore.applyGameToSession('${g.id}')" class="btn btn-primary" style="min-height:34px; margin-top:6px; font-size:12px;">
-              ▶️ Застосувати гру
-            </button>
-          </div>
-        `).join('');
+        grid.innerHTML = `
+          <b class="text-sm font-bold" style="color:var(--text-muted); margin-bottom:6px;" data-i18n="myGames">Мої локальні ігри</b>
+          ${filtered.map(g => renderGameCard(g, false)).join('')}
+        `;
       }
 
       function init() {
         loadCatalogFromStorage();
         render();
+        if (DB.isConfigured()) {
+          loadPublicGames();
+        }
       }
 
       return {
@@ -3697,8 +4264,17 @@
         wizardSaveLocal,
         wizardCopyCode,
         importFromCode,
-        copyGameCode,
-        applyGameToSession,
+        clearImportError,
+        closePreviewModal,
+        confirmImport,
+        openShareModal,
+        closeShareModal,
+        copyShareCodeFromModal,
+        toggleLike,
+        applyGameConfig,
+        publishToSupabase,
+        loadPublicGames,
+        addPublicToLibrary,
         removeGame,
         render
       };
@@ -3791,3 +4367,19 @@
   </script>
 </body>
 </html>
+
+<!--
+-- ============================================================================
+-- SUPABASE SCHEMA
+-- ============================================================================
+-- CREATE TABLE games (
+--   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+--   title text NOT NULL,
+--   description text,
+--   config jsonb NOT NULL,
+--   is_public boolean DEFAULT false,
+--   lang text DEFAULT 'uk',
+--   likes integer DEFAULT 0,
+--   created_at timestamptz DEFAULT now()
+-- );
+-->
