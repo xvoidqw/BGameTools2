@@ -631,6 +631,352 @@
       border-color: var(--danger) !important;
       background: var(--danger-light);
     }
+  
+    /* ==========================================================================
+       GAME WIZARD v2 — 5-step responsive wizard
+       ========================================================================== */
+    #gameWizardModal {
+      z-index: 1000;
+      padding: 16px;
+    }
+    .wizard-window {
+      width: 100%;
+      max-width: min(600px, calc(100vw - 32px));
+      max-height: min(90vh, 800px);
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.45);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .wizard-topbar {
+      position: sticky;
+      top: 0;
+      z-index: 12;
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border);
+    }
+    .wizard-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 14px 20px 2px;
+    }
+    .wizard-header .modal-title {
+      font-size: 17px;
+      line-height: 1.25;
+    }
+    .wz-progress {
+      display: flex;
+      align-items: flex-start;
+      padding: 10px 20px 12px;
+      gap: 0;
+    }
+    .wz-progress-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      flex-shrink: 0;
+      min-width: 42px;
+    }
+    .wz-step-dot {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 13px;
+      border: 2px solid var(--border);
+      background: var(--bg-main);
+      color: var(--text-muted);
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+    }
+    .wz-step-dot.done {
+      background: var(--success);
+      border-color: var(--success);
+      color: #ffffff;
+    }
+    .wz-step-dot.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #ffffff;
+      box-shadow: 0 0 0 4px var(--accent-light);
+    }
+    .wz-step-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-align: center;
+      white-space: nowrap;
+      line-height: 1.2;
+    }
+    .wz-step-label.active { color: var(--accent); }
+    .wz-step-label.done { color: var(--success); }
+    .wz-step-line {
+      flex: 1;
+      height: 2px;
+      min-width: 8px;
+      margin-top: 16px;
+      background: var(--border);
+      transition: background 0.3s ease;
+    }
+    .wz-step-line.done { background: var(--success); }
+    .wizard-body { flex: 1; min-height: 0; }
+    .wizard-step {
+      display: none;
+      flex-direction: column;
+      gap: 16px;
+      padding: 20px;
+    }
+    .wizard-step.active {
+      display: flex;
+      animation: wzStepFadeIn 0.16s ease both;
+    }
+    .wizard-step.wz-leaving {
+      opacity: 0;
+      transform: translateX(-20px);
+      transition: opacity 0.14s ease, transform 0.14s ease;
+    }
+    @keyframes wzStepFadeIn {
+      from { opacity: 0; transform: translateX(20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    .wz-step-head { display: flex; flex-direction: column; gap: 4px; }
+    .wz-step-title { font-size: 19px; font-weight: 800; line-height: 1.25; }
+    .wz-step-sub { font-size: 13px; color: var(--text-muted); line-height: 1.4; }
+    .wz-field { display: flex; flex-direction: column; gap: 6px; }
+    .wz-label-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+    .wz-label { font-size: 13px; font-weight: 700; }
+    .wz-counter { font-size: 11px; color: var(--text-muted); font-variant-numeric: tabular-nums; }
+    .wz-error { font-size: 12px; font-weight: 700; color: var(--danger); }
+    .wz-hint { font-size: 11.5px; color: var(--text-muted); line-height: 1.4; }
+    .wz-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .wz-inline { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .wz-inline > input[type="number"] { width: 82px; text-align: center; font-weight: 700; }
+    .wz-unit { font-size: 12px; font-weight: 600; color: var(--text-muted); }
+    .wz-seg { display: flex; gap: 8px; flex-wrap: wrap; }
+    .wz-toggle-btn {
+      flex: 1;
+      min-height: 48px;
+      padding: 8px 10px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--bg-main);
+      color: var(--text-main);
+      cursor: pointer;
+      font: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      text-align: center;
+      transition: all 0.15s ease;
+    }
+    .wz-toggle-btn:hover { border-color: var(--accent); }
+    .wz-toggle-btn.active {
+      border-color: var(--accent);
+      background: var(--accent-light);
+      color: var(--accent);
+    }
+    .wz-toggle-btn:disabled,
+    .wz-toggle-btn.is-disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      border-color: var(--border);
+    }
+    .wz-seg-lg .wz-toggle-btn { min-height: 52px; font-size: 14px; }
+    .wz-preset-btn {
+      padding: 8px 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--bg-main);
+      color: var(--text-main);
+      cursor: pointer;
+      font: inherit;
+      font-weight: 700;
+      font-size: 13px;
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      transition: all 0.15s ease;
+    }
+    .wz-preset-btn:hover { border-color: var(--accent); }
+    .wz-preset-btn.active {
+      background: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+    }
+    .wz-collapse {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, opacity 0.3s ease, margin-top 0.3s ease;
+      margin-top: 0;
+    }
+    .wz-collapse.open {
+      max-height: 3000px;
+      opacity: 1;
+      margin-top: 2px;
+    }
+    .wz-section {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--bg-main);
+    }
+    .wz-section-title { font-size: 13px; font-weight: 800; }
+    .wz-die-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+    .wz-die-grid .wz-toggle-btn { flex: 0 0 auto; min-width: 62px; min-height: 46px; }
+    .wz-custom-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .wz-custom-row .wz-toggle-btn { flex: 0 0 auto; min-height: 40px; padding: 6px 10px; }
+    .wz-custom-row input[type="number"] { width: 84px; text-align: center; font-weight: 700; }
+    .wz-stepper { display: inline-flex; align-items: center; gap: 6px; }
+    .wz-stepper-btn {
+      min-height: 44px;
+      width: 44px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      background: var(--bg-main);
+      color: var(--text-main);
+      cursor: pointer;
+      font-size: 20px;
+      font-weight: 800;
+      line-height: 1;
+      transition: all 0.15s ease;
+    }
+    .wz-stepper-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .wz-stepper input[type="number"] {
+      width: 74px;
+      min-height: 44px;
+      text-align: center;
+      font-weight: 800;
+      font-size: 16px;
+    }
+    .wz-lock-list { display: flex; flex-direction: column; gap: 8px; }
+    .wz-lock-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      width: 100%;
+      padding: 11px 12px;
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--bg-surface);
+      color: var(--text-main);
+      cursor: pointer;
+      font: inherit;
+      text-align: left;
+      transition: all 0.15s ease;
+    }
+    .wz-lock-row:hover { border-color: var(--accent); }
+    .wz-lock-row.active { border-color: var(--accent); background: var(--accent-light); }
+    .wz-lock-check {
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      border: 2px solid var(--border);
+      background: var(--bg-main);
+      color: transparent;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 900;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .wz-lock-row.active .wz-lock-check {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #ffffff;
+    }
+    .wz-lock-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+    .wz-lock-title { font-size: 13px; font-weight: 800; }
+    .wz-lock-desc { font-size: 11.5px; color: var(--text-muted); line-height: 1.35; }
+    .wz-summary {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--bg-surface);
+      box-shadow: var(--shadow);
+    }
+    .wz-summary-title { font-size: 17px; font-weight: 800; color: var(--accent); word-break: break-word; }
+    .wz-summary-author { font-size: 12px; color: var(--text-muted); }
+    .wz-summary-desc { font-size: 13px; line-height: 1.45; white-space: pre-wrap; word-break: break-word; }
+    .wz-summary-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .wz-chip {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--text-muted);
+      background: var(--bg-main);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 4px 9px;
+    }
+    .wz-summary-row { display: flex; align-items: flex-start; gap: 6px; font-size: 12px; line-height: 1.4; }
+    .wz-summary-row > b { font-weight: 800; flex-shrink: 0; }
+    .wz-summary-tools { font-size: 18px; letter-spacing: 2px; }
+    .wz-actions { display: flex; flex-direction: column; gap: 8px; margin-top: 2px; }
+    .wz-btn-large { width: 100%; min-height: 50px; font-size: 15px; font-weight: 800; }
+    .wizard-footer {
+      position: sticky;
+      bottom: 0;
+      z-index: 12;
+      background: var(--bg-surface);
+      border-top: 1px solid var(--border);
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .wizard-footer .btn { min-height: 44px; }
+    .wizard-footer .wz-next { min-width: 120px; }
+    .wz-hidden { visibility: hidden; pointer-events: none; }
+    @media (max-width: 479px) {
+      #gameWizardModal { padding: 0; }
+      .wizard-window {
+        max-width: 100%;
+        width: 100%;
+        height: 100vh;
+        height: 100dvh;
+        max-height: 100vh;
+        max-height: 100dvh;
+        border-radius: 0;
+        border-left: 0;
+        border-right: 0;
+      }
+      .wizard-header { padding: 12px 16px 2px; }
+      .wz-progress { padding: 8px 16px 10px; }
+      .wz-step-label { display: none; }
+      .wizard-step { padding: 16px; gap: 14px; }
+      .wizard-footer { padding: 12px 16px; }
+      .wz-grid-2 { grid-template-columns: 1fr; }
+      .wz-seg-lg { flex-direction: column; }
+      .wz-seg-lg .wz-toggle-btn { width: 100%; }
+      .wz-die-grid .wz-toggle-btn { flex: 1 1 calc(50% - 8px); }
+      .wz-die-grid .wz-toggle-btn[data-value="custom"] { flex-basis: 100%; }
+    }
+
+    #messageModal { z-index: 1200; }
+
   </style>
 </head>
 <body>
@@ -1233,171 +1579,419 @@
     </div>
   </div>
 
-  <!-- Game Store Wizard Modal (3 Steps) -->
+  <!-- Game Store Wizard Modal (5 Steps) -->
   <div id="gameWizardModal" class="modal-overlay">
-    <div class="modal-content" style="max-width:460px; max-height:90vh; overflow-y:auto;">
-      <div class="modal-header">
-        <h3 id="wizardStepHeaderTitle" class="modal-title">✨ Створення гри</h3>
-        <button class="btn btn-secondary btn-icon" onclick="GameStore.closeWizard()">✕</button>
+    <div class="wizard-window" role="dialog" aria-modal="true" aria-labelledby="wizardStepHeaderTitle">
+      <div class="wizard-topbar">
+        <div class="wizard-header">
+          <h3 id="wizardStepHeaderTitle" class="modal-title">📝 Основна інформація</h3>
+          <button type="button" id="wzCloseBtn" class="btn btn-secondary btn-icon" onclick="GameStore.closeWizard()">✕</button>
+        </div>
+        <div id="wizardProgress" class="wz-progress" aria-hidden="true"></div>
       </div>
 
-      <!-- STEP 1: Basic Info -->
-      <div id="wizardStep1" class="col" style="gap:10px;">
-        <b class="text-sm font-bold" data-i18n="step1Title">Крок 1: Основна інформація</b>
-        <div class="col" style="gap:4px;">
-          <label class="text-sm font-bold">Назва гри *</label>
-          <input type="text" id="wzGameTitle" placeholder="Наприклад: Каркасон, Монополія...">
-        </div>
-        <div class="col" style="gap:4px;">
-          <label class="text-sm font-bold" data-i18n="authorLabel">Автор гри</label>
-          <input type="text" id="wzGameAuthor" placeholder="Ваше ім'я або нікнейм">
-        </div>
-        <div class="col" style="gap:4px;">
-          <label class="text-sm">Опис гри (до 500 символів)</label>
-          <textarea id="wzGameDesc" maxlength="500" rows="3" placeholder="Короткі правила або опис гри..." style="width:100%; padding:8px; border-radius:var(--radius-sm); border:1px solid var(--border); background:var(--bg-surface); color:var(--text-main); font-family:inherit;"></textarea>
-        </div>
-        <div class="row" style="gap:10px;">
-          <div class="col flex-1" style="gap:4px;">
-            <label class="text-sm">Мін гравців</label>
-            <input type="number" id="wzMinPlayers" min="1" max="20" value="1" style="text-align:center;">
+      <div id="wizardBody" class="wizard-body">
+        <!-- STEP 1: Basic info -->
+        <section id="wizardStep1" class="wizard-step active">
+          <div class="wz-step-head">
+            <h4 class="wz-step-title" data-wz-i18n="wzTitleInfo">📝 Основна інформація</h4>
+            <p class="wz-step-sub" data-wz-i18n="wzSubtitleInfo">Розкажіть про вашу гру</p>
           </div>
-          <div class="col flex-1" style="gap:4px;">
-            <label class="text-sm">Макс гравців</label>
-            <input type="number" id="wzMaxPlayers" min="1" max="20" value="6" style="text-align:center;">
-          </div>
-        </div>
-        <div class="row" style="justify-content:flex-end; margin-top:8px;">
-          <button class="btn btn-primary" onclick="GameStore.wizardNext()" data-i18n="nextStep">Далі →</button>
-        </div>
-      </div>
 
-      <!-- STEP 2: Tool Questions -->
-      <div id="wizardStep2" class="col" style="gap:12px; display:none;">
-        <b class="text-sm font-bold" data-i18n="step2Title">Крок 2: Питання про інструменти</b>
+          <div class="wz-field">
+            <div class="wz-label-row">
+              <label class="wz-label" for="wzGameTitle" data-wz-i18n="wzGameTitle">Назва гри *</label>
+              <span id="wzTitleCount" class="wz-counter">0/80</span>
+            </div>
+            <input type="text" id="wzGameTitle" maxlength="80" autocomplete="off">
+            <div id="wzTitleError" class="wz-error" data-wz-i18n="wzTitleRequired" hidden></div>
+          </div>
 
-        <!-- Dice Question -->
-        <div class="col" style="background:var(--bg-main); padding:10px; border-radius:var(--radius-sm); gap:8px;">
-          <div class="row" style="justify-content:space-between;">
-            <span class="text-sm font-bold">🎲 Чи використовуються кубики?</span>
-            <div class="row" style="gap:8px;">
-              <label class="text-sm"><input type="radio" name="wzDiceUsed" value="yes" checked onchange="GameStore.toggleWizardToolVisibility()"> Так</label>
-              <label class="text-sm"><input type="radio" name="wzDiceUsed" value="no" onchange="GameStore.toggleWizardToolVisibility()"> Ні</label>
+          <div class="wz-grid-2">
+            <div class="wz-field">
+              <label class="wz-label" for="wzAuthorName" data-wz-i18n="wzAuthor">Автор / Нікнейм</label>
+              <input type="text" id="wzAuthorName" maxlength="40" autocomplete="off">
+            </div>
+            <div class="wz-field">
+              <label class="wz-label" for="wzCategory" data-wz-i18n="wzCategory">Категорія гри</label>
+              <select id="wzCategory">
+                <option value="" data-wz-i18n="wzCategoryPh">— Виберіть категорію —</option>
+                <option value="strategy" data-wz-i18n="wzCatStrategy">♟️ Стратегія</option>
+                <option value="family" data-wz-i18n="wzCatFamily">👨‍👩‍👧 Сімейна</option>
+                <option value="rpg" data-wz-i18n="wzCatRpg">🧙 RPG / Рольова</option>
+                <option value="party" data-wz-i18n="wzCatParty">🎉 Вечірка</option>
+                <option value="economic" data-wz-i18n="wzCatEconomic">💰 Економічна</option>
+                <option value="cooperative" data-wz-i18n="wzCatCooperative">🤝 Кооперативна</option>
+                <option value="dexterity" data-wz-i18n="wzCatDexterity">🎯 Спритність</option>
+                <option value="other" data-wz-i18n="wzCatOther">📦 Інше</option>
+              </select>
             </div>
           </div>
-          <div id="wzDiceSubOptions" class="col" style="gap:6px; border-top:1px solid var(--border); padding-top:6px;">
-            <span class="text-sm text-muted">Типи кубиків:</span>
-            <div class="row" style="flex-wrap:wrap; gap:6px;">
-              <label class="text-sm"><input type="checkbox" id="wzDie_d4"> D4</label>
-              <label class="text-sm"><input type="checkbox" id="wzDie_d6" checked> D6</label>
-              <label class="text-sm"><input type="checkbox" id="wzDie_d8"> D8</label>
-              <label class="text-sm"><input type="checkbox" id="wzDie_d10"> D10</label>
-              <label class="text-sm"><input type="checkbox" id="wzDie_d12"> D12</label>
-              <label class="text-sm"><input type="checkbox" id="wzDie_d20"> D20</label>
-              <label class="text-sm"><input type="checkbox" id="wzDie_custom"> Власний</label>
+
+          <div class="wz-field">
+            <div class="wz-label-row">
+              <label class="wz-label" for="wzGameDesc" data-wz-i18n="wzDesc">Опис гри</label>
+              <span id="wzDescCount" class="wz-counter">0/1000</span>
             </div>
-            <div class="row" style="justify-content:space-between; align-items:center;">
-              <span class="text-sm">Скільки кубиків за раз (1-10)?</span>
-              <input type="number" id="wzDiceCount" min="1" max="10" value="2" style="width:60px; text-align:center;">
+            <textarea id="wzGameDesc" maxlength="1000" rows="4"></textarea>
+          </div>
+
+          <div class="wz-field">
+            <label class="wz-label" data-wz-i18n="wzPlayersRange">Мінімум та максимум гравців</label>
+            <div class="wz-inline">
+              <span class="wz-unit" data-wz-i18n="wzFrom">від</span>
+              <input type="number" id="wzMinPlayers" min="1" max="20" value="1" inputmode="numeric">
+              <span class="wz-unit">–</span>
+              <span class="wz-unit" data-wz-i18n="wzTo">до</span>
+              <input type="number" id="wzMaxPlayers" min="1" max="20" value="6" inputmode="numeric">
+              <span class="wz-unit" data-wz-i18n="wzPlayers">гравців</span>
             </div>
-            <div class="row" style="justify-content:space-between; align-items:center;">
-              <span class="text-sm">Режим відображення:</span>
-              <div class="row" style="gap:8px;">
-                <label class="text-sm"><input type="radio" name="wzDiceMode" value="dots" checked> Крапки</label>
-                <label class="text-sm"><input type="radio" name="wzDiceMode" value="nums"> Цифри</label>
+            <div id="wzPlayersError" class="wz-error" data-wz-i18n="wzPlayersError" hidden></div>
+          </div>
+
+          <div class="wz-field">
+            <label class="wz-label" for="wzLang" data-wz-i18n="wzLang">Мова опису</label>
+            <select id="wzLang">
+              <option value="uk">Українська 🇺🇦</option>
+              <option value="en">English 🇬🇧</option>
+              <option value="es">Español 🇪🇸</option>
+              <option value="de">Deutsch 🇩🇪</option>
+              <option value="fr">Français 🇫🇷</option>
+              <option value="it">Italiano 🇮🇹</option>
+              <option value="pl">Polski 🇵🇱</option>
+              <option value="pt">Português 🇧🇷</option>
+              <option value="tr">Türkçe 🇹🇷</option>
+              <option value="ja">日本語 🇯🇵</option>
+              <option value="zh">中文 🇨🇳</option>
+              <option value="ko">한국어 🇰🇷</option>
+            </select>
+          </div>
+        </section>
+
+        <!-- STEP 2: Dice -->
+        <section id="wizardStep2" class="wizard-step">
+          <div class="wz-step-head">
+            <h4 class="wz-step-title" data-wz-i18n="wzTitleDice">🎲 Налаштування кубиків</h4>
+            <p class="wz-step-sub" data-wz-i18n="wzSubtitleDice">Чи є кидання кубиків у вашій грі?</p>
+          </div>
+
+          <div class="wz-seg wz-seg-lg" data-wz-group="diceEnabled">
+            <button type="button" class="wz-toggle-btn active" data-value="1" data-wz-i18n="wzDiceYes">🎲 Так, кубики потрібні</button>
+            <button type="button" class="wz-toggle-btn" data-value="0" data-wz-i18n="wzDiceNo">Ні, пропустити →</button>
+          </div>
+
+          <div id="wzDiceOptions" class="wz-collapse open">
+            <div class="wz-section">
+              <span class="wz-section-title" data-wz-i18n="wzDiceTypes">Типи кубиків</span>
+              <div class="wz-die-grid">
+                <button type="button" class="wz-toggle-btn" data-wz-multi="diceType" data-value="D4">D4</button>
+                <button type="button" class="wz-toggle-btn active" data-wz-multi="diceType" data-value="D6">D6</button>
+                <button type="button" class="wz-toggle-btn" data-wz-multi="diceType" data-value="D8">D8</button>
+                <button type="button" class="wz-toggle-btn" data-wz-multi="diceType" data-value="D10">D10</button>
+                <button type="button" class="wz-toggle-btn" data-wz-multi="diceType" data-value="D12">D12</button>
+                <button type="button" class="wz-toggle-btn" data-wz-multi="diceType" data-value="D20">D20</button>
+                <button type="button" class="wz-toggle-btn" data-wz-multi="diceType" data-value="D100">D100</button>
+              </div>
+              <div class="wz-custom-row">
+                <button type="button" class="wz-toggle-btn" data-wz-multi="diceType" data-value="custom" data-wz-i18n="wzCustomDie">⚙️ Власний</button>
+                <input type="number" id="wzCustomFaces" min="2" max="100" value="20" inputmode="numeric">
+                <span class="wz-unit" data-wz-i18n="wzFaces">граней</span>
+                <span class="wz-unit">(2–100)</span>
+              </div>
+              <div id="wzFacesError" class="wz-error" data-wz-i18n="wzFacesError" hidden></div>
+            </div>
+
+            <div class="wz-section">
+              <span class="wz-section-title" data-wz-i18n="wzDiceCountTitle">Кількість кубиків за раз</span>
+              <div class="wz-stepper">
+                <button type="button" class="wz-stepper-btn" onclick="GameStore.wzStepValue('wzDiceCount', -1, 1, 20)">−</button>
+                <input type="number" id="wzDiceCount" min="1" max="20" value="2" inputmode="numeric">
+                <button type="button" class="wz-stepper-btn" onclick="GameStore.wzStepValue('wzDiceCount', 1, 1, 20)">+</button>
+              </div>
+              <div class="wz-hint" data-wz-i18n="wzDiceCountHint">Скільки кубиків кидають одночасно</div>
+            </div>
+
+            <div class="wz-section">
+              <span class="wz-section-title" data-wz-i18n="wzDisplayMode">Режим відображення</span>
+              <div class="wz-seg" data-wz-group="diceDisplay">
+                <button type="button" class="wz-toggle-btn active" data-value="dots" data-wz-i18n="wzDots">🔵 Крапки</button>
+                <button type="button" class="wz-toggle-btn" data-value="nums" data-wz-i18n="wzNums">🔢 Цифри</button>
+              </div>
+              <div id="wzDotsHint" class="wz-hint" data-wz-i18n="wzDotsHint" hidden>Крапки доступні лише для кубиків ≤ D9</div>
+            </div>
+
+            <div class="wz-section">
+              <span class="wz-section-title" data-wz-i18n="wzModifiers">Модифікатори</span>
+              <span class="wz-label" data-wz-i18n="wzModifierToggle">Є бонус/штраф до результату?</span>
+              <div class="wz-seg" data-wz-group="diceModifier">
+                <button type="button" class="wz-toggle-btn" data-value="1" data-wz-i18n="wzYes">Так</button>
+                <button type="button" class="wz-toggle-btn active" data-value="0" data-wz-i18n="wzNo">Ні</button>
+              </div>
+              <div id="wzModifierWrap" class="wz-collapse">
+                <div class="wz-inline">
+                  <span class="wz-unit" data-wz-i18n="wzModifierLabel">Бонус/штраф до кожного кидка</span>
+                  <input type="number" id="wzModifier" min="-99" max="99" step="1" value="0" inputmode="numeric">
+                </div>
+              </div>
+            </div>
+
+            <div class="wz-section">
+              <span class="wz-section-title" data-wz-i18n="wzAllowZero">Допускати нуль</span>
+              <span class="wz-label" data-wz-i18n="wzAllowZeroToggle">Може випасти 0?</span>
+              <div class="wz-seg" data-wz-group="diceZero">
+                <button type="button" class="wz-toggle-btn" data-value="1" data-wz-i18n="wzYes">Так</button>
+                <button type="button" class="wz-toggle-btn active" data-value="0" data-wz-i18n="wzNo">Ні</button>
               </div>
             </div>
           </div>
-        </div>
+        </section>
 
-        <!-- Score Question -->
-        <div class="col" style="background:var(--bg-main); padding:10px; border-radius:var(--radius-sm); gap:8px;">
-          <div class="row" style="justify-content:space-between;">
-            <span class="text-sm font-bold">📊 Рахувати очки?</span>
-            <div class="row" style="gap:8px;">
-              <label class="text-sm"><input type="radio" name="wzScoreUsed" value="yes" checked onchange="GameStore.toggleWizardToolVisibility()"> Так</label>
-              <label class="text-sm"><input type="radio" name="wzScoreUsed" value="no" onchange="GameStore.toggleWizardToolVisibility()"> Ні</label>
-            </div>
+        <!-- STEP 3: Scores & players -->
+        <section id="wizardStep3" class="wizard-step">
+          <div class="wz-step-head">
+            <h4 class="wz-step-title" data-wz-i18n="wzTitleScore">📊 Очки та гравці</h4>
           </div>
-          <div id="wzScoreSubOptions" class="col" style="gap:6px; border-top:1px solid var(--border); padding-top:6px;">
-            <div class="row" style="justify-content:space-between; align-items:center;">
-              <span class="text-sm">Лічильників на гравця:</span>
-              <div class="row" style="gap:8px;">
-                <label class="text-sm"><input type="radio" name="wzCountersNum" value="1" onchange="GameStore.updateWizardCounterInputs()"> 1</label>
-                <label class="text-sm"><input type="radio" name="wzCountersNum" value="2" onchange="GameStore.updateWizardCounterInputs()"> 2</label>
-                <label class="text-sm"><input type="radio" name="wzCountersNum" value="3" checked onchange="GameStore.updateWizardCounterInputs()"> 3</label>
+
+          <div class="wz-section">
+            <span class="wz-section-title" data-wz-i18n="wzScoreSection">Рахування очок</span>
+            <div class="wz-seg wz-seg-lg" data-wz-group="scoreEnabled">
+              <button type="button" class="wz-toggle-btn active" data-value="1" data-wz-i18n="wzScoreYes">📊 Так, рахуємо очки</button>
+              <button type="button" class="wz-toggle-btn" data-value="0" data-wz-i18n="wzSkip">Ні, пропустити →</button>
+            </div>
+
+            <div id="wzScoreOptions" class="wz-collapse open">
+              <div class="wz-field">
+                <span class="wz-label" data-wz-i18n="wzCountersCount">Скільки лічильників на кожного гравця?</span>
+                <div class="wz-seg" data-wz-group="countersCount">
+                  <button type="button" class="wz-toggle-btn" data-value="1">1</button>
+                  <button type="button" class="wz-toggle-btn" data-value="2">2</button>
+                  <button type="button" class="wz-toggle-btn active" data-value="3">3</button>
+                </div>
+              </div>
+
+              <div id="wzCounterWrap1" class="wz-field wz-collapse open">
+                <label class="wz-label" for="wzCounter1"><span data-wz-i18n="wzCounterLabel">Лічильник</span> 1</label>
+                <input type="text" id="wzCounter1" maxlength="20" value="A" placeholder="A" autocomplete="off">
+              </div>
+              <div id="wzCounterWrap2" class="wz-field wz-collapse open">
+                <label class="wz-label" for="wzCounter2"><span data-wz-i18n="wzCounterLabel">Лічильник</span> 2</label>
+                <input type="text" id="wzCounter2" maxlength="20" value="B" placeholder="B" autocomplete="off">
+              </div>
+              <div id="wzCounterWrap3" class="wz-field wz-collapse open">
+                <label class="wz-label" for="wzCounter3"><span data-wz-i18n="wzCounterLabel">Лічильник</span> 3</label>
+                <input type="text" id="wzCounter3" maxlength="20" value="C" placeholder="C" autocomplete="off">
+              </div>
+
+              <div class="wz-field">
+                <span class="wz-label" data-wz-i18n="wzNegativeAllowed">Дозволені від'ємні значення?</span>
+                <div class="wz-seg" data-wz-group="allowNegative">
+                  <button type="button" class="wz-toggle-btn active" data-value="1" data-wz-i18n="wzYes">Так</button>
+                  <button type="button" class="wz-toggle-btn" data-value="0" data-wz-i18n="wzNo">Ні</button>
+                </div>
+              </div>
+
+              <div class="wz-field">
+                <span class="wz-label" data-wz-i18n="wzStartScores">Є початкові очки (не 0)?</span>
+                <div class="wz-seg" data-wz-group="startScores">
+                  <button type="button" class="wz-toggle-btn" data-value="1" data-wz-i18n="wzYes">Так</button>
+                  <button type="button" class="wz-toggle-btn active" data-value="0" data-wz-i18n="wzNo">Ні</button>
+                </div>
+                <div id="wzStartValueWrap" class="wz-collapse">
+                  <div class="wz-inline">
+                    <span class="wz-unit" data-wz-i18n="wzStartValue">Початкове значення</span>
+                    <input type="number" id="wzStartValue" min="-999" max="999" step="1" value="0" inputmode="numeric">
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="col" style="gap:4px;" id="wzCounterLabelsList">
-              <span class="text-sm text-muted">Назви лічильників:</span>
-              <input type="text" id="wzCounter1" value="A" placeholder="Лічильник 1">
-              <input type="text" id="wzCounter2" value="B" placeholder="Лічильник 2">
-              <input type="text" id="wzCounter3" value="C" placeholder="Лічильник 3">
+          </div>
+
+          <div class="wz-section">
+            <span class="wz-section-title" data-wz-i18n="wzTurnOrderSection">Порядок ходів</span>
+            <span class="wz-label" data-wz-i18n="wzTurnOrderToggle">Гравці ходять по черзі?</span>
+            <div class="wz-seg" data-wz-group="turnOrderEnabled">
+              <button type="button" class="wz-toggle-btn active" data-value="1" data-wz-i18n="wzYes">Так</button>
+              <button type="button" class="wz-toggle-btn" data-value="0" data-wz-i18n="wzNo">Ні</button>
             </div>
-            <div class="row" style="justify-content:space-between; align-items:center;">
-              <span class="text-sm">Дозволені від'ємні очки?</span>
-              <div class="row" style="gap:8px;">
-                <label class="text-sm"><input type="radio" name="wzAllowNeg" value="yes" checked> Так</label>
-                <label class="text-sm"><input type="radio" name="wzAllowNeg" value="no"> Ні</label>
+            <div id="wzTurnOrderOptions" class="wz-collapse open">
+              <div class="wz-seg" data-wz-group="turnOrder">
+                <button type="button" class="wz-preset-btn active" data-value="clockwise" data-wz-i18n="wzOrderClockwise">За годинниковою ↻</button>
+                <button type="button" class="wz-preset-btn" data-value="counter" data-wz-i18n="wzOrderCounter">Проти ↺</button>
+                <button type="button" class="wz-preset-btn" data-value="free" data-wz-i18n="wzOrderFree">Вільний</button>
               </div>
             </div>
           </div>
-        </div>
+        </section>
 
-        <!-- Time Limit Question -->
-        <div class="col" style="background:var(--bg-main); padding:10px; border-radius:var(--radius-sm); gap:8px;">
-          <div class="row" style="justify-content:space-between;">
-            <span class="text-sm font-bold">⏱️ Є ліміт часу на хід?</span>
-            <div class="row" style="gap:8px;">
-              <label class="text-sm"><input type="radio" name="wzTimerUsed" value="yes" checked onchange="GameStore.toggleWizardToolVisibility()"> Так</label>
-              <label class="text-sm"><input type="radio" name="wzTimerUsed" value="no" onchange="GameStore.toggleWizardToolVisibility()"> Ні</label>
-            </div>
+        <!-- STEP 4: Time & rounds -->
+        <section id="wizardStep4" class="wizard-step">
+          <div class="wz-step-head">
+            <h4 class="wz-step-title" data-wz-i18n="wzTitleTime">⏱️ Час та раунди</h4>
           </div>
-          <div id="wzTimerSubOptions" class="col" style="gap:6px; border-top:1px solid var(--border); padding-top:6px;">
-            <div class="row" style="justify-content:space-between; align-items:center;">
-              <span class="text-sm">Скільки секунд?</span>
-              <input type="number" id="wzTimerSeconds" min="5" max="3600" value="30" style="width:70px; text-align:center;">
-            </div>
-            <div class="row" style="justify-content:space-between; align-items:center;">
-              <span class="text-sm">Штраф за перевищення?</span>
-              <input type="number" id="wzTimerPenalty" min="0" max="99" value="1" style="width:70px; text-align:center;">
-            </div>
-          </div>
-        </div>
 
-        <!-- Rounds Question -->
-        <div class="col" style="background:var(--bg-main); padding:10px; border-radius:var(--radius-sm); gap:8px;">
-          <div class="row" style="justify-content:space-between;">
-            <span class="text-sm font-bold">🔄 Є раунди у грі?</span>
-            <div class="row" style="gap:8px;">
-              <label class="text-sm"><input type="radio" name="wzRoundsUsed" value="yes" checked onchange="GameStore.toggleWizardToolVisibility()"> Так</label>
-              <label class="text-sm"><input type="radio" name="wzRoundsUsed" value="no" onchange="GameStore.toggleWizardToolVisibility()"> Ні</label>
+          <div class="wz-section">
+            <span class="wz-section-title" data-wz-i18n="wzTimerSection">Таймер ходу</span>
+            <div class="wz-seg wz-seg-lg" data-wz-group="timerEnabled">
+              <button type="button" class="wz-toggle-btn active" data-value="1" data-wz-i18n="wzTimerYes">⏱️ Так, є ліміт часу</button>
+              <button type="button" class="wz-toggle-btn" data-value="0" data-wz-i18n="wzTimerNo">Ні, без таймера</button>
+            </div>
+
+            <div id="wzTimerOptions" class="wz-collapse open">
+              <div class="wz-field">
+                <span class="wz-label" data-wz-i18n="wzTurnTime">Час на один хід</span>
+                <div class="wz-seg" data-wz-group="timerPreset">
+                  <button type="button" class="wz-preset-btn" data-value="15">15<span class="wz-unit" data-wz-i18n="wzSec">с</span></button>
+                  <button type="button" class="wz-preset-btn active" data-value="30">30<span class="wz-unit" data-wz-i18n="wzSec">с</span></button>
+                  <button type="button" class="wz-preset-btn" data-value="60">60<span class="wz-unit" data-wz-i18n="wzSec">с</span></button>
+                  <button type="button" class="wz-preset-btn" data-value="120">2<span class="wz-unit" data-wz-i18n="wzMin">хв</span></button>
+                  <button type="button" class="wz-preset-btn" data-value="300">5<span class="wz-unit" data-wz-i18n="wzMin">хв</span></button>
+                  <button type="button" class="wz-preset-btn" data-value="custom" data-wz-i18n="wzCustomTime">⚙️ Своє</button>
+                </div>
+                <div id="wzCustomTimeWrap" class="wz-collapse">
+                  <div class="wz-inline">
+                    <input type="number" id="wzCustomTime" min="5" max="3600" value="30" inputmode="numeric">
+                    <span class="wz-unit" data-wz-i18n="wzSec">с</span>
+                  </div>
+                  <div id="wzTimeError" class="wz-error" data-wz-i18n="wzTimeError" hidden></div>
+                </div>
+              </div>
+
+              <div class="wz-field">
+                <span class="wz-label" data-wz-i18n="wzPenaltySection">Штраф за перевищення часу</span>
+                <div class="wz-seg" data-wz-group="penaltyEnabled">
+                  <button type="button" class="wz-toggle-btn active" data-value="1" data-wz-i18n="wzYes">Так</button>
+                  <button type="button" class="wz-toggle-btn" data-value="0" data-wz-i18n="wzNo">Ні</button>
+                </div>
+                <div id="wzPenaltyWrap" class="wz-collapse open">
+                  <div class="wz-inline">
+                    <div class="wz-stepper">
+                      <button type="button" class="wz-stepper-btn" onclick="GameStore.wzStepValue('wzPenalty', -1, 0, 99)">−</button>
+                      <input type="number" id="wzPenalty" min="0" max="99" value="1" inputmode="numeric">
+                      <button type="button" class="wz-stepper-btn" onclick="GameStore.wzStepValue('wzPenalty', 1, 0, 99)">+</button>
+                    </div>
+                    <span class="wz-unit" data-wz-i18n="wzPoints">очок</span>
+                  </div>
+                  <div class="wz-hint" data-wz-i18n="wzPenaltyHint">Стільки очок знімається при тайм-ауті</div>
+                </div>
+              </div>
+
+              <div class="wz-field">
+                <span class="wz-label" data-wz-i18n="wzWarningSound">Звуковий сигнал перед кінцем</span>
+                <div class="wz-seg" data-wz-group="warningSound">
+                  <button type="button" class="wz-toggle-btn active" data-value="1" data-wz-i18n="wzYes">Так</button>
+                  <button type="button" class="wz-toggle-btn" data-value="0" data-wz-i18n="wzNo">Ні</button>
+                </div>
+                <div class="wz-hint" data-wz-i18n="wzWarningSoundHint">Попереджувальний сигнал за 5 с</div>
+              </div>
             </div>
           </div>
-          <div id="wzRoundsSubOptions" class="row" style="justify-content:space-between; align-items:center; border-top:1px solid var(--border); padding-top:6px;">
-            <span class="text-sm">Максимум раундів (0 = без обмежень):</span>
-            <input type="number" id="wzMaxRounds" min="0" max="100" value="0" style="width:70px; text-align:center;">
-          </div>
-        </div>
 
-        <div class="row" style="justify-content:space-between; margin-top:8px;">
-          <button class="btn btn-secondary" onclick="GameStore.wizardPrev()" data-i18n="prevStep">← Назад</button>
-          <button class="btn btn-primary" onclick="GameStore.wizardNext()" data-i18n="nextStep">Далі →</button>
-        </div>
+          <div class="wz-section">
+            <span class="wz-section-title" data-wz-i18n="wzRoundsSection">Раунди</span>
+            <div class="wz-seg wz-seg-lg" data-wz-group="roundsEnabled">
+              <button type="button" class="wz-toggle-btn active" data-value="1" data-wz-i18n="wzRoundsYes">🔄 Так, є раунди</button>
+              <button type="button" class="wz-toggle-btn" data-value="0" data-wz-i18n="wzRoundsNo">Ні, без раундів</button>
+            </div>
+
+            <div id="wzRoundsOptions" class="wz-collapse open">
+              <div class="wz-field">
+                <span class="wz-label" data-wz-i18n="wzMaxRounds">Максимальна кількість раундів</span>
+                <div class="wz-seg" data-wz-group="roundsLimit">
+                  <button type="button" class="wz-toggle-btn active" data-value="0" data-wz-i18n="wzUnlimited">Необмежено</button>
+                  <button type="button" class="wz-toggle-btn" data-value="1" data-wz-i18n="wzFixed">Фіксована кількість</button>
+                </div>
+                <div id="wzMaxRoundsWrap" class="wz-collapse">
+                  <div class="wz-stepper">
+                    <button type="button" class="wz-stepper-btn" onclick="GameStore.wzStepValue('wzMaxRounds', -1, 1, 100)">−</button>
+                    <input type="number" id="wzMaxRounds" min="1" max="100" value="10" inputmode="numeric">
+                    <button type="button" class="wz-stepper-btn" onclick="GameStore.wzStepValue('wzMaxRounds', 1, 1, 100)">+</button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="wz-field">
+                <span class="wz-label" data-wz-i18n="wzResetScores">Скидати очки після кожного раунду?</span>
+                <div class="wz-seg" data-wz-group="resetScores">
+                  <button type="button" class="wz-toggle-btn" data-value="1" data-wz-i18n="wzYes">Так</button>
+                  <button type="button" class="wz-toggle-btn active" data-value="0" data-wz-i18n="wzNo">Ні</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- STEP 5: Restrictions & save -->
+        <section id="wizardStep5" class="wizard-step">
+          <div class="wz-step-head">
+            <h4 class="wz-step-title" data-wz-i18n="wzTitleSave">🔒 Обмеження та збереження</h4>
+          </div>
+
+          <div class="wz-section">
+            <span class="wz-section-title" data-wz-i18n="wzLockSection">Заблокувати функції для цієї гри</span>
+            <div class="wz-hint" data-wz-i18n="wzLockHint">Ці функції будуть приховані під час гри</div>
+            <div class="wz-lock-list">
+              <button type="button" class="wz-lock-row" data-wz-lock="calculator" aria-pressed="false">
+                <span class="wz-lock-check">✓</span>
+                <span class="wz-lock-text">
+                  <span class="wz-lock-title" data-wz-i18n="wzLockCalc">📐 Калькулятор формул</span>
+                  <span class="wz-lock-desc" data-wz-i18n="wzLockCalcHint">Прибрати математичний калькулятор</span>
+                </span>
+              </button>
+              <button type="button" class="wz-lock-row" data-wz-lock="colors" aria-pressed="false">
+                <span class="wz-lock-check">✓</span>
+                <span class="wz-lock-text">
+                  <span class="wz-lock-title" data-wz-i18n="wzLockColors">🎨 Зміна кольорів кубиків</span>
+                  <span class="wz-lock-desc" data-wz-i18n="wzLockColorsHint">Заборонити гравцям міняти кольори</span>
+                </span>
+              </button>
+              <button type="button" class="wz-lock-row" data-wz-lock="timerManual" aria-pressed="false">
+                <span class="wz-lock-check">✓</span>
+                <span class="wz-lock-text">
+                  <span class="wz-lock-title" data-wz-i18n="wzLockTimer">⏱️ Ручне редагування таймера</span>
+                  <span class="wz-lock-desc" data-wz-i18n="wzLockTimerHint">Кнопки ±10с будуть недоступні</span>
+                </span>
+              </button>
+              <button type="button" class="wz-lock-row" data-wz-lock="addPlayers" aria-pressed="false">
+                <span class="wz-lock-check">✓</span>
+                <span class="wz-lock-text">
+                  <span class="wz-lock-title" data-wz-i18n="wzLockAddPlayers">➕ Додавання гравців під час гри</span>
+                  <span class="wz-lock-desc" data-wz-i18n="wzLockAddPlayersHint">Не можна додавати нових гравців після старту</span>
+                </span>
+              </button>
+              <button type="button" class="wz-lock-row" data-wz-lock="rerollSingle" aria-pressed="false">
+                <span class="wz-lock-check">✓</span>
+                <span class="wz-lock-text">
+                  <span class="wz-lock-title" data-wz-i18n="wzLockReroll">🔄 Перекидання окремих кубиків</span>
+                  <span class="wz-lock-desc" data-wz-i18n="wzLockRerollHint">Можна кидати тільки всі разом</span>
+                </span>
+              </button>
+              <button type="button" class="wz-lock-row" data-wz-lock="diceCount" aria-pressed="false">
+                <span class="wz-lock-check">✓</span>
+                <span class="wz-lock-text">
+                  <span class="wz-lock-title" data-wz-i18n="wzLockDiceCount">🔢 Зміна кількості кубиків</span>
+                  <span class="wz-lock-desc" data-wz-i18n="wzLockDiceCountHint">Фіксована кількість кубиків</span>
+                </span>
+              </button>
+            </div>
+          </div>
+
+          <div class="wz-section">
+            <span class="wz-section-title" data-wz-i18n="wzSummary">Перегляд</span>
+            <div id="wzSummaryCard" class="wz-summary"></div>
+          </div>
+
+          <div class="wz-actions">
+            <button type="button" class="btn btn-primary wz-btn-large" onclick="GameStore.wizardSaveLocal()" data-wz-i18n="saveLocal">💾 Зберегти локально</button>
+            <button type="button" class="btn btn-secondary" onclick="GameStore.wizardCopyCode()" data-wz-i18n="copyOfflineCode">📤 Скопіювати офлайн-код</button>
+            <button type="button" id="wzPublishBtn" class="btn btn-primary" style="display:none;" onclick="GameStore.wizardPublish()" data-wz-i18n="wzPublish">🌐 Опублікувати в магазині</button>
+          </div>
+        </section>
       </div>
 
-      <!-- STEP 3: Review & Save -->
-      <div id="wizardStep3" class="col" style="gap:10px; display:none;">
-        <b class="text-sm font-bold" data-i18n="step3Title">Крок 3: Перегляд і збереження</b>
-        <div id="wzSummaryCard" class="col" style="background:var(--bg-main); padding:12px; border-radius:var(--radius-sm); border:1px solid var(--border); font-size:12px; gap:8px;">
-          <!-- Populated by GameStore.renderWizardSummary() -->
-        </div>
-        <div class="col" style="gap:8px; margin-top:6px;">
-          <button class="btn btn-primary" onclick="GameStore.wizardSaveLocal()" data-i18n="saveLocal">💾 Зберегти локально</button>
-          <button class="btn btn-secondary" onclick="GameStore.wizardCopyCode()" data-i18n="copyOfflineCode">📤 Скопіювати офлайн-код</button>
-          <button class="btn btn-secondary" onclick="GameStore.wizardPrev()" data-i18n="prevStep">← Назад</button>
-        </div>
+      <div class="wizard-footer">
+        <button type="button" id="wzPrevBtn" class="btn btn-secondary" onclick="GameStore.wizardPrev()" data-wz-i18n="prevStep">← Назад</button>
+        <button type="button" id="wzNextBtn" class="btn btn-primary wz-next" onclick="GameStore.wizardNext()" data-wz-i18n="nextStep">Далі →</button>
       </div>
-
     </div>
   </div>
 
@@ -1627,7 +2221,6 @@
           noRounds: "Ще не завершено жодного раунду.", maxPlayersError: "Максимальна кількість гравців — 8!",
           storeTitle: "Магазин ігор", createGame: "✨ Створити гру", searchGame: "Пошук гри...", importCode: "Введіть код гри...",
           importBtn: "📥 Імпортувати", emptyStoreTitle: "Ігор ще немає", emptyStoreDesc: "Створіть першу гру або введіть офлайн-код",
-          step1Title: "Крок 1: Основна інформація", step2Title: "Крок 2: Інструменти гри", step3Title: "Крок 3: Огляд і збереження",
           nextStep: "Далі →", prevStep: "← Назад", saveLocal: "💾 Зберегти локально", copyOfflineCode: "📤 Скопіювати офлайн-код",
           codeCopied: "Офлайн-код скопійовано!", gameSaved: "Гру успішно додано!", invalidCode: "Невірний офлайн-код гри!",
           renameCounterTitle: "Змінити назву лічильника", renameCounterLabel: "Назва лічильника:", totalScore: "Загальний рахунок",
@@ -1662,7 +2255,6 @@
           noRounds: "No rounds finished yet.", maxPlayersError: "Maximum number of players is 8!",
           storeTitle: "Game Store", createGame: "✨ Create Game", searchGame: "Search games...", importCode: "Enter game code...",
           importBtn: "📥 Import", emptyStoreTitle: "No games yet", emptyStoreDesc: "Create your first game or enter an offline code",
-          step1Title: "Step 1: Basic Info", step2Title: "Step 2: Game Tools", step3Title: "Step 3: Review & Save",
           nextStep: "Next →", prevStep: "← Back", saveLocal: "💾 Save Locally", copyOfflineCode: "📤 Copy Offline Code",
           codeCopied: "Offline code copied!", gameSaved: "Game successfully added!", invalidCode: "Invalid offline game code!",
           renameCounterTitle: "Rename Counter", renameCounterLabel: "Counter name:", totalScore: "Total Score",
@@ -1697,7 +2289,6 @@
           noRounds: "No hay rondas finalizadas.", maxPlayersError: "¡Máximo 8 jugadores!",
           storeTitle: "Tienda de juegos", createGame: "✨ Crear juego", searchGame: "Buscar juego...", importCode: "Introduce código...",
           importBtn: "📥 Importar", emptyStoreTitle: "No hay juegos", emptyStoreDesc: "Crea tu primer juego o introduce un código",
-          step1Title: "Paso 1: Información básica", step2Title: "Paso 2: Herramientas", step3Title: "Paso 3: Revisión y guardado",
           nextStep: "Siguiente →", prevStep: "← Atrás", saveLocal: "💾 Guardar localmente", copyOfflineCode: "📤 Copiar código",
           codeCopied: "¡Código copiado al portapapeles!", gameSaved: "¡Juego añadido con éxito!", invalidCode: "¡Código de juego inválido!",
           renameCounterTitle: "Renombrar contador", renameCounterLabel: "Nombre del contador:", totalScore: "Total",
@@ -1732,7 +2323,6 @@
           noRounds: "Noch keine Runden beendet.", maxPlayersError: "Maximal 8 Spieler erlaubt!",
           storeTitle: "Spieleladen", createGame: "✨ Spiel erstellen", searchGame: "Spiel suchen...", importCode: "Code eingeben...",
           importBtn: "📥 Importieren", emptyStoreTitle: "Noch keine Spiele", emptyStoreDesc: "Erstelle dein erstes Spiel oder gib einen Offline-Code ein",
-          step1Title: "Schritt 1: Grundinfo", step2Title: "Schritt 2: Werkzeuge", step3Title: "Schritt 3: Übersicht & Speichern",
           nextStep: "Weiter →", prevStep: "← Zurück", saveLocal: "💾 Lokal speichern", copyOfflineCode: "📤 Offline-Code kopieren",
           codeCopied: "Offline-Code kopiert!", gameSaved: "Spiel erfolgreich hinzugefügt!", invalidCode: "Ungültiger Offline-Code!",
           renameCounterTitle: "Zähler umbenennen", renameCounterLabel: "Zählername:", totalScore: "Gesamtpunktzahl",
@@ -1767,7 +2357,6 @@
           noRounds: "Aucune manche terminée.", maxPlayersError: "Maximum 8 joueurs !",
           storeTitle: "Magasin de jeux", createGame: "✨ Créer un jeu", searchGame: "Rechercher...", importCode: "Code du jeu...",
           importBtn: "📥 Importer", emptyStoreTitle: "Aucun jeu", emptyStoreDesc: "Créez votre premier jeu ou entrez un code hors ligne",
-          step1Title: "Étape 1: Infos de base", step2Title: "Étape 2: Outils de jeu", step3Title: "Étape 3: Vérification & Sauvegarde",
           nextStep: "Suivant →", prevStep: "← Précédent", saveLocal: "💾 Sauvegarder localement", copyOfflineCode: "📤 Copier le code hors-ligne",
           codeCopied: "Code copié !", gameSaved: "Jeu ajouté avec succès !", invalidCode: "Code hors ligne invalide !",
           renameCounterTitle: "Renommer le compteur", renameCounterLabel: "Nom du compteur :", totalScore: "Score total",
@@ -1802,7 +2391,6 @@
           noRounds: "Nessun round terminato.", maxPlayersError: "Massimo 8 giocatori!",
           storeTitle: "Negozio giochi", createGame: "✨ Crea gioco", searchGame: "Cerca gioco...", importCode: "Codice gioco...",
           importBtn: "📥 Importa", emptyStoreTitle: "Nessun gioco", emptyStoreDesc: "Crea il tuo primo gioco o inserisci un codice offline",
-          step1Title: "Passo 1: Info base", step2Title: "Passo 2: Strumenti", step3Title: "Passo 3: Revisione e Salvataggio",
           nextStep: "Avanti →", prevStep: "← Indietro", saveLocal: "💾 Salva in locale", copyOfflineCode: "📤 Copia codice offline",
           codeCopied: "Codice copiato!", gameSaved: "Gioco aggiunto con successo!", invalidCode: "Codice offline non valido!",
           renameCounterTitle: "Rinomina contatore", renameCounterLabel: "Nome contatore:", totalScore: "Punteggio totale",
@@ -1837,7 +2425,6 @@
           noRounds: "Nie zakończono jeszcze żadnej rundy.", maxPlayersError: "Maksymalnie 8 graczy!",
           storeTitle: "Katalog gier", createGame: "✨ Stwórz grę", searchGame: "Szukaj gry...", importCode: "Wpisz kod gry...",
           importBtn: "📥 Importuj", emptyStoreTitle: "Brak gier", emptyStoreDesc: "Stwórz pierwszą grę lub wpisz kod offline",
-          step1Title: "Krok 1: Podstawowe informacje", step2Title: "Krok 2: Narzędzia do gry", step3Title: "Krok 3: Podsumowanie i zapis",
           nextStep: "Dalej →", prevStep: "← Wstecz", saveLocal: "💾 Zapisz lokalnie", copyOfflineCode: "📤 Kopiuj kod offline",
           codeCopied: "Kod offline skopiowany!", gameSaved: "Gra została pomyślnie dodana!", invalidCode: "Nieprawidłowy kod gry!",
           renameCounterTitle: "Zmień nazwę licznika", renameCounterLabel: "Nazwa licznika:", totalScore: "Suma punktów",
@@ -1872,7 +2459,6 @@
           noRounds: "Nenhuma rodada finalizada.", maxPlayersError: "Máximo de 8 jogadores!",
           storeTitle: "Loja de jogos", createGame: "✨ Criar jogo", searchGame: "Buscar jogo...", importCode: "Código do jogo...",
           importBtn: "📥 Importar", emptyStoreTitle: "Sem jogos", emptyStoreDesc: "Crie seu primeiro jogo ou insira um código offline",
-          step1Title: "Passo 1: Informações básicas", step2Title: "Passo 2: Ferramentas", step3Title: "Passo 3: Revisão e Salvar",
           nextStep: "Avançar →", prevStep: "← Voltar", saveLocal: "💾 Salvar localmente", copyOfflineCode: "📤 Copiar código offline",
           codeCopied: "Código offline copiado!", gameSaved: "Jogo adicionado com sucesso!", invalidCode: "Código offline inválido!",
           renameCounterTitle: "Renomear contador", renameCounterLabel: "Nome do contador:", totalScore: "Pontuação total",
@@ -1907,7 +2493,6 @@
           noRounds: "Henüz tamamlanan tur yok.", maxPlayersError: "En fazla 8 oyuncu!",
           storeTitle: "Oyun Mağazası", createGame: "✨ Oyun Oluştur", searchGame: "Oyun ara...", importCode: "Oyun kodu girin...",
           importBtn: "📥 İçe Aktar", emptyStoreTitle: "Henüz oyun yok", emptyStoreDesc: "İlk oyununuzu oluşturun veya çevrimdışı kod girin",
-          step1Title: "1. Adım: Temel Bilgiler", step2Title: "2. Adım: Oyun Araçları", step3Title: "3. Adım: İnceleme & Kaydet",
           nextStep: "İleri →", prevStep: "← Geri", saveLocal: "💾 Yerel Kaydet", copyOfflineCode: "📤 Çevrimdışı Kodu Kopyala",
           codeCopied: "Çevrimdışı kod kopyalandı!", gameSaved: "Oyun başarıyla eklendi!", invalidCode: "Geçersiz çevrimdışı kod!",
           renameCounterTitle: "Sayacı Yeniden Adlandır", renameCounterLabel: "Sayaç adı:", totalScore: "Toplam Puan",
@@ -1942,7 +2527,6 @@
           noRounds: "終了したラウンドはありません。", maxPlayersError: "プレイヤーは最大8人です！",
           storeTitle: "ゲームストア", createGame: "✨ ゲーム作成", searchGame: "ゲーム検索...", importCode: "ゲームコード入力...",
           importBtn: "📥 インポート", emptyStoreTitle: "ゲームがありません", emptyStoreDesc: "新しいゲームを作成するかオフラインコードを入力してください",
-          step1Title: "ステップ1: 基本情報", step2Title: "ステップ2: ゲームツール", step3Title: "ステップ3: 確認と保存",
           nextStep: "次へ →", prevStep: "← 戻る", saveLocal: "💾 ローカル保存", copyOfflineCode: "📤 オフラインコードコピー",
           codeCopied: "コードをコピーしました！", gameSaved: "ゲームを追加しました！", invalidCode: "無効なオフラインコードです！",
           renameCounterTitle: "カウンター名変更", renameCounterLabel: "カウンター名:", totalScore: "合計スコア",
@@ -1977,7 +2561,6 @@
           noRounds: "尚未完成任何轮次。", maxPlayersError: "最多支持8位玩家！",
           storeTitle: "游戏商店", createGame: "✨ 创建游戏", searchGame: "搜索游戏...", importCode: "输入游戏代码...",
           importBtn: "📥 导入", emptyStoreTitle: "暂无游戏", emptyStoreDesc: "创建您的第一个游戏或输入离线代码",
-          step1Title: "第1步: 基本信息", step2Title: "第2步: 游戏工具", step3Title: "第3步: 预览与保存",
           nextStep: "下一步 →", prevStep: "← 上一步", saveLocal: "💾 本地保存", copyOfflineCode: "📤 复制离线代码",
           codeCopied: "代码已复制到剪贴板！", gameSaved: "游戏创建成功！", invalidCode: "离线游戏代码无效！",
           renameCounterTitle: "重命名计分器", renameCounterLabel: "计分器名称:", totalScore: "总分",
@@ -2012,7 +2595,6 @@
           noRounds: "완료된 라운드가 없습니다.", maxPlayersError: "플레이어는 최대 8명까지 가능합니다!",
           storeTitle: "게임 스토어", createGame: "✨ 게임 만들기", searchGame: "게임 검색...", importCode: "게임 코드 입력...",
           importBtn: "📥 가져오기", emptyStoreTitle: "게임 없음", emptyStoreDesc: "첫 게임을 만들거나 오프라인 코드를 입력하세요",
-          step1Title: "1단계: 기본 정보", step2Title: "2단계: 게임 도구", step3Title: "3단계: 검토 및 저장",
           nextStep: "다음 →", prevStep: "← 이전", saveLocal: "💾 로컬에 저장", copyOfflineCode: "📤 오프라인 코드 복사",
           codeCopied: "코드가 클립보드에 복사되었습니다!", gameSaved: "게임이 추가되었습니다!", invalidCode: "유효하지 않은 오프라인 코드입니다!",
           renameCounterTitle: "카운터 이름 변경", renameCounterLabel: "카운터 이름:", totalScore: "총 점수",
@@ -2024,6 +2606,577 @@
           playGame: "▶️ 플레이"
         }
       };
+
+      const wizardTranslations = {
+        uk: {
+          wzStepInfo: 'Інфо', wzStepDice: 'Кубики', wzStepScore: 'Очки', wzStepTime: 'Час', wzStepSave: 'Збереження',
+          wzTitleInfo: '📝 Основна інформація', wzSubtitleInfo: 'Розкажіть про вашу гру',
+          wzTitleDice: '🎲 Налаштування кубиків', wzSubtitleDice: 'Чи є кидання кубиків у вашій грі?',
+          wzTitleScore: '📊 Очки та гравці', wzTitleTime: '⏱️ Час та раунди', wzTitleSave: '🔒 Обмеження та збереження',
+          wzYes: 'Так', wzNo: 'Ні', wzFrom: 'від', wzTo: 'до', wzPlayers: 'гравців',
+          wzSec: 'с', wzMin: 'хв', wzPoints: 'очок', wzFaces: 'граней', wzNone: '—',
+          wzUnlimited: 'Необмежено', wzFixed: 'Фіксована кількість', wzSkip: 'Ні, пропустити →',
+          wzNoDesc: 'Без опису', wzLockedNotice: 'Цю функцію заблоковано для цієї гри',
+          wzGameTitle: 'Назва гри *', wzGameTitlePh: 'Наприклад: Каркасон, Ticket to Ride...',
+          wzTitleRequired: 'Введіть назву гри', wzAuthor: 'Автор / Нікнейм',
+          wzAuthorPh: "Ваше ім'я або нікнейм (необов'язково)", wzDesc: 'Опис гри',
+          wzDescPh: 'Коротко опишіть правила, мету гри...', wzCategory: 'Категорія гри',
+          wzCategoryPh: '— Виберіть категорію —', wzCatStrategy: '♟️ Стратегія', wzCatFamily: '👨‍👩‍👧 Сімейна',
+          wzCatRpg: '🧙 RPG / Рольова', wzCatParty: '🎉 Вечірка', wzCatEconomic: '💰 Економічна',
+          wzCatCooperative: '🤝 Кооперативна', wzCatDexterity: '🎯 Спритність', wzCatOther: '📦 Інше',
+          wzPlayersRange: 'Мінімум та максимум гравців', wzLang: 'Мова опису',
+          wzDiceYes: '🎲 Так, кубики потрібні', wzDiceNo: 'Ні, пропустити →', wzDiceTypes: 'Типи кубиків',
+          wzCustomDie: '⚙️ Власний', wzDiceCountTitle: 'Кількість кубиків за раз',
+          wzDiceCountHint: 'Скільки кубиків кидають одночасно', wzDisplayMode: 'Режим відображення',
+          wzDots: '🔵 Крапки', wzNums: '🔢 Цифри', wzDotsHint: 'Крапки доступні лише для кубиків ≤ D9',
+          wzModifiers: 'Модифікатори', wzModifierToggle: 'Є бонус/штраф до результату?',
+          wzModifierLabel: 'Бонус/штраф до кожного кидка', wzAllowZero: 'Допускати нуль',
+          wzAllowZeroToggle: 'Може випасти 0?',
+          wzScoreSection: 'Рахування очок', wzScoreYes: '📊 Так, рахуємо очки',
+          wzCountersCount: 'Скільки лічильників на кожного гравця?', wzCounterLabel: 'Лічильник',
+          wzNegativeAllowed: "Дозволені від'ємні значення?", wzStartScores: 'Є початкові очки (не 0)?',
+          wzStartValue: 'Початкове значення', wzTurnOrderSection: 'Порядок ходів',
+          wzTurnOrderToggle: 'Гравці ходять по черзі?', wzOrderClockwise: 'За годинниковою ↻',
+          wzOrderCounter: 'Проти ↺', wzOrderFree: 'Вільний',
+          wzTimerSection: 'Таймер ходу', wzTimerYes: '⏱️ Так, є ліміт часу', wzTimerNo: 'Ні, без таймера',
+          wzTurnTime: 'Час на один хід', wzCustomTime: '⚙️ Своє', wzPenaltySection: 'Штраф за перевищення часу',
+          wzPenaltyToggle: 'Є штраф?', wzPenaltyHint: 'Стільки очок знімається при тайм-ауті',
+          wzWarningSound: 'Звуковий сигнал перед кінцем', wzWarningSoundHint: 'Попереджувальний сигнал за 5 с',
+          wzRoundsSection: 'Раунди', wzRoundsYes: '🔄 Так, є раунди', wzRoundsNo: 'Ні, без раундів',
+          wzMaxRounds: 'Максимальна кількість раундів', wzResetScores: 'Скидати очки після кожного раунду?',
+          wzLockSection: 'Заблокувати функції для цієї гри', wzLockHint: 'Ці функції будуть приховані під час гри',
+          wzLockCalc: '📐 Калькулятор формул', wzLockCalcHint: 'Прибрати математичний калькулятор',
+          wzLockColors: '🎨 Зміна кольорів кубиків', wzLockColorsHint: 'Заборонити гравцям міняти кольори',
+          wzLockTimer: '⏱️ Ручне редагування таймера', wzLockTimerHint: 'Кнопки ±10с будуть недоступні',
+          wzLockAddPlayers: '➕ Додавання гравців під час гри', wzLockAddPlayersHint: 'Не можна додавати нових гравців після старту',
+          wzLockReroll: '🔄 Перекидання окремих кубиків', wzLockRerollHint: 'Можна кидати тільки всі разом',
+          wzLockDiceCount: '🔢 Зміна кількості кубиків', wzLockDiceCountHint: 'Фіксована кількість кубиків',
+          wzSummary: 'Перегляд', wzSummaryPlayers: 'Гравці', wzSummaryCategory: 'Категорія', wzSummaryLang: 'Мова',
+          wzSummaryTools: 'Активні інструменти', wzSummaryLocks: 'Заблоковано', wzPublish: '🌐 Опублікувати в магазині',
+          wzPlayersError: 'Мінімум не може бути більшим за максимум', wzFacesError: 'Грані: 2–100', wzTimeError: 'Час: 5–3600 с'
+        },
+        en: {
+          wzStepInfo: 'Info', wzStepDice: 'Dice', wzStepScore: 'Scores', wzStepTime: 'Time', wzStepSave: 'Save',
+          wzTitleInfo: '📝 Basic Information', wzSubtitleInfo: 'Tell us about your game',
+          wzTitleDice: '🎲 Dice Settings', wzSubtitleDice: 'Does your game use dice?',
+          wzTitleScore: '📊 Scores & Players', wzTitleTime: '⏱️ Time & Rounds', wzTitleSave: '🔒 Restrictions & Saving',
+          wzYes: 'Yes', wzNo: 'No', wzFrom: 'from', wzTo: 'to', wzPlayers: 'players',
+          wzSec: 's', wzMin: 'min', wzPoints: 'points', wzFaces: 'faces', wzNone: '—',
+          wzUnlimited: 'Unlimited', wzFixed: 'Fixed number', wzSkip: 'No, skip →',
+          wzNoDesc: 'No description', wzLockedNotice: 'This feature is locked for this game',
+          wzGameTitle: 'Game title *', wzGameTitlePh: 'For example: Carcassonne, Ticket to Ride...',
+          wzTitleRequired: 'Enter the game title', wzAuthor: 'Author / Nickname',
+          wzAuthorPh: 'Your name or nickname (optional)', wzDesc: 'Game description',
+          wzDescPh: 'Briefly describe the rules and goal...', wzCategory: 'Game category',
+          wzCategoryPh: '— Choose a category —', wzCatStrategy: '♟️ Strategy', wzCatFamily: '👨‍👩‍👧 Family',
+          wzCatRpg: '🧙 RPG / Role-playing', wzCatParty: '🎉 Party', wzCatEconomic: '💰 Economic',
+          wzCatCooperative: '🤝 Cooperative', wzCatDexterity: '🎯 Dexterity', wzCatOther: '📦 Other',
+          wzPlayersRange: 'Minimum and maximum players', wzLang: 'Description language',
+          wzDiceYes: '🎲 Yes, dice are needed', wzDiceNo: 'No, skip →', wzDiceTypes: 'Dice types',
+          wzCustomDie: '⚙️ Custom', wzDiceCountTitle: 'Dice per roll',
+          wzDiceCountHint: 'How many dice are rolled at once', wzDisplayMode: 'Display mode',
+          wzDots: '🔵 Dots', wzNums: '🔢 Numbers', wzDotsHint: 'Dots are only available for dice up to D9',
+          wzModifiers: 'Modifiers', wzModifierToggle: 'Is there a bonus/penalty to the result?',
+          wzModifierLabel: 'Bonus/penalty per roll', wzAllowZero: 'Allow zero',
+          wzAllowZeroToggle: 'Can a 0 be rolled?',
+          wzScoreSection: 'Score tracking', wzScoreYes: '📊 Yes, we track scores',
+          wzCountersCount: 'How many counters per player?', wzCounterLabel: 'Counter',
+          wzNegativeAllowed: 'Allow negative values?', wzStartScores: 'Start with non-zero scores?',
+          wzStartValue: 'Starting value', wzTurnOrderSection: 'Turn order',
+          wzTurnOrderToggle: 'Do players take turns?', wzOrderClockwise: 'Clockwise ↻',
+          wzOrderCounter: 'Counterclockwise ↺', wzOrderFree: 'Free',
+          wzTimerSection: 'Turn timer', wzTimerYes: '⏱️ Yes, there is a time limit', wzTimerNo: 'No timer',
+          wzTurnTime: 'Time per turn', wzCustomTime: '⚙️ Custom', wzPenaltySection: 'Time-out penalty',
+          wzPenaltyToggle: 'Is there a penalty?', wzPenaltyHint: 'Points deducted on timeout',
+          wzWarningSound: 'Sound warning before the end', wzWarningSoundHint: 'Warning beep 5 seconds before the end',
+          wzRoundsSection: 'Rounds', wzRoundsYes: '🔄 Yes, there are rounds', wzRoundsNo: 'No rounds',
+          wzMaxRounds: 'Maximum number of rounds', wzResetScores: 'Reset scores after each round?',
+          wzLockSection: 'Lock features for this game', wzLockHint: 'These features will be hidden during the game',
+          wzLockCalc: '📐 Formula calculator', wzLockCalcHint: 'Remove the math calculator',
+          wzLockColors: '🎨 Dice color changes', wzLockColorsHint: 'Prevent players from changing colors',
+          wzLockTimer: '⏱️ Manual timer editing', wzLockTimerHint: '±10s buttons will be unavailable',
+          wzLockAddPlayers: '➕ Adding players during the game', wzLockAddPlayersHint: 'No new players after the start',
+          wzLockReroll: '🔄 Re-rolling individual dice', wzLockRerollHint: 'Only roll all dice together',
+          wzLockDiceCount: '🔢 Changing the dice count', wzLockDiceCountHint: 'Fixed number of dice',
+          wzSummary: 'Review', wzSummaryPlayers: 'Players', wzSummaryCategory: 'Category', wzSummaryLang: 'Language',
+          wzSummaryTools: 'Active tools', wzSummaryLocks: 'Locked', wzPublish: '🌐 Publish to store',
+          wzPlayersError: 'Minimum cannot be greater than maximum', wzFacesError: 'Faces: 2–100', wzTimeError: 'Time: 5–3600 s'
+        },
+        es: {
+          wzStepInfo: 'Info', wzStepDice: 'Dados', wzStepScore: 'Puntos', wzStepTime: 'Tiempo', wzStepSave: 'Guardar',
+          wzTitleInfo: '📝 Información básica', wzSubtitleInfo: 'Cuéntanos sobre tu juego',
+          wzTitleDice: '🎲 Configuración de dados', wzSubtitleDice: '¿Tu juego usa dados?',
+          wzTitleScore: '📊 Puntos y jugadores', wzTitleTime: '⏱️ Tiempo y rondas', wzTitleSave: '🔒 Restricciones y guardado',
+          wzYes: 'Sí', wzNo: 'No', wzFrom: 'de', wzTo: 'a', wzPlayers: 'jugadores',
+          wzSec: 's', wzMin: 'min', wzPoints: 'puntos', wzFaces: 'caras', wzNone: '—',
+          wzUnlimited: 'Ilimitado', wzFixed: 'Cantidad fija', wzSkip: 'No, omitir →',
+          wzNoDesc: 'Sin descripción', wzLockedNotice: 'Esta función está bloqueada para este juego',
+          wzGameTitle: 'Nombre del juego *', wzGameTitlePh: 'Por ejemplo: Carcassonne, Ticket to Ride...',
+          wzTitleRequired: 'Introduce el nombre del juego', wzAuthor: 'Autor / Apodo',
+          wzAuthorPh: 'Tu nombre o apodo (opcional)', wzDesc: 'Descripción del juego',
+          wzDescPh: 'Describe brevemente las reglas y el objetivo...', wzCategory: 'Categoría del juego',
+          wzCategoryPh: '— Elige una categoría —', wzCatStrategy: '♟️ Estrategia', wzCatFamily: '👨‍👩‍👧 Familiar',
+          wzCatRpg: '🧙 RPG / Rol', wzCatParty: '🎉 Fiesta', wzCatEconomic: '💰 Económico',
+          wzCatCooperative: '🤝 Cooperativo', wzCatDexterity: '🎯 Destreza', wzCatOther: '📦 Otro',
+          wzPlayersRange: 'Mínimo y máximo de jugadores', wzLang: 'Idioma de la descripción',
+          wzDiceYes: '🎲 Sí, se necesitan dados', wzDiceNo: 'No, omitir →', wzDiceTypes: 'Tipos de dados',
+          wzCustomDie: '⚙️ Personalizado', wzDiceCountTitle: 'Dados por tirada',
+          wzDiceCountHint: 'Cuántos dados se lanzan a la vez', wzDisplayMode: 'Modo de visualización',
+          wzDots: '🔵 Puntos', wzNums: '🔢 Números', wzDotsHint: 'Los puntos solo están disponibles para dados ≤ D9',
+          wzModifiers: 'Modificadores', wzModifierToggle: '¿Hay bonificación/penalización al resultado?',
+          wzModifierLabel: 'Bonificación/penalización por tirada', wzAllowZero: 'Permitir cero',
+          wzAllowZeroToggle: '¿Puede salir un 0?',
+          wzScoreSection: 'Conteo de puntos', wzScoreYes: '📊 Sí, contamos puntos',
+          wzCountersCount: '¿Cuántos contadores por jugador?', wzCounterLabel: 'Contador',
+          wzNegativeAllowed: '¿Permitir valores negativos?', wzStartScores: '¿Puntos iniciales distintos de 0?',
+          wzStartValue: 'Valor inicial', wzTurnOrderSection: 'Orden de turnos',
+          wzTurnOrderToggle: '¿Los jugadores juegan por turnos?', wzOrderClockwise: 'En sentido horario ↻',
+          wzOrderCounter: 'En sentido antihorario ↺', wzOrderFree: 'Libre',
+          wzTimerSection: 'Temporizador de turno', wzTimerYes: '⏱️ Sí, hay límite de tiempo', wzTimerNo: 'Sin temporizador',
+          wzTurnTime: 'Tiempo por turno', wzCustomTime: '⚙️ Personalizado', wzPenaltySection: 'Penalización por tiempo',
+          wzPenaltyToggle: '¿Hay penalización?', wzPenaltyHint: 'Puntos que se restan al agotarse el tiempo',
+          wzWarningSound: 'Aviso sonoro antes del final', wzWarningSoundHint: 'Pitido de aviso 5 segundos antes',
+          wzRoundsSection: 'Rondas', wzRoundsYes: '🔄 Sí, hay rondas', wzRoundsNo: 'Sin rondas',
+          wzMaxRounds: 'Número máximo de rondas', wzResetScores: '¿Restablecer puntos tras cada ronda?',
+          wzLockSection: 'Bloquear funciones para este juego', wzLockHint: 'Estas funciones se ocultarán durante la partida',
+          wzLockCalc: '📐 Calculadora de fórmulas', wzLockCalcHint: 'Quitar la calculadora matemática',
+          wzLockColors: '🎨 Cambio de colores de dados', wzLockColorsHint: 'Impedir que los jugadores cambien colores',
+          wzLockTimer: '⏱️ Edición manual del temporizador', wzLockTimerHint: 'Los botones ±10s no estarán disponibles',
+          wzLockAddPlayers: '➕ Añadir jugadores durante la partida', wzLockAddPlayersHint: 'No se pueden añadir jugadores tras el inicio',
+          wzLockReroll: '🔄 Relanzar dados individuales', wzLockRerollHint: 'Solo se pueden lanzar todos juntos',
+          wzLockDiceCount: '🔢 Cambiar la cantidad de dados', wzLockDiceCountHint: 'Cantidad de dados fija',
+          wzSummary: 'Vista previa', wzSummaryPlayers: 'Jugadores', wzSummaryCategory: 'Categoría', wzSummaryLang: 'Idioma',
+          wzSummaryTools: 'Herramientas activas', wzSummaryLocks: 'Bloqueado', wzPublish: '🌐 Publicar en la tienda',
+          wzPlayersError: 'El mínimo no puede ser mayor que el máximo', wzFacesError: 'Caras: 2–100', wzTimeError: 'Tiempo: 5–3600 s'
+        },
+        de: {
+          wzStepInfo: 'Info', wzStepDice: 'Würfel', wzStepScore: 'Punkte', wzStepTime: 'Zeit', wzStepSave: 'Speichern',
+          wzTitleInfo: '📝 Grundinformationen', wzSubtitleInfo: 'Erzähl uns von deinem Spiel',
+          wzTitleDice: '🎲 Würfeleinstellungen', wzSubtitleDice: 'Verwendet dein Spiel Würfel?',
+          wzTitleScore: '📊 Punkte & Spieler', wzTitleTime: '⏱️ Zeit & Runden', wzTitleSave: '🔒 Einschränkungen & Speichern',
+          wzYes: 'Ja', wzNo: 'Nein', wzFrom: 'von', wzTo: 'bis', wzPlayers: 'Spieler',
+          wzSec: 's', wzMin: 'Min.', wzPoints: 'Punkte', wzFaces: 'Seiten', wzNone: '—',
+          wzUnlimited: 'Unbegrenzt', wzFixed: 'Feste Anzahl', wzSkip: 'Nein, überspringen →',
+          wzNoDesc: 'Keine Beschreibung', wzLockedNotice: 'Diese Funktion ist für dieses Spiel gesperrt',
+          wzGameTitle: 'Spielname *', wzGameTitlePh: 'Zum Beispiel: Carcassonne, Ticket to Ride...',
+          wzTitleRequired: 'Gib den Spielnamen ein', wzAuthor: 'Autor / Nickname',
+          wzAuthorPh: 'Dein Name oder Nickname (optional)', wzDesc: 'Spielbeschreibung',
+          wzDescPh: 'Beschreibe kurz Regeln und Ziel...', wzCategory: 'Spielkategorie',
+          wzCategoryPh: '— Kategorie wählen —', wzCatStrategy: '♟️ Strategie', wzCatFamily: '👨‍👩‍👧 Familie',
+          wzCatRpg: '🧙 RPG / Rollenspiel', wzCatParty: '🎉 Party', wzCatEconomic: '💰 Wirtschaft',
+          wzCatCooperative: '🤝 Kooperativ', wzCatDexterity: '🎯 Geschicklichkeit', wzCatOther: '📦 Sonstiges',
+          wzPlayersRange: 'Minimale und maximale Spielerzahl', wzLang: 'Sprache der Beschreibung',
+          wzDiceYes: '🎲 Ja, Würfel werden benötigt', wzDiceNo: 'Nein, überspringen →', wzDiceTypes: 'Würfeltypen',
+          wzCustomDie: '⚙️ Eigener', wzDiceCountTitle: 'Würfel pro Wurf',
+          wzDiceCountHint: 'Wie viele Würfel gleichzeitig geworfen werden', wzDisplayMode: 'Anzeigemodus',
+          wzDots: '🔵 Punkte', wzNums: '🔢 Zahlen', wzDotsHint: 'Punkte sind nur für Würfel bis D9 verfügbar',
+          wzModifiers: 'Modifikatoren', wzModifierToggle: 'Gibt es einen Bonus/Malus auf das Ergebnis?',
+          wzModifierLabel: 'Bonus/Malus pro Wurf', wzAllowZero: 'Null erlauben',
+          wzAllowZeroToggle: 'Kann eine 0 gewürfelt werden?',
+          wzScoreSection: 'Punktezählung', wzScoreYes: '📊 Ja, wir zählen Punkte',
+          wzCountersCount: 'Wie viele Zähler pro Spieler?', wzCounterLabel: 'Zähler',
+          wzNegativeAllowed: 'Negative Werte erlauben?', wzStartScores: 'Startwerte ungleich 0?',
+          wzStartValue: 'Startwert', wzTurnOrderSection: 'Zugreihenfolge',
+          wzTurnOrderToggle: 'Spielen die Spieler der Reihe nach?', wzOrderClockwise: 'Im Uhrzeigersinn ↻',
+          wzOrderCounter: 'Gegen den Uhrzeigersinn ↺', wzOrderFree: 'Frei',
+          wzTimerSection: 'Zug-Timer', wzTimerYes: '⏱️ Ja, es gibt ein Zeitlimit', wzTimerNo: 'Kein Timer',
+          wzTurnTime: 'Zeit pro Zug', wzCustomTime: '⚙️ Eigene', wzPenaltySection: 'Strafe bei Zeitüberschreitung',
+          wzPenaltyToggle: 'Gibt es eine Strafe?', wzPenaltyHint: 'So viele Punkte werden bei Zeitüberschreitung abgezogen',
+          wzWarningSound: 'Ton vor dem Ende', wzWarningSoundHint: 'Warnsignal 5 Sekunden vor dem Ende',
+          wzRoundsSection: 'Runden', wzRoundsYes: '🔄 Ja, es gibt Runden', wzRoundsNo: 'Keine Runden',
+          wzMaxRounds: 'Maximale Rundenzahl', wzResetScores: 'Punkte nach jeder Runde zurücksetzen?',
+          wzLockSection: 'Funktionen für dieses Spiel sperren', wzLockHint: 'Diese Funktionen werden während des Spiels ausgeblendet',
+          wzLockCalc: '📐 Formelrechner', wzLockCalcHint: 'Den Mathe-Rechner entfernen',
+          wzLockColors: '🎨 Würfelfarben ändern', wzLockColorsHint: 'Spielern das Ändern der Farben verbieten',
+          wzLockTimer: '⏱️ Manuelles Bearbeiten des Timers', wzLockTimerHint: '±10s-Tasten sind nicht verfügbar',
+          wzLockAddPlayers: '➕ Spieler während des Spiels hinzufügen', wzLockAddPlayersHint: 'Nach dem Start keine neuen Spieler',
+          wzLockReroll: '🔄 Einzelne Würfel neu werfen', wzLockRerollHint: 'Nur alle Würfel zusammen werfen',
+          wzLockDiceCount: '🔢 Anzahl der Würfel ändern', wzLockDiceCountHint: 'Feste Würfelanzahl',
+          wzSummary: 'Überblick', wzSummaryPlayers: 'Spieler', wzSummaryCategory: 'Kategorie', wzSummaryLang: 'Sprache',
+          wzSummaryTools: 'Aktive Werkzeuge', wzSummaryLocks: 'Gesperrt', wzPublish: '🌐 Im Shop veröffentlichen',
+          wzPlayersError: 'Minimum darf nicht größer als Maximum sein', wzFacesError: 'Seiten: 2–100', wzTimeError: 'Zeit: 5–3600 s'
+        },
+        fr: {
+          wzStepInfo: 'Infos', wzStepDice: 'Dés', wzStepScore: 'Points', wzStepTime: 'Temps', wzStepSave: 'Enregistrer',
+          wzTitleInfo: '📝 Informations de base', wzSubtitleInfo: 'Parlez-nous de votre jeu',
+          wzTitleDice: '🎲 Réglages des dés', wzSubtitleDice: 'Votre jeu utilise-t-il des dés ?',
+          wzTitleScore: '📊 Points et joueurs', wzTitleTime: '⏱️ Temps et manches', wzTitleSave: '🔒 Restrictions et sauvegarde',
+          wzYes: 'Oui', wzNo: 'Non', wzFrom: 'de', wzTo: 'à', wzPlayers: 'joueurs',
+          wzSec: 's', wzMin: 'min', wzPoints: 'points', wzFaces: 'faces', wzNone: '—',
+          wzUnlimited: 'Illimité', wzFixed: 'Nombre fixe', wzSkip: 'Non, passer →',
+          wzNoDesc: 'Sans description', wzLockedNotice: 'Cette fonction est verrouillée pour ce jeu',
+          wzGameTitle: 'Nom du jeu *', wzGameTitlePh: 'Par exemple : Carcassonne, Les Aventuriers du Rail...',
+          wzTitleRequired: 'Saisissez le nom du jeu', wzAuthor: 'Auteur / Pseudo',
+          wzAuthorPh: 'Votre nom ou pseudo (facultatif)', wzDesc: 'Description du jeu',
+          wzDescPh: 'Décrivez brièvement les règles et le but...', wzCategory: 'Catégorie du jeu',
+          wzCategoryPh: '— Choisissez une catégorie —', wzCatStrategy: '♟️ Stratégie', wzCatFamily: '👨‍👩‍👧 Familial',
+          wzCatRpg: '🧙 JDR / Rôle', wzCatParty: '🎉 Fête', wzCatEconomic: '💰 Économique',
+          wzCatCooperative: '🤝 Coopératif', wzCatDexterity: '🎯 Adresse', wzCatOther: '📦 Autre',
+          wzPlayersRange: 'Nombre minimum et maximum de joueurs', wzLang: 'Langue de la description',
+          wzDiceYes: '🎲 Oui, des dés sont nécessaires', wzDiceNo: 'Non, passer →', wzDiceTypes: 'Types de dés',
+          wzCustomDie: '⚙️ Personnalisé', wzDiceCountTitle: 'Dés par lancer',
+          wzDiceCountHint: 'Combien de dés sont lancés à la fois', wzDisplayMode: "Mode d'affichage",
+          wzDots: '🔵 Points', wzNums: '🔢 Chiffres', wzDotsHint: 'Les points ne sont disponibles que pour les dés ≤ D9',
+          wzModifiers: 'Modificateurs', wzModifierToggle: 'Y a-t-il un bonus/malus au résultat ?',
+          wzModifierLabel: 'Bonus/malus par lancer', wzAllowZero: 'Autoriser zéro',
+          wzAllowZeroToggle: 'Un 0 peut-il sortir ?',
+          wzScoreSection: 'Comptage des points', wzScoreYes: '📊 Oui, nous comptons les points',
+          wzCountersCount: 'Combien de compteurs par joueur ?', wzCounterLabel: 'Compteur',
+          wzNegativeAllowed: 'Autoriser les valeurs négatives ?', wzStartScores: 'Points initiaux différents de 0 ?',
+          wzStartValue: 'Valeur initiale', wzTurnOrderSection: 'Ordre de jeu',
+          wzTurnOrderToggle: 'Les joueurs jouent-ils à tour de rôle ?', wzOrderClockwise: 'Dans le sens horaire ↻',
+          wzOrderCounter: 'Dans le sens antihoraire ↺', wzOrderFree: 'Libre',
+          wzTimerSection: 'Minuteur de tour', wzTimerYes: '⏱️ Oui, il y a une limite de temps', wzTimerNo: 'Sans minuteur',
+          wzTurnTime: 'Temps par tour', wzCustomTime: '⚙️ Personnalisé', wzPenaltySection: 'Pénalité de dépassement',
+          wzPenaltyToggle: 'Y a-t-il une pénalité ?', wzPenaltyHint: 'Points retirés en cas de dépassement',
+          wzWarningSound: 'Signal sonore avant la fin', wzWarningSoundHint: "Bip d'avertissement 5 s avant la fin",
+          wzRoundsSection: 'Manches', wzRoundsYes: '🔄 Oui, il y a des manches', wzRoundsNo: 'Sans manches',
+          wzMaxRounds: 'Nombre maximum de manches', wzResetScores: 'Réinitialiser les points après chaque manche ?',
+          wzLockSection: 'Verrouiller des fonctions pour ce jeu', wzLockHint: 'Ces fonctions seront masquées pendant la partie',
+          wzLockCalc: '📐 Calculatrice de formules', wzLockCalcHint: 'Retirer la calculatrice mathématique',
+          wzLockColors: '🎨 Changement de couleur des dés', wzLockColorsHint: 'Empêcher les joueurs de changer les couleurs',
+          wzLockTimer: '⏱️ Modification manuelle du minuteur', wzLockTimerHint: 'Les boutons ±10s seront indisponibles',
+          wzLockAddPlayers: '➕ Ajout de joueurs en cours de partie', wzLockAddPlayersHint: "Impossible d'ajouter des joueurs après le départ",
+          wzLockReroll: '🔄 Relancer des dés individuels', wzLockRerollHint: 'Lancer uniquement tous les dés ensemble',
+          wzLockDiceCount: '🔢 Modification du nombre de dés', wzLockDiceCountHint: 'Nombre de dés fixe',
+          wzSummary: 'Aperçu', wzSummaryPlayers: 'Joueurs', wzSummaryCategory: 'Catégorie', wzSummaryLang: 'Langue',
+          wzSummaryTools: 'Outils actifs', wzSummaryLocks: 'Verrouillé', wzPublish: '🌐 Publier dans la boutique',
+          wzPlayersError: 'Le minimum ne peut pas dépasser le maximum', wzFacesError: 'Faces : 2–100', wzTimeError: 'Temps : 5–3600 s'
+        },
+        it: {
+          wzStepInfo: 'Info', wzStepDice: 'Dadi', wzStepScore: 'Punti', wzStepTime: 'Tempo', wzStepSave: 'Salva',
+          wzTitleInfo: '📝 Informazioni di base', wzSubtitleInfo: 'Raccontaci del tuo gioco',
+          wzTitleDice: '🎲 Impostazioni dei dadi', wzSubtitleDice: 'Il tuo gioco usa i dadi?',
+          wzTitleScore: '📊 Punti e giocatori', wzTitleTime: '⏱️ Tempo e round', wzTitleSave: '🔒 Restrizioni e salvataggio',
+          wzYes: 'Sì', wzNo: 'No', wzFrom: 'da', wzTo: 'a', wzPlayers: 'giocatori',
+          wzSec: 's', wzMin: 'min', wzPoints: 'punti', wzFaces: 'facce', wzNone: '—',
+          wzUnlimited: 'Illimitato', wzFixed: 'Numero fisso', wzSkip: 'No, salta →',
+          wzNoDesc: 'Senza descrizione', wzLockedNotice: 'Questa funzione è bloccata per questo gioco',
+          wzGameTitle: 'Titolo del gioco *', wzGameTitlePh: 'Ad esempio: Carcassonne, Ticket to Ride...',
+          wzTitleRequired: 'Inserisci il titolo del gioco', wzAuthor: 'Autore / Nickname',
+          wzAuthorPh: 'Il tuo nome o nickname (facoltativo)', wzDesc: 'Descrizione del gioco',
+          wzDescPh: 'Descrivi brevemente le regole e lo scopo...', wzCategory: 'Categoria del gioco',
+          wzCategoryPh: '— Scegli una categoria —', wzCatStrategy: '♟️ Strategia', wzCatFamily: '👨‍👩‍👧 Famiglia',
+          wzCatRpg: '🧙 GDR / Ruolo', wzCatParty: '🎉 Festa', wzCatEconomic: '💰 Economico',
+          wzCatCooperative: '🤝 Cooperativo', wzCatDexterity: '🎯 Destrezza', wzCatOther: '📦 Altro',
+          wzPlayersRange: 'Numero minimo e massimo di giocatori', wzLang: 'Lingua della descrizione',
+          wzDiceYes: '🎲 Sì, servono i dadi', wzDiceNo: 'No, salta →', wzDiceTypes: 'Tipi di dadi',
+          wzCustomDie: '⚙️ Personalizzato', wzDiceCountTitle: 'Dadi per tiro',
+          wzDiceCountHint: 'Quanti dadi si lanciano insieme', wzDisplayMode: 'Modalità di visualizzazione',
+          wzDots: '🔵 Punti', wzNums: '🔢 Numeri', wzDotsHint: 'I punti sono disponibili solo per dadi ≤ D9',
+          wzModifiers: 'Modificatori', wzModifierToggle: "C'è un bonus/penalità al risultato?",
+          wzModifierLabel: 'Bonus/penalità per tiro', wzAllowZero: 'Consenti zero',
+          wzAllowZeroToggle: 'Può uscire 0?',
+          wzScoreSection: 'Conteggio punti', wzScoreYes: '📊 Sì, contiamo i punti',
+          wzCountersCount: 'Quanti contatori per giocatore?', wzCounterLabel: 'Contatore',
+          wzNegativeAllowed: 'Consenti valori negativi?', wzStartScores: 'Punti iniziali diversi da 0?',
+          wzStartValue: 'Valore iniziale', wzTurnOrderSection: 'Ordine di turno',
+          wzTurnOrderToggle: 'I giocatori giocano a turno?', wzOrderClockwise: 'In senso orario ↻',
+          wzOrderCounter: 'In senso antiorario ↺', wzOrderFree: 'Libero',
+          wzTimerSection: 'Timer del turno', wzTimerYes: "⏱️ Sì, c'è un limite di tempo", wzTimerNo: 'Senza timer',
+          wzTurnTime: 'Tempo per turno', wzCustomTime: '⚙️ Personalizzato', wzPenaltySection: 'Penalità per superamento',
+          wzPenaltyToggle: "C'è una penalità?", wzPenaltyHint: 'Punti sottratti allo scadere del tempo',
+          wzWarningSound: 'Avviso sonoro prima della fine', wzWarningSoundHint: 'Bip di avviso 5 secondi prima',
+          wzRoundsSection: 'Round', wzRoundsYes: '🔄 Sì, ci sono i round', wzRoundsNo: 'Senza round',
+          wzMaxRounds: 'Numero massimo di round', wzResetScores: 'Azzerare i punti dopo ogni round?',
+          wzLockSection: 'Blocca funzioni per questo gioco', wzLockHint: 'Queste funzioni saranno nascoste durante la partita',
+          wzLockCalc: '📐 Calcolatrice di formule', wzLockCalcHint: 'Rimuovi la calcolatrice matematica',
+          wzLockColors: '🎨 Cambio colori dei dadi', wzLockColorsHint: 'Impedisci ai giocatori di cambiare i colori',
+          wzLockTimer: '⏱️ Modifica manuale del timer', wzLockTimerHint: 'I pulsanti ±10s non saranno disponibili',
+          wzLockAddPlayers: '➕ Aggiunta di giocatori durante la partita', wzLockAddPlayersHint: "Nessun nuovo giocatore dopo l'inizio",
+          wzLockReroll: '🔄 Rilancio di singoli dadi', wzLockRerollHint: 'Si possono lanciare solo tutti insieme',
+          wzLockDiceCount: '🔢 Modifica del numero di dadi', wzLockDiceCountHint: 'Numero di dadi fisso',
+          wzSummary: 'Anteprima', wzSummaryPlayers: 'Giocatori', wzSummaryCategory: 'Categoria', wzSummaryLang: 'Lingua',
+          wzSummaryTools: 'Strumenti attivi', wzSummaryLocks: 'Bloccato', wzPublish: '🌐 Pubblica nello store',
+          wzPlayersError: 'Il minimo non può superare il massimo', wzFacesError: 'Facce: 2–100', wzTimeError: 'Tempo: 5–3600 s'
+        },
+        pl: {
+          wzStepInfo: 'Info', wzStepDice: 'Kości', wzStepScore: 'Punkty', wzStepTime: 'Czas', wzStepSave: 'Zapisz',
+          wzTitleInfo: '📝 Podstawowe informacje', wzSubtitleInfo: 'Opowiedz o swojej grze',
+          wzTitleDice: '🎲 Ustawienia kości', wzSubtitleDice: 'Czy w Twojej grze używa się kości?',
+          wzTitleScore: '📊 Punkty i gracze', wzTitleTime: '⏱️ Czas i rundy', wzTitleSave: '🔒 Ograniczenia i zapis',
+          wzYes: 'Tak', wzNo: 'Nie', wzFrom: 'od', wzTo: 'do', wzPlayers: 'graczy',
+          wzSec: 's', wzMin: 'min', wzPoints: 'punktów', wzFaces: 'ścian', wzNone: '—',
+          wzUnlimited: 'Bez limitu', wzFixed: 'Stała liczba', wzSkip: 'Nie, pomiń →',
+          wzNoDesc: 'Bez opisu', wzLockedNotice: 'Ta funkcja jest zablokowana dla tej gry',
+          wzGameTitle: 'Nazwa gry *', wzGameTitlePh: 'Na przykład: Carcassonne, Ticket to Ride...',
+          wzTitleRequired: 'Wpisz nazwę gry', wzAuthor: 'Autor / Nick',
+          wzAuthorPh: 'Twoje imię lub nick (opcjonalnie)', wzDesc: 'Opis gry',
+          wzDescPh: 'Krótko opisz zasady i cel gry...', wzCategory: 'Kategoria gry',
+          wzCategoryPh: '— Wybierz kategorię —', wzCatStrategy: '♟️ Strategia', wzCatFamily: '👨‍👩‍👧 Rodzinna',
+          wzCatRpg: '🧙 RPG / Fabularna', wzCatParty: '🎉 Imprezowa', wzCatEconomic: '💰 Ekonomiczna',
+          wzCatCooperative: '🤝 Kooperacyjna', wzCatDexterity: '🎯 Zręcznościowa', wzCatOther: '📦 Inna',
+          wzPlayersRange: 'Minimalna i maksymalna liczba graczy', wzLang: 'Język opisu',
+          wzDiceYes: '🎲 Tak, kości są potrzebne', wzDiceNo: 'Nie, pomiń →', wzDiceTypes: 'Typy kości',
+          wzCustomDie: '⚙️ Własna', wzDiceCountTitle: 'Kości na rzut',
+          wzDiceCountHint: 'Ile kości rzuca się naraz', wzDisplayMode: 'Tryb wyświetlania',
+          wzDots: '🔵 Oczka', wzNums: '🔢 Cyfry', wzDotsHint: 'Oczka są dostępne tylko dla kości ≤ D9',
+          wzModifiers: 'Modyfikatory', wzModifierToggle: 'Czy jest bonus/kara do wyniku?',
+          wzModifierLabel: 'Bonus/kara do każdego rzutu', wzAllowZero: 'Zezwalaj na zero',
+          wzAllowZeroToggle: 'Czy może wypaść 0?',
+          wzScoreSection: 'Liczenie punktów', wzScoreYes: '📊 Tak, liczymy punkty',
+          wzCountersCount: 'Ile liczników na gracza?', wzCounterLabel: 'Licznik',
+          wzNegativeAllowed: 'Zezwalać na wartości ujemne?', wzStartScores: 'Punkty startowe inne niż 0?',
+          wzStartValue: 'Wartość początkowa', wzTurnOrderSection: 'Kolejność tur',
+          wzTurnOrderToggle: 'Czy gracze grają po kolei?', wzOrderClockwise: 'Zgodnie z ruchem wskazówek ↻',
+          wzOrderCounter: 'Przeciwnie do ruchu wskazówek ↺', wzOrderFree: 'Dowolna',
+          wzTimerSection: 'Timer tury', wzTimerYes: '⏱️ Tak, jest limit czasu', wzTimerNo: 'Bez timera',
+          wzTurnTime: 'Czas na turę', wzCustomTime: '⚙️ Własny', wzPenaltySection: 'Kara za przekroczenie czasu',
+          wzPenaltyToggle: 'Czy jest kara?', wzPenaltyHint: 'Tyle punktów odejmuje się po upływie czasu',
+          wzWarningSound: 'Sygnał dźwiękowy przed końcem', wzWarningSoundHint: 'Ostrzeżenie 5 s przed końcem',
+          wzRoundsSection: 'Rundy', wzRoundsYes: '🔄 Tak, są rundy', wzRoundsNo: 'Bez rund',
+          wzMaxRounds: 'Maksymalna liczba rund', wzResetScores: 'Resetować punkty po każdej rundzie?',
+          wzLockSection: 'Zablokuj funkcje dla tej gry', wzLockHint: 'Te funkcje będą ukryte podczas gry',
+          wzLockCalc: '📐 Kalkulator formuł', wzLockCalcHint: 'Usuń kalkulator matematyczny',
+          wzLockColors: '🎨 Zmiana kolorów kości', wzLockColorsHint: 'Zabroń graczom zmiany kolorów',
+          wzLockTimer: '⏱️ Ręczna edycja timera', wzLockTimerHint: 'Przyciski ±10s będą niedostępne',
+          wzLockAddPlayers: '➕ Dodawanie graczy w trakcie gry', wzLockAddPlayersHint: 'Nie można dodawać graczy po starcie',
+          wzLockReroll: '🔄 Ponowne rzucanie pojedynczych kości', wzLockRerollHint: 'Rzut tylko wszystkimi kośćmi naraz',
+          wzLockDiceCount: '🔢 Zmiana liczby kości', wzLockDiceCountHint: 'Stała liczba kości',
+          wzSummary: 'Podgląd', wzSummaryPlayers: 'Gracze', wzSummaryCategory: 'Kategoria', wzSummaryLang: 'Język',
+          wzSummaryTools: 'Aktywne narzędzia', wzSummaryLocks: 'Zablokowane', wzPublish: '🌐 Opublikuj w sklepie',
+          wzPlayersError: 'Minimum nie może być większe niż maksimum', wzFacesError: 'Ściany: 2–100', wzTimeError: 'Czas: 5–3600 s'
+        },
+        pt: {
+          wzStepInfo: 'Info', wzStepDice: 'Dados', wzStepScore: 'Pontos', wzStepTime: 'Tempo', wzStepSave: 'Salvar',
+          wzTitleInfo: '📝 Informações básicas', wzSubtitleInfo: 'Conte sobre o seu jogo',
+          wzTitleDice: '🎲 Configurações dos dados', wzSubtitleDice: 'O seu jogo usa dados?',
+          wzTitleScore: '📊 Pontos e jogadores', wzTitleTime: '⏱️ Tempo e rodadas', wzTitleSave: '🔒 Restrições e salvamento',
+          wzYes: 'Sim', wzNo: 'Não', wzFrom: 'de', wzTo: 'até', wzPlayers: 'jogadores',
+          wzSec: 's', wzMin: 'min', wzPoints: 'pontos', wzFaces: 'faces', wzNone: '—',
+          wzUnlimited: 'Ilimitado', wzFixed: 'Quantidade fixa', wzSkip: 'Não, pular →',
+          wzNoDesc: 'Sem descrição', wzLockedNotice: 'Este recurso está bloqueado para este jogo',
+          wzGameTitle: 'Nome do jogo *', wzGameTitlePh: 'Por exemplo: Carcassonne, Ticket to Ride...',
+          wzTitleRequired: 'Digite o nome do jogo', wzAuthor: 'Autor / Apelido',
+          wzAuthorPh: 'Seu nome ou apelido (opcional)', wzDesc: 'Descrição do jogo',
+          wzDescPh: 'Descreva brevemente as regras e o objetivo...', wzCategory: 'Categoria do jogo',
+          wzCategoryPh: '— Escolha uma categoria —', wzCatStrategy: '♟️ Estratégia', wzCatFamily: '👨‍👩‍👧 Família',
+          wzCatRpg: '🧙 RPG / Interpretação', wzCatParty: '🎉 Festa', wzCatEconomic: '💰 Econômico',
+          wzCatCooperative: '🤝 Cooperativo', wzCatDexterity: '🎯 Destreza', wzCatOther: '📦 Outro',
+          wzPlayersRange: 'Mínimo e máximo de jogadores', wzLang: 'Idioma da descrição',
+          wzDiceYes: '🎲 Sim, os dados são necessários', wzDiceNo: 'Não, pular →', wzDiceTypes: 'Tipos de dados',
+          wzCustomDie: '⚙️ Personalizado', wzDiceCountTitle: 'Dados por rolagem',
+          wzDiceCountHint: 'Quantos dados são rolados de uma vez', wzDisplayMode: 'Modo de exibição',
+          wzDots: '🔵 Pontos', wzNums: '🔢 Números', wzDotsHint: 'Pontos só estão disponíveis para dados ≤ D9',
+          wzModifiers: 'Modificadores', wzModifierToggle: 'Há bônus/penalidade no resultado?',
+          wzModifierLabel: 'Bônus/penalidade por rolagem', wzAllowZero: 'Permitir zero',
+          wzAllowZeroToggle: 'Pode sair 0?',
+          wzScoreSection: 'Contagem de pontos', wzScoreYes: '📊 Sim, contamos pontos',
+          wzCountersCount: 'Quantos contadores por jogador?', wzCounterLabel: 'Contador',
+          wzNegativeAllowed: 'Permitir valores negativos?', wzStartScores: 'Pontos iniciais diferentes de 0?',
+          wzStartValue: 'Valor inicial', wzTurnOrderSection: 'Ordem dos turnos',
+          wzTurnOrderToggle: 'Os jogadores jogam em turnos?', wzOrderClockwise: 'Sentido horário ↻',
+          wzOrderCounter: 'Sentido anti-horário ↺', wzOrderFree: 'Livre',
+          wzTimerSection: 'Timer do turno', wzTimerYes: '⏱️ Sim, há limite de tempo', wzTimerNo: 'Sem timer',
+          wzTurnTime: 'Tempo por turno', wzCustomTime: '⚙️ Personalizado', wzPenaltySection: 'Penalidade por tempo esgotado',
+          wzPenaltyToggle: 'Há penalidade?', wzPenaltyHint: 'Pontos descontados ao esgotar o tempo',
+          wzWarningSound: 'Aviso sonoro antes do fim', wzWarningSoundHint: 'Bipe de aviso 5 s antes do fim',
+          wzRoundsSection: 'Rodadas', wzRoundsYes: '🔄 Sim, há rodadas', wzRoundsNo: 'Sem rodadas',
+          wzMaxRounds: 'Número máximo de rodadas', wzResetScores: 'Zerar pontos após cada rodada?',
+          wzLockSection: 'Bloquear recursos para este jogo', wzLockHint: 'Estes recursos ficarão ocultos durante a partida',
+          wzLockCalc: '📐 Calculadora de fórmulas', wzLockCalcHint: 'Remover a calculadora matemática',
+          wzLockColors: '🎨 Mudança de cores dos dados', wzLockColorsHint: 'Impedir que os jogadores mudem as cores',
+          wzLockTimer: '⏱️ Edição manual do timer', wzLockTimerHint: 'Os botões ±10s ficarão indisponíveis',
+          wzLockAddPlayers: '➕ Adicionar jogadores durante a partida', wzLockAddPlayersHint: 'Não é possível adicionar jogadores após o início',
+          wzLockReroll: '🔄 Rolar dados individuais novamente', wzLockRerollHint: 'Só é possível rolar todos juntos',
+          wzLockDiceCount: '🔢 Alterar a quantidade de dados', wzLockDiceCountHint: 'Quantidade de dados fixa',
+          wzSummary: 'Revisão', wzSummaryPlayers: 'Jogadores', wzSummaryCategory: 'Categoria', wzSummaryLang: 'Idioma',
+          wzSummaryTools: 'Ferramentas ativas', wzSummaryLocks: 'Bloqueado', wzPublish: '🌐 Publicar na loja',
+          wzPlayersError: 'O mínimo não pode ser maior que o máximo', wzFacesError: 'Faces: 2–100', wzTimeError: 'Tempo: 5–3600 s'
+        },
+        tr: {
+          wzStepInfo: 'Bilgi', wzStepDice: 'Zar', wzStepScore: 'Puanlar', wzStepTime: 'Süre', wzStepSave: 'Kaydet',
+          wzTitleInfo: '📝 Temel Bilgiler', wzSubtitleInfo: 'Oyununuz hakkında bilgi verin',
+          wzTitleDice: '🎲 Zar Ayarları', wzSubtitleDice: 'Oyununuzda zar kullanılıyor mu?',
+          wzTitleScore: '📊 Puanlar ve Oyuncular', wzTitleTime: '⏱️ Süre ve Turlar', wzTitleSave: '🔒 Kısıtlamalar ve Kayıt',
+          wzYes: 'Evet', wzNo: 'Hayır', wzFrom: 'ile', wzTo: 'arası', wzPlayers: 'oyuncu',
+          wzSec: 'sn', wzMin: 'dk', wzPoints: 'puan', wzFaces: 'yüz', wzNone: '—',
+          wzUnlimited: 'Sınırsız', wzFixed: 'Sabit sayı', wzSkip: 'Hayır, atla →',
+          wzNoDesc: 'Açıklama yok', wzLockedNotice: 'Bu özellik bu oyun için kilitli',
+          wzGameTitle: 'Oyun adı *', wzGameTitlePh: 'Örneğin: Carcassonne, Ticket to Ride...',
+          wzTitleRequired: 'Oyun adını girin', wzAuthor: 'Yazar / Takma ad',
+          wzAuthorPh: 'Adınız veya takma adınız (isteğe bağlı)', wzDesc: 'Oyun açıklaması',
+          wzDescPh: 'Kuralları ve amacı kısaca açıklayın...', wzCategory: 'Oyun kategorisi',
+          wzCategoryPh: '— Bir kategori seçin —', wzCatStrategy: '♟️ Strateji', wzCatFamily: '👨‍👩‍👧 Aile',
+          wzCatRpg: '🧙 RPG / Rol yapma', wzCatParty: '🎉 Parti', wzCatEconomic: '💰 Ekonomik',
+          wzCatCooperative: '🤝 İşbirlikçi', wzCatDexterity: '🎯 El becerisi', wzCatOther: '📦 Diğer',
+          wzPlayersRange: 'Minimum ve maksimum oyuncu sayısı', wzLang: 'Açıklama dili',
+          wzDiceYes: '🎲 Evet, zar gerekli', wzDiceNo: 'Hayır, atla →', wzDiceTypes: 'Zar türleri',
+          wzCustomDie: '⚙️ Özel', wzDiceCountTitle: 'Seferdeki zar sayısı',
+          wzDiceCountHint: 'Aynı anda kaç zar atılır', wzDisplayMode: 'Görüntüleme modu',
+          wzDots: '🔵 Noktalar', wzNums: '🔢 Sayılar', wzDotsHint: 'Noktalar yalnızca D9 ve altı zarlar için kullanılabilir',
+          wzModifiers: 'Değiştiriciler', wzModifierToggle: 'Sonuca bonus/ceza var mı?',
+          wzModifierLabel: 'Her atışa bonus/ceza', wzAllowZero: 'Sıfıra izin ver',
+          wzAllowZeroToggle: '0 gelebilir mi?',
+          wzScoreSection: 'Puan takibi', wzScoreYes: '📊 Evet, puanları sayıyoruz',
+          wzCountersCount: 'Oyuncu başına kaç sayaç?', wzCounterLabel: 'Sayaç',
+          wzNegativeAllowed: 'Negatif değerlere izin verilsin mi?', wzStartScores: 'Başlangıç puanı 0 değil mi?',
+          wzStartValue: 'Başlangıç değeri', wzTurnOrderSection: 'Sıra düzeni',
+          wzTurnOrderToggle: 'Oyuncular sırayla mı oynar?', wzOrderClockwise: 'Saat yönünde ↻',
+          wzOrderCounter: 'Saat yönünün tersine ↺', wzOrderFree: 'Serbest',
+          wzTimerSection: 'Tur zamanlayıcısı', wzTimerYes: '⏱️ Evet, süre sınırı var', wzTimerNo: 'Zamanlayıcı yok',
+          wzTurnTime: 'Tur başına süre', wzCustomTime: '⚙️ Özel', wzPenaltySection: 'Süre aşımı cezası',
+          wzPenaltyToggle: 'Ceza var mı?', wzPenaltyHint: 'Süre aşımında düşülecek puan',
+          wzWarningSound: 'Bitişten önce sesli uyarı', wzWarningSoundHint: 'Bitişten 5 sn önce uyarı sesi',
+          wzRoundsSection: 'Turlar', wzRoundsYes: '🔄 Evet, turlar var', wzRoundsNo: 'Turlar yok',
+          wzMaxRounds: 'Maksimum tur sayısı', wzResetScores: 'Her turdan sonra puanlar sıfırlansın mı?',
+          wzLockSection: 'Bu oyun için özellikleri kilitle', wzLockHint: 'Bu özellikler oyun sırasında gizlenecek',
+          wzLockCalc: '📐 Formül hesaplayıcı', wzLockCalcHint: 'Matematik hesaplayıcıyı kaldır',
+          wzLockColors: '🎨 Zar renklerini değiştirme', wzLockColorsHint: 'Oyuncuların renkleri değiştirmesini engelle',
+          wzLockTimer: '⏱️ Zamanlayıcıyı elle düzenleme', wzLockTimerHint: '±10sn düğmeleri kullanılamaz',
+          wzLockAddPlayers: '➕ Oyun sırasında oyuncu ekleme', wzLockAddPlayersHint: 'Başlangıçtan sonra yeni oyuncu eklenemez',
+          wzLockReroll: '🔄 Tek zarları yeniden atma', wzLockRerollHint: 'Yalnızca tümü birlikte atılabilir',
+          wzLockDiceCount: '🔢 Zar sayısını değiştirme', wzLockDiceCountHint: 'Sabit zar sayısı',
+          wzSummary: 'Önizleme', wzSummaryPlayers: 'Oyuncular', wzSummaryCategory: 'Kategori', wzSummaryLang: 'Dil',
+          wzSummaryTools: 'Etkin araçlar', wzSummaryLocks: 'Kilitli', wzPublish: '🌐 Mağazada yayınla',
+          wzPlayersError: 'Minimum, maksimumdan büyük olamaz', wzFacesError: 'Yüzler: 2–100', wzTimeError: 'Süre: 5–3600 sn'
+        },
+        ja: {
+          wzStepInfo: '情報', wzStepDice: 'サイコロ', wzStepScore: '点数', wzStepTime: '時間', wzStepSave: '保存',
+          wzTitleInfo: '📝 基本情報', wzSubtitleInfo: 'ゲームについて教えてください',
+          wzTitleDice: '🎲 サイコロ設定', wzSubtitleDice: 'ゲームでサイコロを使いますか？',
+          wzTitleScore: '📊 点数とプレイヤー', wzTitleTime: '⏱️ 時間とラウンド', wzTitleSave: '🔒 制限と保存',
+          wzYes: 'はい', wzNo: 'いいえ', wzFrom: 'から', wzTo: 'まで', wzPlayers: '人',
+          wzSec: '秒', wzMin: '分', wzPoints: '点', wzFaces: '面', wzNone: '—',
+          wzUnlimited: '無制限', wzFixed: '固定数', wzSkip: 'いいえ、スキップ →',
+          wzNoDesc: '説明なし', wzLockedNotice: 'この機能はこのゲームでロックされています',
+          wzGameTitle: 'ゲーム名 *', wzGameTitlePh: '例: カルカソンヌ、チケット・トゥ・ライド...',
+          wzTitleRequired: 'ゲーム名を入力してください', wzAuthor: '作者 / ニックネーム',
+          wzAuthorPh: '名前またはニックネーム（任意）', wzDesc: 'ゲームの説明',
+          wzDescPh: 'ルールや目的を簡単に説明...', wzCategory: 'ゲームカテゴリ',
+          wzCategoryPh: '— カテゴリを選択 —', wzCatStrategy: '♟️ ストラテジー', wzCatFamily: '👨‍👩‍👧 ファミリー',
+          wzCatRpg: '🧙 RPG / ロールプレイ', wzCatParty: '🎉 パーティー', wzCatEconomic: '💰 経済',
+          wzCatCooperative: '🤝 協力', wzCatDexterity: '🎯 器用さ', wzCatOther: '📦 その他',
+          wzPlayersRange: '最小・最大プレイヤー数', wzLang: '説明の言語',
+          wzDiceYes: '🎲 はい、サイコロが必要', wzDiceNo: 'いいえ、スキップ →', wzDiceTypes: 'サイコロの種類',
+          wzCustomDie: '⚙️ カスタム', wzDiceCountTitle: '1回に振るサイコロ数',
+          wzDiceCountHint: '同時に振るサイコロの数', wzDisplayMode: '表示モード',
+          wzDots: '🔵 ドット', wzNums: '🔢 数字', wzDotsHint: 'ドットはD9以下のサイコロのみ利用可能',
+          wzModifiers: '修正値', wzModifierToggle: '結果にボーナス/ペナルティはありますか？',
+          wzModifierLabel: '各ロールへのボーナス/ペナルティ', wzAllowZero: 'ゼロを許可',
+          wzAllowZeroToggle: '0が出ることはありますか？',
+          wzScoreSection: '点数の記録', wzScoreYes: '📊 はい、点数を記録します',
+          wzCountersCount: 'プレイヤーごとのカウンター数', wzCounterLabel: 'カウンター',
+          wzNegativeAllowed: '負の値を許可しますか？', wzStartScores: '0以外の開始点数がありますか？',
+          wzStartValue: '開始値', wzTurnOrderSection: '手番順',
+          wzTurnOrderToggle: 'プレイヤーは順番に行動しますか？', wzOrderClockwise: '時計回り ↻',
+          wzOrderCounter: '反時計回り ↺', wzOrderFree: '自由',
+          wzTimerSection: '手番タイマー', wzTimerYes: '⏱️ はい、制限時間あり', wzTimerNo: 'タイマーなし',
+          wzTurnTime: '1手番の時間', wzCustomTime: '⚙️ カスタム', wzPenaltySection: '時間超過のペナルティ',
+          wzPenaltyToggle: 'ペナルティはありますか？', wzPenaltyHint: '時間切れで減点される点数',
+          wzWarningSound: '終了前の通知音', wzWarningSoundHint: '終了5秒前に警告音',
+          wzRoundsSection: 'ラウンド', wzRoundsYes: '🔄 はい、ラウンドあり', wzRoundsNo: 'ラウンドなし',
+          wzMaxRounds: '最大ラウンド数', wzResetScores: '各ラウンド後に点数をリセットしますか？',
+          wzLockSection: 'このゲームの機能をロック', wzLockHint: 'これらの機能はゲーム中に非表示になります',
+          wzLockCalc: '📐 数式電卓', wzLockCalcHint: '数学電卓を非表示',
+          wzLockColors: '🎨 サイコロの色変更', wzLockColorsHint: 'プレイヤーの色変更を禁止',
+          wzLockTimer: '⏱️ タイマーの手動編集', wzLockTimerHint: '±10秒ボタンが使えなくなります',
+          wzLockAddPlayers: '➕ ゲーム中のプレイヤー追加', wzLockAddPlayersHint: '開始後は新しいプレイヤーを追加できません',
+          wzLockReroll: '🔄 個別サイコロの振り直し', wzLockRerollHint: 'すべてまとめてのみ振れます',
+          wzLockDiceCount: '🔢 サイコロ数の変更', wzLockDiceCountHint: 'サイコロ数は固定',
+          wzSummary: '確認', wzSummaryPlayers: 'プレイヤー', wzSummaryCategory: 'カテゴリ', wzSummaryLang: '言語',
+          wzSummaryTools: '有効なツール', wzSummaryLocks: 'ロック中', wzPublish: '🌐 ストアに公開',
+          wzPlayersError: '最小値は最大値を超えられません', wzFacesError: '面: 2–100', wzTimeError: '時間: 5–3600秒'
+        },
+        zh: {
+          wzStepInfo: '信息', wzStepDice: '骰子', wzStepScore: '计分', wzStepTime: '时间', wzStepSave: '保存',
+          wzTitleInfo: '📝 基本信息', wzSubtitleInfo: '介绍一下你的游戏',
+          wzTitleDice: '🎲 骰子设置', wzSubtitleDice: '你的游戏需要骰子吗？',
+          wzTitleScore: '📊 计分与玩家', wzTitleTime: '⏱️ 时间与回合', wzTitleSave: '🔒 限制与保存',
+          wzYes: '是', wzNo: '否', wzFrom: '从', wzTo: '到', wzPlayers: '名玩家',
+          wzSec: '秒', wzMin: '分', wzPoints: '分', wzFaces: '面', wzNone: '—',
+          wzUnlimited: '无限制', wzFixed: '固定数量', wzSkip: '否，跳过 →',
+          wzNoDesc: '无描述', wzLockedNotice: '此游戏已锁定该功能',
+          wzGameTitle: '游戏名称 *', wzGameTitlePh: '例如：卡卡颂、车票之旅...',
+          wzTitleRequired: '请输入游戏名称', wzAuthor: '作者 / 昵称',
+          wzAuthorPh: '你的名字或昵称（可选）', wzDesc: '游戏描述',
+          wzDescPh: '简要描述规则和目标...', wzCategory: '游戏类别',
+          wzCategoryPh: '— 选择类别 —', wzCatStrategy: '♟️ 策略', wzCatFamily: '👨‍👩‍👧 家庭',
+          wzCatRpg: '🧙 RPG / 角色扮演', wzCatParty: '🎉 派对', wzCatEconomic: '💰 经济',
+          wzCatCooperative: '🤝 合作', wzCatDexterity: '🎯 灵巧', wzCatOther: '📦 其他',
+          wzPlayersRange: '最少和最多玩家数', wzLang: '描述语言',
+          wzDiceYes: '🎲 是，需要骰子', wzDiceNo: '否，跳过 →', wzDiceTypes: '骰子类型',
+          wzCustomDie: '⚙️ 自定义', wzDiceCountTitle: '每次投掷骰子数',
+          wzDiceCountHint: '同时投掷多少个骰子', wzDisplayMode: '显示模式',
+          wzDots: '🔵 点数', wzNums: '🔢 数字', wzDotsHint: '点数仅适用于 D9 及以下骰子',
+          wzModifiers: '修正值', wzModifierToggle: '结果有加成/惩罚吗？',
+          wzModifierLabel: '每次投掷的加成/惩罚', wzAllowZero: '允许零',
+          wzAllowZeroToggle: '可能掷出 0 吗？',
+          wzScoreSection: '计分', wzScoreYes: '📊 是，需要计分',
+          wzCountersCount: '每位玩家几个计数器？', wzCounterLabel: '计数器',
+          wzNegativeAllowed: '允许负值？', wzStartScores: '初始分数不是 0？',
+          wzStartValue: '初始值', wzTurnOrderSection: '回合顺序',
+          wzTurnOrderToggle: '玩家是否轮流行动？', wzOrderClockwise: '顺时针 ↻',
+          wzOrderCounter: '逆时针 ↺', wzOrderFree: '自由',
+          wzTimerSection: '回合计时器', wzTimerYes: '⏱️ 是，有时间限制', wzTimerNo: '无计时器',
+          wzTurnTime: '每回合时间', wzCustomTime: '⚙️ 自定义', wzPenaltySection: '超时惩罚',
+          wzPenaltyToggle: '有惩罚吗？', wzPenaltyHint: '超时扣除的分数',
+          wzWarningSound: '结束前声音提示', wzWarningSoundHint: '结束前 5 秒提示音',
+          wzRoundsSection: '回合', wzRoundsYes: '🔄 是，有回合', wzRoundsNo: '无回合',
+          wzMaxRounds: '最大回合数', wzResetScores: '每回合后重置分数？',
+          wzLockSection: '锁定此游戏的功能', wzLockHint: '这些功能将在游戏过程中隐藏',
+          wzLockCalc: '📐 公式计算器', wzLockCalcHint: '移除数学计算器',
+          wzLockColors: '🎨 修改骰子颜色', wzLockColorsHint: '禁止玩家修改颜色',
+          wzLockTimer: '⏱️ 手动编辑计时器', wzLockTimerHint: '±10秒按钮将不可用',
+          wzLockAddPlayers: '➕ 游戏中添加玩家', wzLockAddPlayersHint: '开始后不能添加新玩家',
+          wzLockReroll: '🔄 单独重掷骰子', wzLockRerollHint: '只能一起投掷全部骰子',
+          wzLockDiceCount: '🔢 修改骰子数量', wzLockDiceCountHint: '固定骰子数量',
+          wzSummary: '预览', wzSummaryPlayers: '玩家', wzSummaryCategory: '类别', wzSummaryLang: '语言',
+          wzSummaryTools: '已启用工具', wzSummaryLocks: '已锁定', wzPublish: '🌐 发布到商店',
+          wzPlayersError: '最小值不能大于最大值', wzFacesError: '面数：2–100', wzTimeError: '时间：5–3600 秒'
+        },
+        ko: {
+          wzStepInfo: '정보', wzStepDice: '주사위', wzStepScore: '점수', wzStepTime: '시간', wzStepSave: '저장',
+          wzTitleInfo: '📝 기본 정보', wzSubtitleInfo: '게임에 대해 알려주세요',
+          wzTitleDice: '🎲 주사위 설정', wzSubtitleDice: '게임에 주사위가 필요한가요?',
+          wzTitleScore: '📊 점수와 플레이어', wzTitleTime: '⏱️ 시간과 라운드', wzTitleSave: '🔒 제한 및 저장',
+          wzYes: '예', wzNo: '아니요', wzFrom: '부터', wzTo: '까지', wzPlayers: '명',
+          wzSec: '초', wzMin: '분', wzPoints: '점', wzFaces: '면', wzNone: '—',
+          wzUnlimited: '무제한', wzFixed: '고정 수량', wzSkip: '아니요, 건너뛰기 →',
+          wzNoDesc: '설명 없음', wzLockedNotice: '이 게임에서는 이 기능이 잠겨 있습니다',
+          wzGameTitle: '게임 이름 *', wzGameTitlePh: '예: 카르카손, 티켓 투 라이드...',
+          wzTitleRequired: '게임 이름을 입력하세요', wzAuthor: '작성자 / 닉네임',
+          wzAuthorPh: '이름 또는 닉네임 (선택)', wzDesc: '게임 설명',
+          wzDescPh: '규칙과 목표를 간단히 설명하세요...', wzCategory: '게임 카테고리',
+          wzCategoryPh: '— 카테고리 선택 —', wzCatStrategy: '♟️ 전략', wzCatFamily: '👨‍👩‍👧 가족',
+          wzCatRpg: '🧙 RPG / 롤플레잉', wzCatParty: '🎉 파티', wzCatEconomic: '💰 경제',
+          wzCatCooperative: '🤝 협동', wzCatDexterity: '🎯 순발력', wzCatOther: '📦 기타',
+          wzPlayersRange: '최소 및 최대 플레이어 수', wzLang: '설명 언어',
+          wzDiceYes: '🎲 예, 주사위가 필요합니다', wzDiceNo: '아니요, 건너뛰기 →', wzDiceTypes: '주사위 종류',
+          wzCustomDie: '⚙️ 사용자 지정', wzDiceCountTitle: '한 번에 굴리는 주사위 수',
+          wzDiceCountHint: '동시에 굴리는 주사위 수', wzDisplayMode: '표시 모드',
+          wzDots: '🔵 점', wzNums: '🔢 숫자', wzDotsHint: '점은 D9 이하 주사위에서만 사용할 수 있습니다',
+          wzModifiers: '수정치', wzModifierToggle: '결과에 보너스/페널티가 있나요?',
+          wzModifierLabel: '굴림마다 보너스/페널티', wzAllowZero: '0 허용',
+          wzAllowZeroToggle: '0이 나올 수 있나요?',
+          wzScoreSection: '점수 기록', wzScoreYes: '📊 예, 점수를 기록합니다',
+          wzCountersCount: '플레이어당 카운터 수', wzCounterLabel: '카운터',
+          wzNegativeAllowed: '음수 값을 허용하나요?', wzStartScores: '시작 점수가 0이 아닌가요?',
+          wzStartValue: '시작 값', wzTurnOrderSection: '턴 순서',
+          wzTurnOrderToggle: '플레이어가 번갈아 진행하나요?', wzOrderClockwise: '시계 방향 ↻',
+          wzOrderCounter: '반시계 방향 ↺', wzOrderFree: '자유',
+          wzTimerSection: '턴 타이머', wzTimerYes: '⏱️ 예, 시간 제한이 있습니다', wzTimerNo: '타이머 없음',
+          wzTurnTime: '턴당 시간', wzCustomTime: '⚙️ 사용자 지정', wzPenaltySection: '시간 초과 페널티',
+          wzPenaltyToggle: '페널티가 있나요?', wzPenaltyHint: '시간 초과 시 차감되는 점수',
+          wzWarningSound: '종료 전 소리 알림', wzWarningSoundHint: '종료 5초 전 경고음',
+          wzRoundsSection: '라운드', wzRoundsYes: '🔄 예, 라운드가 있습니다', wzRoundsNo: '라운드 없음',
+          wzMaxRounds: '최대 라운드 수', wzResetScores: '각 라운드 후 점수를 초기화하나요?',
+          wzLockSection: '이 게임의 기능 잠금', wzLockHint: '이 기능은 게임 중에 숨겨집니다',
+          wzLockCalc: '📐 수식 계산기', wzLockCalcHint: '수학 계산기 제거',
+          wzLockColors: '🎨 주사위 색상 변경', wzLockColorsHint: '플레이어가 색상을 변경하지 못하게 함',
+          wzLockTimer: '⏱️ 타이머 수동 편집', wzLockTimerHint: '±10초 버튼을 사용할 수 없습니다',
+          wzLockAddPlayers: '➕ 게임 중 플레이어 추가', wzLockAddPlayersHint: '시작 후 새 플레이어를 추가할 수 없습니다',
+          wzLockReroll: '🔄 개별 주사위 다시 굴리기', wzLockRerollHint: '모두 함께만 굴릴 수 있습니다',
+          wzLockDiceCount: '🔢 주사위 수 변경', wzLockDiceCountHint: '주사위 수 고정',
+          wzSummary: '미리보기', wzSummaryPlayers: '플레이어', wzSummaryCategory: '카테고리', wzSummaryLang: '언어',
+          wzSummaryTools: '활성 도구', wzSummaryLocks: '잠김', wzPublish: '🌐 스토어에 게시',
+          wzPlayersError: '최솟값은 최댓값보다 클 수 없습니다', wzFacesError: '면 수: 2–100', wzTimeError: '시간: 5–3600초'
+        }
+      };
+      Object.keys(wizardTranslations).forEach(lang => {
+        if (!translations[lang]) translations[lang] = {};
+        Object.assign(translations[lang], wizardTranslations[lang]);
+      });
 
       function t(key) {
         if (translations[currentLang] && translations[currentLang][key]) {
@@ -3618,8 +4771,6 @@
     const GameStore = (() => {
       let catalog = []; // ← ПОРОЖНІЙ МАСИВ БЕЗ ХАРДКОДУ, завантажується з localStorage 'bgt_catalog'
       let publicCatalog = [];
-      let currentWizardStep = 1;
-      let wizardDraft = null;
       let pendingImportConfig = null;
 
       function onSearch(query) {
@@ -3802,8 +4953,16 @@
           }
           DiceRoller.setDieType(dieFace);
           DiceRoller.setDiceCount(diceCfg.count || 2);
-          if (diceCfg.mode) {
-            DiceRoller.setVisualMode(diceCfg.mode);
+          const diceVisualMode = diceCfg.displayMode || diceCfg.mode;
+          if (diceVisualMode) {
+            DiceRoller.setVisualMode(diceVisualMode);
+          }
+          if (typeof diceCfg.allowZero === 'boolean') {
+            const zeroToggle = document.getElementById('allowZeroToggle');
+            if (zeroToggle) {
+              zeroToggle.checked = diceCfg.allowZero;
+              DiceRoller.renderAll();
+            }
           }
         }
 
@@ -3811,7 +4970,20 @@
         const scoreCfg = config.tools?.scorebook || config.score;
         if (scoreCfg && (scoreCfg.enabled || scoreCfg.used)) {
           if (scoreCfg.counters && Array.isArray(scoreCfg.counters)) {
-            Scorebook.setCounterLabels(scoreCfg.counters);
+            Scorebook.setCounterLabels(scoreCfg.counters.map(counter => (
+              typeof counter === 'string' ? counter : (counter.label || counter.id || '')
+            )).filter(Boolean));
+
+            if (typeof Scorebook.getPlayers === 'function') {
+              scoreCfg.counters.forEach((counter, index) => {
+                const start = typeof counter === 'object' ? Number(counter.start) : 0;
+                if (!start) return;
+                Scorebook.getPlayers().forEach(player => {
+                  const target = player.counters && player.counters[index];
+                  if (target) Scorebook.setCounterValue(player.id, target.id, start);
+                });
+              });
+            }
           }
         }
 
@@ -3821,6 +4993,8 @@
           Scorebook.setTimerDuration(timerCfg.turnSeconds || timerCfg.seconds || 30);
           Scorebook.setPenalty(timerCfg.penalty || 0);
         }
+
+        applyLockedFeatures(Array.isArray(config.locked) ? config.locked : []);
 
         AppState.emit('game_loaded', config);
         App.setView('play');
@@ -3901,184 +5075,817 @@
         }
       }
 
-      function openWizard() {
-        currentWizardStep = 1;
-        document.getElementById('wzGameTitle').value = '';
-        document.getElementById('wzGameAuthor').value = '';
-        document.getElementById('wzGameDesc').value = '';
-        document.getElementById('wzMinPlayers').value = '1';
-        document.getElementById('wzMaxPlayers').value = '6';
+      /* ---------- Game Wizard v2 (5 steps) ---------- */
+      const WIZARD_TOTAL_STEPS = 5;
+      const WIZARD_STEP_TITLE_KEYS = {
+        1: 'wzTitleInfo',
+        2: 'wzTitleDice',
+        3: 'wzTitleScore',
+        4: 'wzTitleTime',
+        5: 'wzTitleSave'
+      };
+      const WIZARD_STEP_LABEL_KEYS = ['wzStepInfo', 'wzStepDice', 'wzStepScore', 'wzStepTime', 'wzStepSave'];
+      const WIZARD_CATEGORY_KEYS = {
+        strategy: 'wzCatStrategy',
+        family: 'wzCatFamily',
+        rpg: 'wzCatRpg',
+        party: 'wzCatParty',
+        economic: 'wzCatEconomic',
+        cooperative: 'wzCatCooperative',
+        dexterity: 'wzCatDexterity',
+        other: 'wzCatOther'
+      };
+      const WIZARD_LANG_NAMES = {
+        uk: 'Українська 🇺🇦',
+        en: 'English 🇬🇧',
+        es: 'Español 🇪🇸',
+        de: 'Deutsch 🇩🇪',
+        fr: 'Français 🇫🇷',
+        it: 'Italiano 🇮🇹',
+        pl: 'Polski 🇵🇱',
+        pt: 'Português 🇧🇷',
+        tr: 'Türkçe 🇹🇷',
+        ja: '日本語 🇯🇵',
+        zh: '中文 🇨🇳',
+        ko: '한국어 🇰🇷'
+      };
+      const WIZARD_LOCK_KEYS = {
+        calculator: 'wzLockCalc',
+        colors: 'wzLockColors',
+        timerManual: 'wzLockTimer',
+        addPlayers: 'wzLockAddPlayers',
+        rerollSingle: 'wzLockReroll',
+        diceCount: 'wzLockDiceCount'
+      };
+      const WIZARD_LOCK_SELECTORS = {
+        calculator: [
+          '#panelDice button[onclick="DiceRoller.toggleFormulaModal()"]',
+          '#panelScorebook button[onclick="Scorebook.openCalculatorModal()"]'
+        ],
+        colors: [
+          '#panelDice button[onclick="DiceRoller.toggleGroupColorPicker()"]'
+        ],
+        timerManual: [
+          '#panelScorebook button[onclick="Scorebook.adjustTime(-10)"]',
+          '#panelScorebook button[onclick="Scorebook.adjustTime(10)"]'
+        ],
+        addPlayers: [
+          '#panelScorebook button[onclick="Scorebook.openAddPlayerModal()"]'
+        ],
+        diceCount: [
+          '#panelDice #diceCountInput',
+          '#panelDice button[onclick="DiceRoller.adjustDiceCount(-1)"]',
+          '#panelDice button[onclick="DiceRoller.adjustDiceCount(1)"]'
+        ],
+        rerollSingle: []
+      };
 
-        const diceYes = document.querySelector('input[name="wzDiceUsed"][value="yes"]');
-        if (diceYes) diceYes.checked = true;
-        document.getElementById('wzDie_d6').checked = true;
-        document.getElementById('wzDiceCount').value = '2';
+      let wizardStep = 1;
+      let wizardDraft = null;
+      let wizardNavLocked = false;
+      let wizardEventsBound = false;
+      let activeLocks = new Set();
 
-        const scoreYes = document.querySelector('input[name="wzScoreUsed"][value="yes"]');
-        if (scoreYes) scoreYes.checked = true;
-        const c3 = document.querySelector('input[name="wzCountersNum"][value="3"]');
-        if (c3) c3.checked = true;
-        document.getElementById('wzCounter1').value = 'A';
-        document.getElementById('wzCounter2').value = 'B';
-        document.getElementById('wzCounter3').value = 'C';
-
-        const timerYes = document.querySelector('input[name="wzTimerUsed"][value="yes"]');
-        if (timerYes) timerYes.checked = true;
-        document.getElementById('wzTimerSeconds').value = '30';
-        document.getElementById('wzTimerPenalty').value = '1';
-
-        const roundYes = document.querySelector('input[name="wzRoundsUsed"][value="yes"]');
-        if (roundYes) roundYes.checked = true;
-        document.getElementById('wzMaxRounds').value = '0';
-
-        toggleWizardToolVisibility();
-        updateWizardCounterInputs();
-        showWizardStep(1);
-
-        document.getElementById('gameWizardModal').classList.add('open');
+      function escapeWizardHtml(value) {
+        return String(value == null ? '' : value).replace(/[&<>"']/g, ch => ({
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#39;'
+        }[ch]));
       }
 
-      function closeWizard() {
-        document.getElementById('gameWizardModal').classList.remove('open');
-        currentWizardStep = 1;
-      }
-
-      function showWizardStep(step) {
-        currentWizardStep = step;
-        document.getElementById('wizardStep1').style.display = step === 1 ? 'flex' : 'none';
-        document.getElementById('wizardStep2').style.display = step === 2 ? 'flex' : 'none';
-        document.getElementById('wizardStep3').style.display = step === 3 ? 'flex' : 'none';
-
-        const titleEl = document.getElementById('wizardStepHeaderTitle');
-        if (titleEl) {
-          titleEl.innerText = step === 1 ? `✨ ${i18n.t('step1Title')}` :
-                              step === 2 ? `🛠️ ${i18n.t('step2Title')}` :
-                              `📋 ${i18n.t('step3Title')}`;
-        }
-      }
-
-      function wizardNext() {
-        if (currentWizardStep === 1) {
-          const title = document.getElementById('wzGameTitle').value.trim();
-          if (!title) {
-            Scorebook.showMessage('Будь ласка, введіть назву гри!');
-            return;
-          }
-          showWizardStep(2);
-        } else if (currentWizardStep === 2) {
-          buildWizardDraft();
-          renderWizardSummary();
-          showWizardStep(3);
-        }
-      }
-
-      function wizardPrev() {
-        if (currentWizardStep > 1) {
-          showWizardStep(currentWizardStep - 1);
-        }
-      }
-
-      function toggleWizardToolVisibility() {
-        const diceUsed = document.querySelector('input[name="wzDiceUsed"]:checked')?.value === 'yes';
-        const scoreUsed = document.querySelector('input[name="wzScoreUsed"]:checked')?.value === 'yes';
-        const timerUsed = document.querySelector('input[name="wzTimerUsed"]:checked')?.value === 'yes';
-        const roundsUsed = document.querySelector('input[name="wzRoundsUsed"]:checked')?.value === 'yes';
-
-        const dBox = document.getElementById('wzDiceSubOptions');
-        if (dBox) dBox.style.display = diceUsed ? 'flex' : 'none';
-
-        const sBox = document.getElementById('wzScoreSubOptions');
-        if (sBox) sBox.style.display = scoreUsed ? 'flex' : 'none';
-
-        const tBox = document.getElementById('wzTimerSubOptions');
-        if (tBox) tBox.style.display = timerUsed ? 'flex' : 'none';
-
-        const rBox = document.getElementById('wzRoundsSubOptions');
-        if (rBox) rBox.style.display = roundsUsed ? 'flex' : 'none';
-      }
-
-      function updateWizardCounterInputs() {
-        const num = parseInt(document.querySelector('input[name="wzCountersNum"]:checked')?.value || '3');
-        const c1 = document.getElementById('wzCounter1');
-        const c2 = document.getElementById('wzCounter2');
-        const c3 = document.getElementById('wzCounter3');
-
-        if (c1) c1.style.display = num >= 1 ? 'block' : 'none';
-        if (c2) c2.style.display = num >= 2 ? 'block' : 'none';
-        if (c3) c3.style.display = num >= 3 ? 'block' : 'none';
-      }
-
-      function buildWizardDraft() {
-        const title = document.getElementById('wzGameTitle').value.trim();
-        const author = document.getElementById('wzGameAuthor').value.trim();
-        const desc = document.getElementById('wzGameDesc').value.trim() || 'Без опису';
-        const minP = parseInt(document.getElementById('wzMinPlayers').value) || 1;
-        const maxP = parseInt(document.getElementById('wzMaxPlayers').value) || 6;
-
-        const diceUsed = document.querySelector('input[name="wzDiceUsed"]:checked')?.value === 'yes';
-        const diceTypes = [];
-        if (document.getElementById('wzDie_d4').checked) diceTypes.push('D4');
-        if (document.getElementById('wzDie_d6').checked) diceTypes.push('D6');
-        if (document.getElementById('wzDie_d8').checked) diceTypes.push('D8');
-        if (document.getElementById('wzDie_d10').checked) diceTypes.push('D10');
-        if (document.getElementById('wzDie_d12').checked) diceTypes.push('D12');
-        if (document.getElementById('wzDie_d20').checked) diceTypes.push('D20');
-        if (document.getElementById('wzDie_custom').checked) diceTypes.push('Custom');
-        if (diceTypes.length === 0) diceTypes.push('D6');
-
-        const diceCount = parseInt(document.getElementById('wzDiceCount').value) || 2;
-        const diceMode = document.querySelector('input[name="wzDiceMode"]:checked')?.value || 'dots';
-
-        const scoreUsed = document.querySelector('input[name="wzScoreUsed"]:checked')?.value === 'yes';
-        const numCounters = parseInt(document.querySelector('input[name="wzCountersNum"]:checked')?.value || '3');
-        const counterNames = [];
-        if (numCounters >= 1) counterNames.push(document.getElementById('wzCounter1').value.trim() || 'A');
-        if (numCounters >= 2) counterNames.push(document.getElementById('wzCounter2').value.trim() || 'B');
-        if (numCounters >= 3) counterNames.push(document.getElementById('wzCounter3').value.trim() || 'C');
-        const allowNeg = document.querySelector('input[name="wzAllowNeg"]:checked')?.value === 'yes';
-
-        const timerUsed = document.querySelector('input[name="wzTimerUsed"]:checked')?.value === 'yes';
-        const timerSeconds = parseInt(document.getElementById('wzTimerSeconds').value) || 30;
-        const timerPenalty = parseInt(document.getElementById('wzTimerPenalty').value) || 0;
-
-        const roundsUsed = document.querySelector('input[name="wzRoundsUsed"]:checked')?.value === 'yes';
-        const maxRounds = parseInt(document.getElementById('wzMaxRounds').value) || 0;
-
-        wizardDraft = {
+      function createWizardDraft() {
+        return {
           id: 'game_' + Date.now(),
-          title,
-          author,
-          desc,
-          players: { min: minP, max: maxP },
-          dice: { used: diceUsed, types: diceTypes, count: diceCount, mode: diceMode },
-          score: { used: scoreUsed, counters: counterNames, allowNeg },
-          timer: { used: timerUsed, seconds: timerSeconds, penalty: timerPenalty },
-          rounds: { used: roundsUsed, max: maxRounds },
+          title: '',
+          author: '',
+          description: '',
+          category: '',
+          lang: i18n.getLang() || 'uk',
+          players: { min: 1, max: 6 },
+          tools: {
+            dice: {
+              enabled: true,
+              types: ['D6'],
+              count: 2,
+              displayMode: 'dots',
+              modifier: 0,
+              allowZero: false
+            },
+            scorebook: {
+              enabled: true,
+              counters: [
+                { id: 'A', label: 'A', start: 0 },
+                { id: 'B', label: 'B', start: 0 },
+                { id: 'C', label: 'C', start: 0 }
+              ],
+              negativeAllowed: true,
+              turnOrderEnabled: true,
+              turnOrder: 'clockwise'
+            },
+            timer: {
+              enabled: true,
+              turnSeconds: 30,
+              penalty: 1,
+              warningSound: true
+            },
+            rounds: {
+              enabled: true,
+              max: 0,
+              resetScoresEachRound: false
+            }
+          },
+          locked: [],
           likes: 0
         };
       }
 
-      function renderWizardSummary() {
+      function initWizardEvents() {
+        if (wizardEventsBound) return;
+        const modal = document.getElementById('gameWizardModal');
+        if (!modal) return;
+        wizardEventsBound = true;
+
+        modal.addEventListener('click', onWizardClick);
+        modal.addEventListener('input', onWizardInput);
+        modal.addEventListener('change', onWizardChange);
+        document.addEventListener('click', onLockedFeatureClick, true);
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && modal.classList.contains('open')) {
+            e.preventDefault();
+            closeWizard();
+          }
+        });
+      }
+
+      function onWizardClick(event) {
+        const modal = document.getElementById('gameWizardModal');
+        if (!modal) return;
+        const lockRow = event.target.closest('.wz-lock-row');
+        if (lockRow && modal.contains(lockRow)) {
+          lockRow.classList.toggle('active');
+          lockRow.setAttribute('aria-pressed', lockRow.classList.contains('active') ? 'true' : 'false');
+          wizardCollectStep(5);
+          wizardRenderSummary();
+          return;
+        }
+
+        const btn = event.target.closest('.wz-toggle-btn, .wz-preset-btn');
+        if (!btn || !modal.contains(btn) || btn.disabled) return;
+
+        const groupBox = btn.closest('[data-wz-group]');
+        if (groupBox) {
+          groupBox.querySelectorAll('.wz-toggle-btn, .wz-preset-btn').forEach(item => {
+            const on = item === btn;
+            item.classList.toggle('active', on);
+            item.setAttribute('aria-checked', on ? 'true' : 'false');
+          });
+          wzOnGroupChange(groupBox.dataset.wzGroup);
+          return;
+        }
+
+        const multi = btn.dataset.wzMulti;
+        if (multi) {
+          btn.classList.toggle('active');
+          btn.setAttribute('aria-pressed', btn.classList.contains('active') ? 'true' : 'false');
+          if (multi === 'diceType') wzUpdateDotsAvailability();
+        }
+      }
+
+      function onWizardInput(event) {
+        const el = event.target;
+        if (el.id === 'wzGameTitle') {
+          setWizardCounter('wzTitleCount', el.value.length, 80);
+          if (el.value.trim()) showWizardError('wzGameTitle', 'wzTitleError', false);
+        } else if (el.id === 'wzGameDesc') {
+          setWizardCounter('wzDescCount', el.value.length, 1000);
+        } else if (el.id === 'wzCustomFaces') {
+          showWizardError('wzCustomFaces', 'wzFacesError', false);
+          wzUpdateDotsAvailability();
+        }
+      }
+
+      function onWizardChange(event) {
+        const el = event.target;
+        const rules = {
+          wzMinPlayers: [1, 20],
+          wzMaxPlayers: [1, 20],
+          wzDiceCount: [1, 20],
+          wzCustomFaces: [2, 100],
+          wzModifier: [-99, 99],
+          wzStartValue: [-999, 999],
+          wzPenalty: [0, 99],
+          wzMaxRounds: [1, 100],
+          wzCustomTime: [5, 3600]
+        };
+        const rule = rules[el.id];
+        if (rule) {
+          const n = parseInt(el.value, 10);
+          const safe = isNaN(n) ? rule[0] : Math.max(rule[0], Math.min(rule[1], n));
+          el.value = safe;
+          if (el.id === 'wzCustomFaces') {
+            wzUpdateDotsAvailability();
+            showWizardError('wzCustomFaces', 'wzFacesError', false);
+          }
+          if (el.id === 'wzCustomTime') showWizardError('wzCustomTime', 'wzTimeError', false);
+          if (el.id === 'wzMinPlayers' || el.id === 'wzMaxPlayers') {
+            document.getElementById('wzPlayersError').hidden = true;
+            document.getElementById('wzMinPlayers').classList.remove('error-border');
+            document.getElementById('wzMaxPlayers').classList.remove('error-border');
+          }
+        }
+      }
+
+      function setWizardCounter(elId, length, max) {
+        const el = document.getElementById(elId);
+        if (el) el.innerText = length + '/' + max;
+      }
+
+      function showWizardError(inputId, errorId, show) {
+        const input = document.getElementById(inputId);
+        const error = document.getElementById(errorId);
+        if (input) input.classList.toggle('error-border', show);
+        if (error) error.hidden = !show;
+      }
+
+      function toggleWizardCollapse(id, open) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.classList.toggle('open', open);
+        el.setAttribute('aria-hidden', open ? 'false' : 'true');
+      }
+
+      function wzGroupValue(group) {
+        const box = document.querySelector('#gameWizardModal [data-wz-group="' + group + '"]');
+        const active = box ? box.querySelector('.wz-toggle-btn.active, .wz-preset-btn.active') : null;
+        return active ? String(active.dataset.value) : '';
+      }
+
+      function wzMultiValues(name) {
+        return Array.from(document.querySelectorAll('#gameWizardModal .wz-toggle-btn.active[data-wz-multi="' + name + '"]'))
+          .map(btn => String(btn.dataset.value));
+      }
+
+      function setWizardGroup(group, value) {
+        const box = document.querySelector('#gameWizardModal [data-wz-group="' + group + '"]');
+        if (!box) return;
+        const buttons = Array.from(box.querySelectorAll('.wz-toggle-btn, .wz-preset-btn'));
+        let found = false;
+        buttons.forEach(btn => {
+          const on = String(btn.dataset.value) === String(value);
+          btn.classList.toggle('active', on);
+          btn.setAttribute('aria-checked', on ? 'true' : 'false');
+          if (on) found = true;
+        });
+        if (!found && buttons[0]) {
+          buttons[0].classList.add('active');
+          value = buttons[0].dataset.value;
+        }
+        wzOnGroupChange(group);
+      }
+
+      function setWizardMulti(name, values) {
+        document.querySelectorAll('#gameWizardModal .wz-toggle-btn[data-wz-multi="' + name + '"]').forEach(btn => {
+          const on = values.indexOf(String(btn.dataset.value)) !== -1;
+          btn.classList.toggle('active', on);
+          btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+        });
+        if (name === 'diceType') wzUpdateDotsAvailability();
+      }
+
+      function wzOnGroupChange(group) {
+        switch (group) {
+          case 'diceEnabled':
+            toggleWizardCollapse('wzDiceOptions', wzGroupValue('diceEnabled') === '1');
+            break;
+          case 'diceModifier':
+            toggleWizardCollapse('wzModifierWrap', wzGroupValue('diceModifier') === '1');
+            break;
+          case 'scoreEnabled':
+            toggleWizardCollapse('wzScoreOptions', wzGroupValue('scoreEnabled') === '1');
+            break;
+          case 'countersCount':
+            updateWizardCounterInputs(parseInt(wzGroupValue('countersCount'), 10) || 3);
+            break;
+          case 'startScores':
+            toggleWizardCollapse('wzStartValueWrap', wzGroupValue('startScores') === '1');
+            break;
+          case 'turnOrderEnabled':
+            toggleWizardCollapse('wzTurnOrderOptions', wzGroupValue('turnOrderEnabled') === '1');
+            break;
+          case 'timerEnabled':
+            toggleWizardCollapse('wzTimerOptions', wzGroupValue('timerEnabled') === '1');
+            break;
+          case 'timerPreset':
+            toggleWizardCollapse('wzCustomTimeWrap', wzGroupValue('timerPreset') === 'custom');
+            break;
+          case 'penaltyEnabled':
+            toggleWizardCollapse('wzPenaltyWrap', wzGroupValue('penaltyEnabled') === '1');
+            break;
+          case 'roundsEnabled':
+            toggleWizardCollapse('wzRoundsOptions', wzGroupValue('roundsEnabled') === '1');
+            break;
+          case 'roundsLimit':
+            toggleWizardCollapse('wzMaxRoundsWrap', wzGroupValue('roundsLimit') === '1');
+            break;
+          default:
+            break;
+        }
+      }
+
+      function updateWizardCounterInputs(count) {
+        for (let i = 1; i <= 3; i++) {
+          toggleWizardCollapse('wzCounterWrap' + i, i <= count);
+        }
+      }
+
+      function wzUpdateDotsAvailability() {
+        const types = wzMultiValues('diceType');
+        let maxFaces = 0;
+        types.forEach(type => {
+          if (type === 'custom') {
+            const custom = document.getElementById('wzCustomFaces');
+            maxFaces = Math.max(maxFaces, parseInt(custom && custom.value, 10) || 100);
+          } else {
+            maxFaces = Math.max(maxFaces, parseInt(String(type).replace(/\D/g, ''), 10) || 0);
+          }
+        });
+
+        const available = maxFaces > 0 && maxFaces <= 9;
+        const dots = document.querySelector('#gameWizardModal [data-wz-group="diceDisplay"] [data-value="dots"]');
+        const nums = document.querySelector('#gameWizardModal [data-wz-group="diceDisplay"] [data-value="nums"]');
+        if (dots) {
+          dots.disabled = !available;
+          dots.classList.toggle('is-disabled', !available);
+          if (!available && dots.classList.contains('active') && nums) {
+            dots.classList.remove('active');
+            nums.classList.add('active');
+          }
+        }
+        const hint = document.getElementById('wzDotsHint');
+        if (hint) hint.hidden = available;
+      }
+
+      function wzStepValue(inputId, delta, min, max) {
+        const input = document.getElementById(inputId);
+        if (!input) return;
+        const current = parseInt(input.value, 10);
+        const base = isNaN(current) ? min : current;
+        input.value = Math.max(min, Math.min(max, base + delta));
+        if (inputId === 'wzCustomFaces') wzUpdateDotsAvailability();
+      }
+
+      function readWizardNumber(inputId, min, max, fallback) {
+        const input = document.getElementById(inputId);
+        let n = parseInt(input && input.value, 10);
+        if (isNaN(n)) n = fallback;
+        n = Math.max(min, Math.min(max, n));
+        if (input) input.value = n;
+        return n;
+      }
+
+      function resetWizardForm() {
+        const setVal = (id, value) => {
+          const el = document.getElementById(id);
+          if (el) el.value = value;
+        };
+        setVal('wzGameTitle', '');
+        setVal('wzAuthorName', '');
+        setVal('wzGameDesc', '');
+        setVal('wzCategory', '');
+        setVal('wzLang', wizardDraft && wizardDraft.lang ? wizardDraft.lang : 'uk');
+        setVal('wzMinPlayers', 1);
+        setVal('wzMaxPlayers', 6);
+        setVal('wzCounter1', 'A');
+        setVal('wzCounter2', 'B');
+        setVal('wzCounter3', 'C');
+        setVal('wzStartValue', 0);
+        setVal('wzCustomFaces', 20);
+        setVal('wzDiceCount', 2);
+        setVal('wzModifier', 0);
+        setVal('wzCustomTime', 30);
+        setVal('wzPenalty', 1);
+        setVal('wzMaxRounds', 10);
+
+        setWizardCounter('wzTitleCount', 0, 80);
+        setWizardCounter('wzDescCount', 0, 1000);
+        showWizardError('wzGameTitle', 'wzTitleError', false);
+        showWizardError('wzCustomFaces', 'wzFacesError', false);
+        showWizardError('wzCustomTime', 'wzTimeError', false);
+        const playersError = document.getElementById('wzPlayersError');
+        if (playersError) playersError.hidden = true;
+        ['wzMinPlayers', 'wzMaxPlayers'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.classList.remove('error-border');
+        });
+
+        setWizardGroup('diceEnabled', '1');
+        setWizardMulti('diceType', ['D6']);
+        setWizardGroup('diceDisplay', 'dots');
+        setWizardGroup('diceModifier', '0');
+        setWizardGroup('diceZero', '0');
+        setWizardGroup('scoreEnabled', '1');
+        setWizardGroup('countersCount', '3');
+        setWizardGroup('allowNegative', '1');
+        setWizardGroup('startScores', '0');
+        setWizardGroup('turnOrderEnabled', '1');
+        setWizardGroup('turnOrder', 'clockwise');
+        setWizardGroup('timerEnabled', '1');
+        setWizardGroup('timerPreset', '30');
+        setWizardGroup('penaltyEnabled', '1');
+        setWizardGroup('warningSound', '1');
+        setWizardGroup('roundsEnabled', '1');
+        setWizardGroup('roundsLimit', '0');
+        setWizardGroup('resetScores', '0');
+        updateWizardCounterInputs(3);
+
+        document.querySelectorAll('#gameWizardModal .wz-lock-row').forEach(row => {
+          row.classList.remove('active');
+          row.setAttribute('aria-pressed', 'false');
+        });
+        wzUpdateDotsAvailability();
+      }
+
+      function wizardApplyText() {
+        const modal = document.getElementById('gameWizardModal');
+        if (!modal) return;
+        modal.querySelectorAll('[data-wz-i18n]').forEach(el => {
+          const key = el.getAttribute('data-wz-i18n');
+          if (!key) return;
+          const text = i18n.t(key);
+          if (el.tagName === 'OPTION') {
+            el.textContent = text;
+          } else {
+            el.innerText = text;
+          }
+        });
+      }
+
+      function wizardRefreshPlaceholders() {
+        const placeholders = {
+          wzGameTitle: 'wzGameTitlePh',
+          wzAuthorName: 'wzAuthorPh',
+          wzGameDesc: 'wzDescPh'
+        };
+        Object.keys(placeholders).forEach(id => {
+          const el = document.getElementById(id);
+          if (el) el.placeholder = i18n.t(placeholders[id]);
+        });
+        const closeBtn = document.getElementById('wzCloseBtn');
+        if (closeBtn) closeBtn.setAttribute('aria-label', i18n.t('close'));
+      }
+
+      function openWizard() {
+        initWizardEvents();
+        wizardStep = 1;
+        wizardDraft = createWizardDraft();
+        resetWizardForm();
+        wizardApplyText();
+        wizardRefreshPlaceholders();
+        applyWizardStepVisibility();
+        wizardUpdateProgress();
+        updateWizardHeader();
+        updateWizardFooter();
+        wizardRenderSummary();
+
+        const publishBtn = document.getElementById('wzPublishBtn');
+        if (publishBtn) publishBtn.style.display = DB.isConfigured() ? 'inline-flex' : 'none';
+
+        const modal = document.getElementById('gameWizardModal');
+        if (modal) modal.classList.add('open');
+      }
+
+      function closeWizard() {
+        const modal = document.getElementById('gameWizardModal');
+        if (modal) modal.classList.remove('open');
+        wizardStep = 1;
+        wizardNavLocked = false;
+        wizardDraft = null;
+      }
+
+      function applyWizardStepVisibility() {
+        for (let i = 1; i <= WIZARD_TOTAL_STEPS; i++) {
+          const el = document.getElementById('wizardStep' + i);
+          if (!el) continue;
+          const on = i === wizardStep;
+          el.classList.toggle('active', on);
+          el.setAttribute('aria-hidden', on ? 'false' : 'true');
+        }
+      }
+
+      function updateWizardHeader() {
+        const titleEl = document.getElementById('wizardStepHeaderTitle');
+        if (!titleEl) return;
+        const key = WIZARD_STEP_TITLE_KEYS[wizardStep];
+        if (key) titleEl.innerText = i18n.t(key);
+      }
+
+      function updateWizardFooter() {
+        const prev = document.getElementById('wzPrevBtn');
+        const next = document.getElementById('wzNextBtn');
+        if (prev) prev.classList.toggle('wz-hidden', wizardStep === 1);
+        if (next) next.classList.toggle('wz-hidden', wizardStep === WIZARD_TOTAL_STEPS);
+      }
+
+      function wizardUpdateProgress() {
+        const progress = document.getElementById('wizardProgress');
+        if (!progress) return;
+        let html = '';
+        for (let i = 1; i <= WIZARD_TOTAL_STEPS; i++) {
+          const state = i < wizardStep ? 'done' : (i === wizardStep ? 'active' : '');
+          const label = i18n.t(WIZARD_STEP_LABEL_KEYS[i - 1]);
+          html += '<div class="wz-progress-step">' +
+            '<div class="wz-step-dot ' + state + '">' + (i < wizardStep ? '✓' : i) + '</div>' +
+            '<span class="wz-step-label ' + state + '">' + escapeWizardHtml(label) + '</span>' +
+            '</div>';
+          if (i < WIZARD_TOTAL_STEPS) {
+            html += '<div class="wz-step-line ' + (i < wizardStep ? 'done' : '') + '"></div>';
+          }
+        }
+        progress.innerHTML = html;
+      }
+
+      function jumpToWizardStep(step) {
+        wizardStep = Math.max(1, Math.min(WIZARD_TOTAL_STEPS, step));
+        if (wizardStep === WIZARD_TOTAL_STEPS) wizardRenderSummary();
+        applyWizardStepVisibility();
+        wizardUpdateProgress();
+        updateWizardHeader();
+        updateWizardFooter();
+        const win = document.querySelector('#gameWizardModal .wizard-window');
+        if (win) win.scrollTop = 0;
+      }
+
+      function wizardGoTo(step) {
+        step = Math.max(1, Math.min(WIZARD_TOTAL_STEPS, step));
+        if (step === wizardStep || wizardNavLocked) return;
+        const current = document.getElementById('wizardStep' + wizardStep);
+        const next = document.getElementById('wizardStep' + step);
+        if (!current || !next) return;
+
+        wizardStep = step;
+        if (wizardStep === WIZARD_TOTAL_STEPS) wizardRenderSummary();
+        wizardUpdateProgress();
+        updateWizardHeader();
+        updateWizardFooter();
+        wizardNavLocked = true;
+        current.classList.add('wz-leaving');
+
+        window.setTimeout(() => {
+          current.classList.remove('active', 'wz-leaving');
+          next.classList.add('active');
+          window.setTimeout(() => {
+            wizardNavLocked = false;
+            const win = document.querySelector('#gameWizardModal .wizard-window');
+            if (win) win.scrollTop = 0;
+          }, 170);
+        }, 140);
+      }
+
+      function wizardNext() {
+        if (wizardNavLocked) return;
+        if (!wizardCollectStep(wizardStep)) return;
+        if (wizardStep === WIZARD_TOTAL_STEPS) {
+          wizardRenderSummary();
+          return;
+        }
+        if (wizardStep === WIZARD_TOTAL_STEPS - 1) wizardRenderSummary();
+        wizardGoTo(wizardStep + 1);
+      }
+
+      function wizardPrev() {
+        if (wizardNavLocked) return;
+        if (wizardStep > 1) wizardGoTo(wizardStep - 1);
+      }
+
+      function wizardCollectStep(step) {
+        if (!wizardDraft) return false;
+        switch (step) {
+          case 1: {
+            const titleEl = document.getElementById('wzGameTitle');
+            const title = (titleEl.value || '').trim();
+            if (!title) {
+              showWizardError('wzGameTitle', 'wzTitleError', true);
+              titleEl.focus();
+              return false;
+            }
+            showWizardError('wzGameTitle', 'wzTitleError', false);
+
+            const minEl = document.getElementById('wzMinPlayers');
+            const maxEl = document.getElementById('wzMaxPlayers');
+            const min = readWizardNumber('wzMinPlayers', 1, 20, 1);
+            const max = readWizardNumber('wzMaxPlayers', 1, 20, 6);
+            const playersError = document.getElementById('wzPlayersError');
+            if (min > max) {
+              if (playersError) playersError.hidden = false;
+              minEl.classList.add('error-border');
+              maxEl.classList.add('error-border');
+              maxEl.focus();
+              return false;
+            }
+            if (playersError) playersError.hidden = true;
+            minEl.classList.remove('error-border');
+            maxEl.classList.remove('error-border');
+
+            wizardDraft.title = title;
+            wizardDraft.author = (document.getElementById('wzAuthorName').value || '').trim();
+            wizardDraft.description = (document.getElementById('wzGameDesc').value || '').trim();
+            wizardDraft.category = document.getElementById('wzCategory').value || '';
+            wizardDraft.lang = document.getElementById('wzLang').value || 'uk';
+            wizardDraft.players = { min, max };
+            return true;
+          }
+          case 2: {
+            const enabled = wzGroupValue('diceEnabled') === '1';
+            const dice = wizardDraft.tools.dice;
+            dice.enabled = enabled;
+            showWizardError('wzCustomFaces', 'wzFacesError', false);
+            if (!enabled) return true;
+
+            let types = wzMultiValues('diceType');
+            if (!types.length) {
+              types = ['D6'];
+              setWizardMulti('diceType', types);
+            }
+
+            const customInput = document.getElementById('wzCustomFaces');
+            const customFaces = parseInt(customInput.value, 10);
+            if (types.indexOf('custom') !== -1 && (isNaN(customFaces) || customFaces < 2 || customFaces > 100)) {
+              showWizardError('wzCustomFaces', 'wzFacesError', true);
+              customInput.focus();
+              return false;
+            }
+
+            types = types.map(type => type === 'custom' ? 'D' + customFaces : type);
+            types = types.filter((type, index, arr) => arr.indexOf(type) === index);
+
+            dice.types = types;
+            dice.count = readWizardNumber('wzDiceCount', 1, 20, 2);
+            let displayMode = wzGroupValue('diceDisplay') === 'nums' ? 'nums' : 'dots';
+            const maxFaces = types.reduce((acc, type) => Math.max(acc, parseInt(String(type).replace(/\D/g, ''), 10) || 0), 0);
+            if (displayMode === 'dots' && maxFaces > 9) {
+              displayMode = 'nums';
+              setWizardGroup('diceDisplay', 'nums');
+            }
+            dice.displayMode = displayMode;
+            dice.modifier = wzGroupValue('diceModifier') === '1' ? readWizardNumber('wzModifier', -99, 99, 0) : 0;
+            dice.allowZero = wzGroupValue('diceZero') === '1';
+            return true;
+          }
+          case 3: {
+            const enabled = wzGroupValue('scoreEnabled') === '1';
+            const scorebook = wizardDraft.tools.scorebook;
+            scorebook.enabled = enabled;
+            if (enabled) {
+              const count = Math.max(1, Math.min(3, parseInt(wzGroupValue('countersCount'), 10) || 3));
+              const startEnabled = wzGroupValue('startScores') === '1';
+              const start = startEnabled ? readWizardNumber('wzStartValue', -999, 999, 0) : 0;
+              const counters = [];
+              for (let i = 1; i <= count; i++) {
+                const input = document.getElementById('wzCounter' + i);
+                const label = ((input && input.value) || '').trim() || String.fromCharCode(64 + i);
+                counters.push({
+                  id: String.fromCharCode(64 + i),
+                  label: label.slice(0, 20),
+                  start
+                });
+              }
+              scorebook.counters = counters;
+              scorebook.negativeAllowed = wzGroupValue('allowNegative') === '1';
+              scorebook.turnOrderEnabled = wzGroupValue('turnOrderEnabled') === '1';
+              scorebook.turnOrder = scorebook.turnOrderEnabled ? (wzGroupValue('turnOrder') || 'clockwise') : 'free';
+            } else {
+              scorebook.counters = [{ id: 'A', label: 'A', start: 0 }];
+              scorebook.negativeAllowed = true;
+              scorebook.turnOrderEnabled = false;
+              scorebook.turnOrder = 'free';
+            }
+            return true;
+          }
+          case 4: {
+            const timerEnabled = wzGroupValue('timerEnabled') === '1';
+            const timer = wizardDraft.tools.timer;
+            timer.enabled = timerEnabled;
+            showWizardError('wzCustomTime', 'wzTimeError', false);
+            if (timerEnabled) {
+              const preset = wzGroupValue('timerPreset') || '30';
+              let seconds;
+              if (preset === 'custom') {
+                const input = document.getElementById('wzCustomTime');
+                const raw = parseInt(input.value, 10);
+                if (isNaN(raw) || raw < 5 || raw > 3600) {
+                  showWizardError('wzCustomTime', 'wzTimeError', true);
+                  input.focus();
+                  return false;
+                }
+                seconds = raw;
+              } else {
+                seconds = parseInt(preset, 10) || 30;
+              }
+              timer.turnSeconds = seconds;
+              timer.penalty = wzGroupValue('penaltyEnabled') === '1' ? readWizardNumber('wzPenalty', 0, 99, 1) : 0;
+              timer.warningSound = wzGroupValue('warningSound') === '1';
+            } else {
+              timer.turnSeconds = 30;
+              timer.penalty = 0;
+              timer.warningSound = false;
+            }
+
+            const roundsEnabled = wzGroupValue('roundsEnabled') === '1';
+            const rounds = wizardDraft.tools.rounds;
+            rounds.enabled = roundsEnabled;
+            if (roundsEnabled) {
+              const fixed = wzGroupValue('roundsLimit') === '1';
+              rounds.max = fixed ? readWizardNumber('wzMaxRounds', 1, 100, 10) : 0;
+              rounds.resetScoresEachRound = wzGroupValue('resetScores') === '1';
+            } else {
+              rounds.max = 0;
+              rounds.resetScoresEachRound = false;
+            }
+            return true;
+          }
+          case 5: {
+            wizardDraft.locked = Array.from(document.querySelectorAll('#gameWizardModal .wz-lock-row.active'))
+              .map(row => row.dataset.wzLock)
+              .filter(Boolean);
+            return true;
+          }
+          default:
+            return true;
+        }
+      }
+
+      function collectAllWizardSteps() {
+        for (let step = 1; step <= WIZARD_TOTAL_STEPS; step++) {
+          if (!wizardCollectStep(step)) {
+            jumpToWizardStep(step);
+            return false;
+          }
+        }
+        return true;
+      }
+
+      function formatWizardTime(seconds) {
+        if (seconds >= 60 && seconds % 60 === 0) return (seconds / 60) + i18n.t('wzMin');
+        return seconds + i18n.t('wzSec');
+      }
+
+      function wizardRenderSummary() {
         const box = document.getElementById('wzSummaryCard');
         if (!box || !wizardDraft) return;
+        const game = wizardDraft;
+        const category = game.category ? i18n.t(WIZARD_CATEGORY_KEYS[game.category] || 'wzCatOther') : i18n.t('wzNone');
+        const langName = WIZARD_LANG_NAMES[game.lang] || String(game.lang || '').toUpperCase();
+        const activeIcons = [
+          game.tools.dice.enabled ? '🎲' : '',
+          game.tools.scorebook.enabled ? '📊' : '',
+          game.tools.timer.enabled ? '⏱️' : '',
+          game.tools.rounds.enabled ? '🔄' : ''
+        ].filter(Boolean).join(' ');
+        const details = [];
+        if (game.tools.dice.enabled) {
+          details.push('🎲 ' + game.tools.dice.count + ' × ' + game.tools.dice.types.join(' / '));
+        }
+        if (game.tools.scorebook.enabled) {
+          details.push('📊 ' + game.tools.scorebook.counters.map(counter => counter.label).join(' · '));
+        }
+        if (game.tools.timer.enabled) {
+          details.push('⏱️ ' + formatWizardTime(game.tools.timer.turnSeconds));
+        }
+        if (game.tools.rounds.enabled) {
+          details.push('🔄 ' + (game.tools.rounds.max ? game.tools.rounds.max : i18n.t('wzUnlimited')));
+        }
+        const lockedLabels = (game.locked || []).map(key => i18n.t(WIZARD_LOCK_KEYS[key] || key));
 
-        box.innerHTML = `
-          <div style="font-size:16px; font-weight:800; color:var(--accent);">${wizardDraft.title}</div>
-          ${wizardDraft.author ? `<div class="text-sm text-muted"><b>${i18n.t('authorLabel')}</b> ${wizardDraft.author}</div>` : ''}
-          <div style="color:var(--text-muted);">${wizardDraft.desc}</div>
-          <div class="row" style="gap:12px; flex-wrap:wrap; margin-top:4px;">
-            <span>👥 <b>${wizardDraft.players.min}-${wizardDraft.players.max}</b> гравців</span>
-            <span>🎲 Кубики: <b>${wizardDraft.dice.used ? `${wizardDraft.dice.count} шт (${wizardDraft.dice.types.join(',')})` : 'Ні'}</b></span>
-            <span>📊 Очки: <b>${wizardDraft.score.used ? wizardDraft.score.counters.join(', ') : 'Ні'}</b></span>
-            <span>⏱️ Таймер: <b>${wizardDraft.timer.used ? `${wizardDraft.timer.seconds}с (штраф: ${wizardDraft.timer.penalty})` : 'Ні'}</b></span>
-            <span>🔄 Раунди: <b>${wizardDraft.rounds.used ? (wizardDraft.rounds.max ? wizardDraft.rounds.max : '∞') : 'Ні'}</b></span>
-          </div>
-        `;
+        box.innerHTML =
+          '<div class="wz-summary-title">' + escapeWizardHtml(game.title) + '</div>' +
+          (game.author ? '<div class="wz-summary-author">' + escapeWizardHtml(i18n.t('authorLabel')) + ' ' + escapeWizardHtml(game.author) + '</div>' : '') +
+          '<div class="wz-summary-desc">' + escapeWizardHtml(game.description || i18n.t('wzNoDesc')) + '</div>' +
+          '<div class="wz-summary-chips">' +
+            '<span class="wz-chip">👥 ' + game.players.min + '–' + game.players.max + ' ' + escapeWizardHtml(i18n.t('wzPlayers')) + '</span>' +
+            '<span class="wz-chip">📂 ' + escapeWizardHtml(i18n.t('wzSummaryCategory')) + ': ' + escapeWizardHtml(category) + '</span>' +
+            '<span class="wz-chip">🌐 ' + escapeWizardHtml(i18n.t('wzSummaryLang')) + ': ' + escapeWizardHtml(langName) + '</span>' +
+          '</div>' +
+          '<div class="wz-summary-row"><b>' + escapeWizardHtml(i18n.t('wzSummaryTools')) + ':</b><span class="wz-summary-tools">' + (activeIcons || escapeWizardHtml(i18n.t('wzNone'))) + '</span></div>' +
+          (details.length ? '<div class="wz-summary-row"><span>' + escapeWizardHtml(details.join(' · ')) + '</span></div>' : '') +
+          '<div class="wz-summary-row"><b>' + escapeWizardHtml(i18n.t('wzSummaryLocks')) + ':</b><span>' + (lockedLabels.length ? escapeWizardHtml(lockedLabels.join(' · ')) : escapeWizardHtml(i18n.t('wzNone'))) + '</span></div>';
+      }
+
+      function prepareWizardGame() {
+        if (!wizardDraft) return null;
+        wizardDraft.id = wizardDraft.id || 'game_' + Date.now();
+        wizardDraft.likes = wizardDraft.likes || 0;
+        wizardDraft.desc = wizardDraft.description || i18n.t('wzNoDesc');
+        return wizardDraft;
       }
 
       function wizardSaveLocal() {
-        if (!wizardDraft) return;
-        catalog.push(wizardDraft);
+        if (!collectAllWizardSteps()) return;
+        const game = prepareWizardGame();
+        if (!game) return;
+        if (!catalog.some(item => item.id === game.id)) catalog.push(game);
         saveCatalogToStorage();
         closeWizard();
         render();
@@ -4086,11 +5893,14 @@
       }
 
       function wizardCopyCode() {
-        if (!wizardDraft) return;
-        const code = GameCodec.encode(wizardDraft);
+        if (!collectAllWizardSteps()) return;
+        const game = prepareWizardGame();
+        if (!game) return;
+        const code = GameCodec.encode(game);
+        if (!code) return;
         if (navigator.clipboard && navigator.clipboard.writeText) {
           navigator.clipboard.writeText(code).then(() => {
-            Scorebook.showMessage(`${i18n.t('codeCopied')}\n\n${code}`);
+            Scorebook.showMessage(i18n.t('codeCopied') + '\n\n' + code);
           }).catch(() => {
             Scorebook.showMessage(code);
           });
@@ -4098,6 +5908,40 @@
           Scorebook.showMessage(code);
         }
       }
+
+      function wizardPublish() {
+        if (!collectAllWizardSteps()) return;
+        const game = prepareWizardGame();
+        if (!game) return;
+        if (!catalog.some(item => item.id === game.id)) catalog.push(game);
+        saveCatalogToStorage();
+        closeWizard();
+        render();
+        publishToSupabase(game.id);
+      }
+
+      function applyLockedFeatures(locked) {
+        activeLocks = new Set(Array.isArray(locked) ? locked : []);
+        Object.keys(WIZARD_LOCK_SELECTORS).forEach(key => {
+          const hide = activeLocks.has(key);
+          WIZARD_LOCK_SELECTORS[key].forEach(selector => {
+            document.querySelectorAll(selector).forEach(el => {
+              el.style.display = hide ? 'none' : '';
+            });
+          });
+        });
+      }
+
+      function onLockedFeatureClick(event) {
+        if (!activeLocks.size) return;
+        if (event.target.closest && event.target.closest('.die-card') && activeLocks.has('rerollSingle')) {
+          event.preventDefault();
+          event.stopPropagation();
+          if (event.stopImmediatePropagation) event.stopImmediatePropagation();
+          Scorebook.showMessage(i18n.t('wzLockedNotice'));
+        }
+      }
+
 
       function removeGame(gameId) {
         App.openConfirm('Видалити гру?', 'Ви впевнені, що хочете видалити цю гру з каталогу?', () => {
@@ -4257,12 +6101,15 @@
         onSearch,
         openWizard,
         closeWizard,
+        wizardGoTo,
         wizardNext,
         wizardPrev,
-        toggleWizardToolVisibility,
-        updateWizardCounterInputs,
+        wizardUpdateProgress,
+        wizardCollectStep,
+        wzStepValue,
         wizardSaveLocal,
         wizardCopyCode,
+        wizardPublish,
         importFromCode,
         clearImportError,
         closePreviewModal,
